@@ -19,7 +19,7 @@ class TabType extends AbstractType
             ->add('name')
             ->add('songKey', EnumType::class, [
                 'class' => SongKey::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
             ->add('capo')
             ->add('content')
