@@ -20,8 +20,8 @@ class Tab
     #[ORM\ManyToOne(inversedBy: 'tabs')]
     private ?Artist $artist = null;
 
-    #[ORM\Column(enumType: 'SongKey', nullable: true)]
-    private ?SongKey $songKey = null;
+    #[ORM\Column(type: 'string', enumType: SongKey::class)]
+    private SongKey $songKey;
 
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $capo = null;
@@ -58,7 +58,7 @@ class Tab
         return $this;
     }
 
-    public function getSongKey(): ?SongKey
+    public function getSongKey(): SongKey
     {
         return $this->songKey;
     }
