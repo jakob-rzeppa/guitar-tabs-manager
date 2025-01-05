@@ -6,22 +6,26 @@
 {% block body %}
 	<h1>Tab index</h1>
 
-	<table class="table">
+	<input type="text" id="tab_search" placeholder="Search...">
+
+	<table>
 		<thead>
 			<tr>
 				<th>Name</th>
 				<th>Key</th>
 				<th>Capo</th>
+				<th>Similarity</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody id="wrapper">
 			{% for tab in tabs %}
-				<tr>
+				<tr class="tab">
 					<td>
 						<a href="{{ path('app_tab_show', {'id': tab.id}) }}">{{ tab.name }}</a>
 					</td>
 					<td>{{ tab.songKey.name }}</td>
 					<td>{{ tab.capo }}</td>
+					<td class="similarity"></td>
 				</tr>
 			{% else %}
 				<tr>
@@ -32,4 +36,8 @@
 	</table>
 
 	<a href="{{ path('app_tab_new') }}">Create new</a>
+{% endblock %}
+
+{% block javascripts %}
+	{{ importmap('tabSearch') }}
 {% endblock %}
