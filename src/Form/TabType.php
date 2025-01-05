@@ -25,7 +25,7 @@ class TabType extends AbstractType
             ->add('content')
             ->add('artist', EntityType::class, [
                 'class' => Artist::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
         ;
     }
