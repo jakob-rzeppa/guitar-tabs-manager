@@ -11,7 +11,8 @@
 	<table>
 		<thead>
 			<tr>
-				<th>Name</th>
+				<th>Song</th>
+				<th>Artist</th>
 				<th>Key</th>
 				<th>Capo</th>
 				<th>Similarity</th>
@@ -23,6 +24,7 @@
 					<td>
 						<a href="{{ path('app_tab_show', {'id': tab.id}) }}">{{ tab.name }}</a>
 					</td>
+					<td>{{ tab.artist.name }}</td>
 					<td>{{ tab.songKey.name }}</td>
 					<td>{{ tab.capo }}</td>
 					<td class="similarity"></td>
