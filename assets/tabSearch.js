@@ -1,22 +1,31 @@
 const tabSearch = document.querySelector('#tab_search');
 const wrapper = document.querySelector('#wrapper');
-const rows = Array.from(wrapper.querySelectorAll('.tab'));
+const tabs = Array.from(wrapper.querySelectorAll('.tab'));
 
 tabSearch.addEventListener('input', () => {
   const searchTerm = tabSearch.value.toLowerCase();
-  rows.forEach(row => {
+
+  tabs.forEach(row => {
     const name = row.querySelector('td:first-child a').textContent.toLowerCase();
     const similarity = getSimilarity(searchTerm, name);
-    row.querySelector('.similarity').textContent = similarity.toFixed(2);
+    row.dataset.similarity = similarity.toFixed(2);
   });
-  rows.sort((a, b) => {
-    const similarityA = parseFloat(a.querySelector('.similarity').textContent);
-    const similarityB = parseFloat(b.querySelector('.similarity').textContent);
+  tabs.sort((a, b) => {
+    const similarityA = parseFloat(a.dataset.similarity);
+    const similarityB = parseFloat(b.dataset.similarity);
     return similarityB - similarityA;
   });
-  rows.forEach(row => wrapper.appendChild(row));
+  tabs.forEach(row => wrapper.appendChild(row));
 });
 
+/**
+ * Calculates the similarity between two strings based on the Levenshtein distance.
+ * The similarity is a value between 0 and 1, where 1 means the strings are identical.
+ *
+ * @param {string} a - The first string to compare.
+ * @param {string} b - The second string to compare.
+ * @returns {number} A value between 0 and 1 representing the similarity between the two strings.
+ */
 function getSimilarity(a, b) {
   let longer = a;
   let shorter = b;
@@ -31,6 +40,16 @@ function getSimilarity(a, b) {
   return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
 }
 
+/**
+ * Calculates the Levenshtein distance (edit distance) between two strings.
+ * The Levenshtein distance is a measure of the difference between two sequences.
+ * It is the minimum number of single-character edits (insertions, deletions, or substitutions)
+ * required to change one string into the other.
+ *
+ * @param {string} s1 - The first string to compare.
+ * @param {string} s2 - The second string to compare.
+ * @returns {number} The Levenshtein distance between the two strings.
+ */
 function editDistance(s1, s2) {
   s1 = s1.toLowerCase();
   s2 = s2.toLowerCase();
