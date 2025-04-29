@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Tab{% endblock %}
+
+{% block body %}
+    <h1>Edit Tab</h1>
+
+    {{ include('tab/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_tab_index') }}">back to list</a>
+
+    {{ include('tab/_delete_form.html.twig') }}
+{% endblock %}
