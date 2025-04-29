@@ -22,7 +22,6 @@ class UserForm extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('password')
         ;
     }
 
