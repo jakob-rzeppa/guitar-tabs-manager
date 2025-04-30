@@ -15,6 +15,11 @@ class TabForm extends AbstractType
             ->add('title')
             ->add('capo')
             ->add('content')
+            ->add('tags', null, [
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => true,
+            ])
         ;
     }
 

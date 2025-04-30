@@ -17,12 +17,16 @@
 		<table class="table">
 			<tbody>
 				<tr>
-					<th>Id</th>
-					<td>{{ tab.id }}</td>
-				</tr>
-				<tr>
-					<th>Title</th>
-					<td></td>
+					<th>Tags</th>
+					<td>
+						{% for tag in tab.tags %}
+							{{ tag.name }}
+							{% if not loop.last %},
+							{% endif %}
+						{% else %}
+							<em>No tags</em>
+						{% endfor %}
+					</td>
 				</tr>
 				<tr>
 					<th>Capo</th>
