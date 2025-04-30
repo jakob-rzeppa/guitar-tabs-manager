@@ -1,14 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Tab
+{% block title %}
+	Edit Tab
 {% endblock %}
 
 {% block body %}
 	<h1>Edit Tab</h1>
 
 	{{ include('tab/_form.html.twig', {'button_label': 'Update'}) }}
-
-	<a href="{{ path('app_tag_new') }}">create new tag</a>
 
 	<a href="{{ path('app_tab_index') }}">back to list</a>
 
