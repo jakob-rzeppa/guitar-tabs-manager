@@ -1,34 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tab{% endblock %}
+{% block title %}
+	{{ tab.title }}
+{% endblock %}
 
 {% block body %}
-    <h1>Tab</h1>
+	<section class="tab-information">
+		<h1>{{ tab.title }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ tab.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ tab.title }}</td>
-            </tr>
-            <tr>
-                <th>Capo</th>
-                <td>{{ tab.capo }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ tab.content }}</td>
-            </tr>
-        </tbody>
-    </table>
+		<a href="{{ path('app_tab_index') }}">back to list</a>
 
-    <a href="{{ path('app_tab_index') }}">back to list</a>
+		<a href="{{ path('app_tab_edit', {'id': tab.id}) }}" class="edit-link">
+			<span>Edit</span>
+		</a>
 
-    <a href="{{ path('app_tab_edit', {'id': tab.id}) }}">edit</a>
+		<table class="table">
+			<tbody>
+				<tr>
+					<th>Id</th>
+					<td>{{ tab.id }}</td>
+				</tr>
+				<tr>
+					<th>Title</th>
+					<td></td>
+				</tr>
+				<tr>
+					<th>Capo</th>
+					<td>{{ tab.capo }}</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
 
-    {{ include('tab/_delete_form.html.twig') }}
+	<pre>
+        {{ tab.content }}
+    </pre>
+
 {% endblock %}
