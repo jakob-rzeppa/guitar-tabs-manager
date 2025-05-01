@@ -1,39 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tab index{% endblock %}
+{% block title %}
+	Tabs
+{% endblock %}
 
 {% block body %}
-    <h1>Tab index</h1>
+	<h1>Tabs</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Capo</th>
-                <th>Content</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for tab in tabs %}
-            <tr>
-                <td>{{ tab.id }}</td>
-                <td>{{ tab.title }}</td>
-                <td>{{ tab.capo }}</td>
-                <td>{{ tab.content }}</td>
-                <td>
-                    <a href="{{ path('app_tab_show', {'id': tab.id}) }}">show</a>
-                    <a href="{{ path('app_tab_edit', {'id': tab.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<div class="tabs-display">
+		{% for tab in tabs %}
+			<div>
+				<h2>{{ tab.title }}</h2>
+				<ul>
+					{% for tag in tab.tags %}
+						<li>{{ tag.name }}</li>
+					{% endfor %}
+				</ul>
+				<pre>{{ tab.content }}</pre>
+				<a href="{{ path('app_tab_show', {'id': tab.id}) }}">Show</a>
+				<a href="{{ path('app_tab_edit', {'id': tab.id}) }}">Edit</a>
+			</div>
+		{% else %}
+			no records found
+		{% endfor %}
+	</div>
 
-    <a href="{{ path('app_tab_new') }}">Create new</a>
+	<a href="{{ path('app_tab_new') }}">Create new</a>
 {% endblock %}

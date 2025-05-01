@@ -1,0 +1,16 @@
+.tabs-display {
+  margin: 20px;
+}
+
+.tabs-display div {
+  background-color: #f0f0f0;
+  overflow: hidden;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px;
+}
+
+.tabs-display div pre {
+  max-height: 92px;
+  overflow: hidden;
+}
