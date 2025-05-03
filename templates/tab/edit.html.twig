@@ -11,6 +11,8 @@
 
 	{{ include('tab/_transpose_form.html.twig', {'last_selected_direction': app.request.get('last_selected_direction')}) }}
 
+	{{ include('tab/_cleanup_form.html.twig') }}
+
 	<a href="{{ path('app_tag_new') }}">create new tag</a>
 
 	<a href="{{ path('app_tab_index') }}">back to list</a>
