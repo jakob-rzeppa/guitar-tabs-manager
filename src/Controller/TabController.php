@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Tab;
 use App\Form\TabForm;
 use App\Repository\TabRepository;
+use App\Service\TransposeService;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,10 +70,31 @@ final class TabController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}/transpose', name: 'app_tab_transpose', methods: ['POST'])]
+    public function transpose(Request $request, Tab $tab, EntityManagerInterface $entityManager, TransposeService $transposeService): Response
+    {
+        $direction = $request->request->get('direction');
+
+        if (!in_array($direction, ['up', 'down'], true)) {
+            throw new InvalidArgumentException('Invalid transpose direction.');
+        }
+
+        $transposedTab = $transposeService->transposeTab($tab->getContent(), $direction);
+
+        $tab->setContent($transposedTab);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Tab transposed successfully!');
+        return $this->redirectToRoute('app_tab_edit', [
+            'id' => $tab->getId(),
+            'last_selected_direction' => $direction,
+        ], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/{id}', name: 'app_tab_delete', methods: ['POST'])]
     public function delete(Request $request, Tab $tab, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$tab->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $tab->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($tab);
             $entityManager->flush();
         }

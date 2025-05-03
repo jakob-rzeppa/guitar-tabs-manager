@@ -1,0 +1,7 @@
+<form method="post" action="{{ path('app_tab_transpose', {'id': tab.id}) }}">
+	<select name="direction">
+		<option value="up" {% if last_selected_direction == 'up' %} selected {% endif %}>Up</option>
+		<option value="down" {% if last_selected_direction == 'down' %} selected {% endif %}>Down</option>
+	</select>
+	<button type="submit">Transpose</button>
+</form>
