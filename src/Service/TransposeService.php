@@ -2,9 +2,11 @@
 
 namespace App\Service;
 
+use InvalidArgumentException;
+
 class TransposeService
 {
-    public function transposeTab(string $tab)
+    public function transposeTab(string $tab, string $direction): string
     {
         $tabRows = explode("\n", $tab);
 
@@ -23,7 +25,14 @@ class TransposeService
                 continue;
             }
 
-            $transposeTable = $this->getTransposeTable();
+            if ($direction === 'down') {
+                $transposeTable = $this->getTransposeTableDown();
+            } elseif ($direction === 'up') {
+                $transposeTable = $this->getTransposeTableUp();
+            } else {
+                throw new InvalidArgumentException('Invalid transpose direction. Use "up" or "down".');
+            }
+
             $keys = array_keys($transposeTable);
             usort($keys, function ($a, $b) {
                 return strlen($b) - strlen($a);
@@ -59,7 +68,7 @@ class TransposeService
         return rtrim($result, "\n");
     }
 
-    private function getTransposeTable(): array
+    private function getTransposeTableUp(): array
     {
         return [
             'C' => 'C#',
@@ -87,5 +96,10 @@ class TransposeService
             'A#m' => 'Bm',
             'Bm' => 'Cm',
         ];
+    }
+
+    private function getTransposeTableDown(): array
+    {
+        return array_flip($this->getTransposeTableUp());
     }
 }
