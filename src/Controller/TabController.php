@@ -74,17 +74,24 @@ final class TabController extends AbstractController
     public function transpose(Request $request, Tab $tab, EntityManagerInterface $entityManager, TransposeService $transposeService): Response
     {
         $direction = $request->request->get('direction');
+        $changeCapo = $request->request->get('change_capo');
 
         if (!in_array($direction, ['up', 'down'], true)) {
             throw new InvalidArgumentException('Invalid transpose direction.');
         }
 
         $transposedTab = $transposeService->transposeTab($tab->getContent(), $direction);
-
         $tab->setContent($transposedTab);
+
+        // Handle capo adjustment if the change capo button was clicked
+        if ($changeCapo) {
+            $currentCapo = $tab->getCapo();
+            $newCapo = $direction === 'up' ? $currentCapo - 1 : $currentCapo + 1;
+            $tab->setCapo($newCapo);
+        }
+
         $entityManager->flush();
 
-        $this->addFlash('success', 'Tab transposed successfully!');
         return $this->redirectToRoute('app_tab_edit', [
             'id' => $tab->getId(),
             'last_selected_direction' => $direction,
