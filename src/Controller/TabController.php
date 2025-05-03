@@ -61,7 +61,7 @@ final class TabController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_tab_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_tab_show', ['id' => $tab->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('tab/edit.html.twig', [
