@@ -25,10 +25,8 @@
 }
 
 .tab-content {
-    padding: 15px;
-    border-radius: 5px;
+    padding: 25px;
     font-size: 14px;
     line-height: 1.5;
-    overflow-x: auto;
     white-space: pre-wrap;
 }
