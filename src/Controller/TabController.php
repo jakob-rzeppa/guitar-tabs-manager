@@ -78,7 +78,7 @@ final class TabController extends AbstractController
         $tab->setContent($cleanedTab);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_tab_edit', [
+        return $this->redirectToRoute('app_tab_show', [
             'id' => $tab->getId(),
         ], Response::HTTP_SEE_OTHER);
     }
