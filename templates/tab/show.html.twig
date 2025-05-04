@@ -8,9 +8,9 @@
 	<section class="tab-information">
 		<h1>{{ tab.title }}</h1>
 
-		<a href="{{ path('app_tab_index') }}">back to list</a>
+		<a href="{{ path('app_tab_index') }}" class="link">Back to List</a>
 
-		<a href="{{ path('app_tab_edit', {'id': tab.id}) }}" class="edit-link">
+		<a href="{{ path('app_tab_edit', {'id': tab.id}) }}" class="link">
 			<span>Edit</span>
 		</a>
 
@@ -36,8 +36,8 @@
 		</table>
 	</section>
 
-	<pre>
-        {{ tab.content }}
-    </pre>
+	<pre class="tab-content">
+		{{ tab.content|raw }}
+	</pre>
 
 {% endblock %}
