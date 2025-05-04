@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Tab;
 use App\Form\TabForm;
 use App\Repository\TabRepository;
-use App\Service\CleanupService;
+use App\Service\FormatService;
 use App\Service\TransposeService;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -71,11 +71,11 @@ final class TabController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/cleanup', name: 'app_tab_cleanup', methods: ['POST'])]
-    public function cleanup(Request $request, Tab $tab, EntityManagerInterface $entityManager, CleanupService $cleanupService): Response
+    #[Route('/{id}/format', name: 'app_tab_format', methods: ['POST'])]
+    public function cleanup(Request $request, Tab $tab, EntityManagerInterface $entityManager, FormatService $formatService): Response
     {
-        $cleanedTab = $cleanupService->cleanupTab($tab->getContent());
-        $tab->setContent($cleanedTab);
+        $formatedTab = $formatService->formatTab($tab->getContent());
+        $tab->setContent($formatedTab);
         $entityManager->flush();
 
         return $this->redirectToRoute('app_tab_show', [

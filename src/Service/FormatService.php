@@ -2,9 +2,9 @@
 
 namespace App\Service;
 
-class CleanupService
+class FormatService
 {
-    public function cleanupTab(string $tab): string
+    public function formatTab(string $tab): string
     {
         $tabLines = explode("\n", $tab);
 

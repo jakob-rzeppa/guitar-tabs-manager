@@ -2,23 +2,23 @@
 
 namespace App\Tests;
 
-use App\Service\CleanupService;
+use App\Service\FormatService;
 use PHPUnit\Framework\TestCase;
 
-class CleanupServiceTest extends TestCase
+class FormatServiceTest extends TestCase
 {
     public function testRemoveEmptyLines(): void
     {
         $tab = "      G        Em\n\nI found a love for me\n\n          C                            D\n\nDarling, just dive right in, and follow my lead\n\n        G          Em\n\nWell, I found a girl beautiful and sweet\n\n    C                                     D\n\nI never knew you were the someone waiting for me";
         $expected = "      G        Em\nI found a love for me\n          C                            D\nDarling, just dive right in, and follow my lead\n        G          Em\nWell, I found a girl beautiful and sweet\n    C                                     D\nI never knew you were the someone waiting for me";
 
-        $cleanupService = new CleanupService();
-        $result = $cleanupService->cleanupTab($tab);
+        $formatService = new FormatService();
+        $result = $formatService->formatTab($tab);
 
         $this->assertEquals(
             $expected,
             $result,
-            'The cleaned tab should be equal to the expected tab'
+            'The formated tab should be equal to the expected tab'
         );
     }
 
@@ -27,13 +27,13 @@ class CleanupServiceTest extends TestCase
         $tab = "        C                     D\nAnd in your eyes you're holding mine\n[Chorus]\n      Em   C             G          D              Em\nBaby, I'm dancing in the dark, with you between my arms";
         $expected = "        C                     D\nAnd in your eyes you're holding mine\n\n[Chorus]\n\n      Em   C             G          D              Em\nBaby, I'm dancing in the dark, with you between my arms";
 
-        $cleanupService = new CleanupService();
-        $result = $cleanupService->cleanupTab($tab);
+        $formatService = new FormatService();
+        $result = $formatService->formatTab($tab);
 
         $this->assertEquals(
             $expected,
             $result,
-            'The cleaned tab should be equal to the expected tab'
+            'The formated tab should be equal to the expected tab'
         );
     }
 
@@ -42,13 +42,13 @@ class CleanupServiceTest extends TestCase
         $tab = "  Em       C                  G        D          G\nI don't deserve this, darling you look perfect tonight\n|(G) | G | Em | % |\n| C  | % | D  | % |\n      Em   C              G         D              Em\n\nBaby, I'm dancing in the dark, with you between my arms\n\n|(G) | G | Em | % |\n\n| C  | % | D  | % |\n\n      Em   C              G         D              Em\nBaby, I'm dancing in the dark, with you between my arms";
         $expected = "  Em       C                  G        D          G\nI don't deserve this, darling you look perfect tonight\n\n|(G) | G | Em | % |\n| C  | % | D  | % |\n\n      Em   C              G         D              Em\nBaby, I'm dancing in the dark, with you between my arms\n\n|(G) | G | Em | % |\n| C  | % | D  | % |\n\n      Em   C              G         D              Em\nBaby, I'm dancing in the dark, with you between my arms";
 
-        $cleanupService = new CleanupService();
-        $result = $cleanupService->cleanupTab($tab);
+        $formatService = new FormatService();
+        $result = $formatService->formatTab($tab);
 
         $this->assertEquals(
             $expected,
             $result,
-            'The cleaned tab should be equal to the expected tab'
+            'The formated tab should be equal to the expected tab'
         );
     }
 
@@ -57,13 +57,13 @@ class CleanupServiceTest extends TestCase
         $tab = "  Em       C                  G        D          G\nI don't deserve this, darling you look perfect tonight\n[Interlude]\n|(G) | G | Em | % |\n[Chorus]\n      Em   C              G         D              Em\n\nBaby, I'm dancing in the dark, with you between my arms";
         $expected = "  Em       C                  G        D          G\nI don't deserve this, darling you look perfect tonight\n\n[Interlude]\n\n|(G) | G | Em | % |\n\n[Chorus]\n\n      Em   C              G         D              Em\nBaby, I'm dancing in the dark, with you between my arms";
 
-        $cleanupService = new CleanupService();
-        $result = $cleanupService->cleanupTab($tab);
+        $formatService = new FormatService();
+        $result = $formatService->formatTab($tab);
 
         $this->assertEquals(
             $expected,
             $result,
-            'The cleaned tab should be equal to the expected tab'
+            'The formated tab should be equal to the expected tab'
         );
     }
 
@@ -72,13 +72,13 @@ class CleanupServiceTest extends TestCase
         $tab = "\n[Intro]\n\n  Em       C                  G        D          G\nI don't deserve this, darling you look perfect tonight\n\n[Chorus]\n      Em   C             G          D              Em\nBaby, I'm dancing in the dark, with you between my arms\n[Outro]\n";
         $expected = "[Intro]\n\n  Em       C                  G        D          G\nI don't deserve this, darling you look perfect tonight\n\n[Chorus]\n\n      Em   C             G          D              Em\nBaby, I'm dancing in the dark, with you between my arms\n\n[Outro]";
 
-        $cleanupService = new CleanupService();
-        $result = $cleanupService->cleanupTab($tab);
+        $formatService = new FormatService();
+        $result = $formatService->formatTab($tab);
 
         $this->assertEquals(
             $expected,
             $result,
-            'The cleaned tab should be equal to the expected tab'
+            'The formated tab should be equal to the expected tab'
         );
     }
 }
