@@ -9,11 +9,11 @@
 
 	{{ include('tab/_form.html.twig', {'button_label': 'Update'}) }}
 
+	{{ include('tag/_new_form.html.twig') }}
+
 	{{ include('tab/_transpose_form.html.twig', {'last_selected_direction': app.request.get('last_selected_direction')}) }}
 
 	{{ include('tab/_format_form.html.twig') }}
-
-	<a href="{{ path('app_tag_new') }}">create new tag</a>
 
 	<a href="{{ path('app_tab_show', {'id': tab.id}) }}">Back to Tab</a>
 

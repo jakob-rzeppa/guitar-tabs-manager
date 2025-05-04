@@ -14,23 +14,22 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/app/tag')]
 final class TagController extends AbstractController
 {
-    #[Route('/new', name: 'app_tag_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_tag_new', methods: ['POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $name = $request->request->get('name');
+
         $tag = new Tag();
-        $form = $this->createForm(TagForm::class, $tag);
-        $form->handleRequest($request);
+        $tag->setName($name);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($tag);
-            $entityManager->flush();
+        $entityManager->persist($tag);
+        $entityManager->flush();
 
-            return $this->redirectToRoute('app_tab_index', [], Response::HTTP_SEE_OTHER);
+        $tabId = $request->request->get('tab_id');
+        if (!$tabId) {
+            throw $this->createNotFoundException('Tab ID is required to redirect to the edit page.');
         }
 
-        return $this->render('tag/new.html.twig', [
-            'tag' => $tag,
-            'form' => $form,
-        ]);
+        return $this->redirectToRoute('app_tab_edit', ['id' => $tabId], Response::HTTP_SEE_OTHER);
     }
 }
