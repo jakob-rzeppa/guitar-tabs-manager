@@ -1,24 +1,27 @@
 body {
-    --bg: #f0f1fa;
-    --bg-accent: #2C2E3A;
-    --text: #141619;
-    --text-accent: #ffffff;
-    --accent-one: #0A21C0;
-    --accent-two: #050A44;
+    --bg-light: white;
+    --bg-light-text: black;
+    --bg-dark: black;
+    --bg-dark-text: white;
+    --accent: #ffd706;
 }
 
 body {
     font-family: "Lato", sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
+    background-color: var(--bg-dark);
+    color: var(--bg-light-text);
 }
 
-.link {
-    color: var(--accent-one);
-    text-decoration: none;
-    display: block;
+.container {
+    background-color: var(--bg-light);
+    width: max-content;
+    min-width: 70%;
+    margin: 0 auto;
+    border-left: 1px solid #3d3d3d;
+    border-right: 1px solid #3d3d3d;
+    min-height: 100vh;
 }
 
-.link:hover {
-    text-decoration: underline;
+.content {
+    padding: 20px;
 }
