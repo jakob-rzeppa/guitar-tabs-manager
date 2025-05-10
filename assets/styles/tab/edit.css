@@ -37,3 +37,11 @@
 .transpose-submit:hover+.capo-tooltip {
     display: block;
 }
+
+.format-form .form-submit {
+    margin: 1.5rem 0;
+}
+
+.tab-delete-form .form-submit {
+    margin: 1.5rem 0;
+}
