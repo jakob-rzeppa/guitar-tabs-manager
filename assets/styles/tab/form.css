@@ -35,18 +35,6 @@ textarea {
     border-radius: 4px;
 }
 
-.form-submit {
-    color: var(--bg-dark-text);
-    background-color: var(--bg-dark);
-    border: none;
+#tab_form+.form-submit {
     margin: 1.5rem 0;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.form-submit:hover {
-    background-color: var(--accent);
-    color: var(--bg-dark-text);
 }
