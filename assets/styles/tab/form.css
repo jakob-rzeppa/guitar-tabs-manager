@@ -1,0 +1,52 @@
+#tab_form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+#tab_form div {
+    width: 100%;
+}
+
+#tab_form div label {
+    font-size: 1.2rem;
+    display: block;
+}
+
+#tab_form div input[type="text"],
+#tab_form div input[type="number"],
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#tab_form_tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-submit {
+    color: var(--bg-dark-text);
+    background-color: var(--bg-dark);
+    border: none;
+    margin: 1.5rem 0;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.form-submit:hover {
+    background-color: var(--accent);
+    color: var(--bg-dark-text);
+}
