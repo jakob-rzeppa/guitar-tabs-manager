@@ -1,0 +1,14 @@
+{% extends 'app/base.html.twig' %}
+
+{% block title %}New Tab
+{% endblock %}
+
+{% block content %}
+	<h1>Create new Tab</h1>
+
+	{{ include('app/tab/_form.html.twig') }}
+
+	{{ include('app/tag/_new_form.html.twig') }}
+
+	<a href="{{ path('app_tab_index') }}">back to list</a>
+{% endblock %}

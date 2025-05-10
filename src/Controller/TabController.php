@@ -20,7 +20,7 @@ final class TabController extends AbstractController
     #[Route(name: 'app_tab_index', methods: ['GET'])]
     public function index(TabRepository $tabRepository): Response
     {
-        return $this->render('tab/index.html.twig', [
+        return $this->render('app/tab/index.html.twig', [
             'tabs' => $tabRepository->findAll(),
         ]);
     }
@@ -39,7 +39,7 @@ final class TabController extends AbstractController
             return $this->redirectToRoute('app_tab_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('tab/new.html.twig', [
+        return $this->render('app/tab/new.html.twig', [
             'tab' => $tab,
             'form' => $form,
         ]);
@@ -48,7 +48,7 @@ final class TabController extends AbstractController
     #[Route('/{id}', name: 'app_tab_show', methods: ['GET'])]
     public function show(Tab $tab): Response
     {
-        return $this->render('tab/show.html.twig', [
+        return $this->render('app/tab/show.html.twig', [
             'tab' => $tab,
         ]);
     }
@@ -65,7 +65,7 @@ final class TabController extends AbstractController
             return $this->redirectToRoute('app_tab_show', ['id' => $tab->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('tab/edit.html.twig', [
+        return $this->render('app/tab/edit.html.twig', [
             'tab' => $tab,
             'form' => $form,
         ]);
