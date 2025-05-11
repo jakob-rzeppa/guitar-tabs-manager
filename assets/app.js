@@ -13,6 +13,8 @@ import './styles/tab/show.css';
 import './styles/tab/form.css';
 import './styles/tab/edit.css';
 
+import './styles/artist/form.css';
+
 import './styles/tag/form.css';
 
 import './styles/login.css';
