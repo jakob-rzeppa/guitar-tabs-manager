@@ -6,7 +6,12 @@
 
 {% block content %}
 	<section class="tab-information">
-		<h1>{{ tab.title }}</h1>
+		<h1>{{ tab.title }}
+			{% if tab.artist is not empty %}
+				<span class="title-artist-by">by</span>
+				{{ tab.artist.name }}
+			{% endif %}
+		</h1>
 
 		<a href="{{ path('app_tab_index') }}" class="link">Back to List</a>
 

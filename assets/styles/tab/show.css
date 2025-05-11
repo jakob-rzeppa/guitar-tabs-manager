@@ -6,6 +6,11 @@
     text-decoration: none;
 }
 
+.title-artist-by {
+    font-size: 1.6rem;
+    color: var(--accent);
+}
+
 .table {
     border-collapse: collapse;
     margin-top: 20px;
