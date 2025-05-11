@@ -10,7 +10,12 @@
 	<div class="tabs-display">
 		{% for tab in tabs %}
 			<div>
-				<h2>{{ tab.title }}</h2>
+				<h2>{{ tab.title }}
+					{% if tab.artist is not empty %}
+						<span style="font-size: smaller; color: gray;">by</span>
+						{{ tab.artist.name }}
+					{% endif %}
+				</h2>
 				<ul>
 					{% for tag in tab.tags %}
 						<li>{{ tag.name }}</li>
