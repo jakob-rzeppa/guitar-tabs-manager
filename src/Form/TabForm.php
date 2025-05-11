@@ -20,6 +20,10 @@ class TabForm extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
+            ->add('artist', null, [
+                'choice_label' => 'name',
+                'placeholder' => '-',
+            ])
         ;
     }
 

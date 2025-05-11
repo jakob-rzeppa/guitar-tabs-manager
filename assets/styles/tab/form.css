@@ -24,6 +24,15 @@ textarea {
     border-radius: 4px;
 }
 
+#tab_form_artist {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--bg-light);
+}
+
 #tab_form_tags {
     display: flex;
     flex-wrap: wrap;
