@@ -9,10 +9,18 @@
 
 	<div data-controller="tabs-display" class="tabs-display-container">
 		<input class="tabs-search-input" type="text" placeholder="Search..." data-tabs-display-target="tabSearchInput" data-action="input->tabs-display#search">
+		<input class="tabs-search-input" type="text" placeholder="Search..." autocomplete="off" data-tabs-display-target="filterByTagsInput" data-action="input->tabs-display#orderTagSuggestions">
+		<div class="tags-autocomplete" data-tabs-display-target="tagsAutocomplete" data-tags="{{ tags|map(tag => tag.name)|join(',') }}">
+			{% for tag in tags %}
+				<div data-name="{{ tag.name }}" class="tags-autocomplete-item" data-action="click->tabs-display#selectTag">
+					{{ tag.name }}
+				</div>
+			{% endfor %}
+		</div>
 		<hr class="devider" style="margin: 20px 0;">
 		<div class="tabs-display" data-tabs-display-target="tabsContainer">
 			{% for tab in tabs %}
-				<div data-tabs-display-target="tabItem" data-title="{{ tab.title }}">
+				<div data-tabs-display-target="tabItem" data-title="{{ tab.title }}" data-tags="{{ tab.tags|map(tag => tag.name)|join(',') }}">
 					<h2>{{ tab.title }}
 						{% if tab.artist is not empty %}
 							<span>by</span>

@@ -10,7 +10,7 @@ import { Controller } from '@hotwired/stimulus';
  * Delete this file or adapt it for your use!
  */
 export default class extends Controller {
-    static targets = ['tabSearchInput', 'tabItem', 'tabsContainer'];
+    static targets = ['tabSearchInput', 'tabItem', 'tabsContainer', 'filterByTagsInput', 'tagsAutocomplete'];
 
     search() {
         const searchValue = this.tabSearchInputTarget.value.toLowerCase();
@@ -26,6 +26,68 @@ export default class extends Controller {
         });
 
         tabItems.forEach(tab => this.tabsContainerTarget.appendChild(tab));
+    }
+
+    orderTagSuggestions() {
+        const tagInputValueArray = this.filterByTagsInputTarget.value.toLowerCase().split(' ');
+        const searchValue = tagInputValueArray[tagInputValueArray.length - 1];
+        const tagItems = Array.from(this.tagsAutocompleteTarget.querySelectorAll('div'));
+
+        tagItems.sort((a, b) => {
+            const nameA = a.dataset.name.toLowerCase();
+            const nameB = b.dataset.name.toLowerCase();
+            return (
+                this.calculateSimilarity(searchValue, nameB) -
+                this.calculateSimilarity(searchValue, nameA)
+            );
+        });
+
+        tagItems.forEach(tag => this.tagsAutocompleteTarget.appendChild(tag));
+
+        this.filterByTags();
+        this.displayOnlyNonSelectedTagSuggestions();
+    }
+
+    selectTag(event) {
+        const tag = event.currentTarget.dataset.name;
+        const tagInput = this.filterByTagsInputTarget;
+
+        const possibleTags = this.tagsAutocompleteTarget.dataset.tags.split(',').map(tag => tag.trim());
+
+        const tagInputValueArray = tagInput.value.split(',').map(tag => tag.trim());
+
+        if (!possibleTags.includes(tagInputValueArray[tagInputValueArray.length - 1])) {
+            tagInputValueArray.pop();
+            tagInputValueArray.push(tag);
+            this.filterByTagsInputTarget.value = tagInputValueArray.join(', ');
+        }
+
+        this.filterByTags();
+        this.displayOnlyNonSelectedTagSuggestions();
+    }
+
+    filterByTags() {
+        const tagInputValueArray = this.filterByTagsInputTarget.value.split(',').map(tag => tag.trim());
+        const possibleTags = this.tagsAutocompleteTarget.dataset.tags.split(',').map(tag => tag.trim());
+        const tabItems = Array.from(this.tabItemTargets);
+
+        tabItems.forEach(tab => {
+            const tags = tab.dataset.tags.split(',').map(tag => tag.trim());
+            const isVisible = tagInputValueArray.every(tag => possibleTags.includes(tag) ? tags.includes(tag) : true);
+            tab.style.display = isVisible ? 'block' : 'none';
+        });
+    }
+
+    displayOnlyNonSelectedTagSuggestions() {
+        const tagInputValueArray = this.filterByTagsInputTarget.value.split(',').map(tag => tag.trim());
+        const possibleTags = this.tagsAutocompleteTarget.dataset.tags.split(',').map(tag => tag.trim());
+        const tagItems = Array.from(this.tagsAutocompleteTarget.querySelectorAll('div'));
+
+        tagItems.forEach(tag => {
+            const tagName = tag.dataset.name;
+            const isSelected = tagInputValueArray.includes(tagName);
+            tag.style.display = isSelected ? 'none' : 'block';
+        });
     }
 
     calculateSimilarity(target, candidate) {
