@@ -31,6 +31,9 @@ class Tab
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'tabs')]
     private Collection $tags;
 
+    #[ORM\ManyToOne(inversedBy: 'tabs')]
+    private ?Artist $artist = null;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -97,6 +100,18 @@ class Tab
     public function removeTag(Tag $tag): static
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    public function getArtist(): ?Artist
+    {
+        return $this->artist;
+    }
+
+    public function setArtist(?Artist $artist): static
+    {
+        $this->artist = $artist;
 
         return $this;
     }
