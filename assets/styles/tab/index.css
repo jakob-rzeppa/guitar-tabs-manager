@@ -1,13 +1,27 @@
-.tabs-display {
+.tabs-display-container {
   margin: 20px;
+}
+
+.tabs-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.tabs-display {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .tabs-display div {
   background-color: var(--bg-light);
+  border: 1px solid var(--border);
   overflow: hidden;
   border-radius: 8px;
   padding: 20px;
-  margin: 20px;
 }
 
 .tabs-display div pre {

@@ -7,27 +7,33 @@
 {% block content %}
 	<h1>Tabs</h1>
 
-	<div class="tabs-display">
-		{% for tab in tabs %}
-			<div>
-				<h2>{{ tab.title }}
-					{% if tab.artist is not empty %}
-						<span style="font-size: smaller; color: gray;">by</span>
-						{{ tab.artist.name }}
+	<div data-controller="tabs-display" class="tabs-display-container">
+		<input class="tabs-search-input" type="text" placeholder="Search..." data-tabs-display-target="tabSearchInput" data-action="input->tabs-display#search">
+		<hr class="devider" style="margin: 20px 0;">
+		<div class="tabs-display" data-tabs-display-target="tabsContainer">
+			{% for tab in tabs %}
+				<div data-tabs-display-target="tabItem" data-title="{{ tab.title }}">
+					<h2>{{ tab.title }}
+						{% if tab.artist is not empty %}
+							<span>by</span>
+							{{ tab.artist.name }}
+						{% endif %}
+					</h2>
+					{% if tab.tags is not null %}
+						<ul>
+							{% for tag in tab.tags %}
+								<li>{{ tag.name }}</li>
+							{% endfor %}
+						</ul>
 					{% endif %}
-				</h2>
-				<ul>
-					{% for tag in tab.tags %}
-						<li>{{ tag.name }}</li>
-					{% endfor %}
-				</ul>
-				<pre>{{ tab.content }}</pre>
-				<a href="{{ path('app_tab_show', {'id': tab.id}) }}">Show</a>
-				<a href="{{ path('app_tab_edit', {'id': tab.id}) }}">Edit</a>
-			</div>
-		{% else %}
-			no records found
-		{% endfor %}
+					<pre>{{ tab.content }}</pre>
+					<a href="{{ path('app_tab_show', {'id': tab.id}) }}">Show</a>
+					<a href="{{ path('app_tab_edit', {'id': tab.id}) }}">Edit</a>
+				</div>
+			{% else %}
+				no records found
+			{% endfor %}
+		</div>
 	</div>
 
 	<a href="{{ path('app_tab_new') }}">Create new</a>
