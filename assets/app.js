@@ -15,4 +15,6 @@ import './styles/tab/edit.css';
 
 import './styles/tag/form.css';
 
+import './styles/login.css';
+
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
