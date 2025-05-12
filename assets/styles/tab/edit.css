@@ -1,0 +1,47 @@
+.transpose-form {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+.transpose-form label {
+    font-size: 1.2rem;
+}
+
+.transpose-form select {
+    padding: 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+}
+
+.transpose-form div {
+    position: relative;
+}
+
+.transpose-form div .capo-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    background-color: var(--bg-dark);
+    color: var(--bg-dark-text);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    white-space: wrap;
+}
+
+.transpose-submit:hover+.capo-tooltip {
+    display: block;
+}
+
+.format-form .form-submit {
+    margin: 1.5rem 0;
+}
+
+.tab-delete-form .form-submit {
+    margin: 1.5rem 0;
+}
