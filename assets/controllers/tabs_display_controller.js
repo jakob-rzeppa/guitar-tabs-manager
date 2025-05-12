@@ -12,6 +12,11 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['tabSearchInput', 'tabItem', 'tabsContainer', 'filterByTagsInput', 'tagsAutocomplete', 'filterByArtistInput', 'artistAutocomplete'];
 
+    connect() {
+        this.orderTagSuggestions();
+        this.orderArtistSuggestions();
+    }
+
     search() {
         const searchValue = this.tabSearchInputTarget.value.toLowerCase();
         const tabItems = Array.from(this.tabItemTargets);
@@ -42,6 +47,12 @@ export default class extends Controller {
             );
         });
 
+        tagItems.sort((a, b) => {
+            const isHiddenA = a.style.display === 'none';
+            const isHiddenB = b.style.display === 'none';
+            return isHiddenA - isHiddenB;
+        });
+
         tagItems.forEach(tag => this.tagsAutocompleteTarget.appendChild(tag));
 
         this.filterByTags();
@@ -59,6 +70,12 @@ export default class extends Controller {
                 this.calculateSimilarity(artistInputValue, nameB) -
                 this.calculateSimilarity(artistInputValue, nameA)
             );
+        });
+
+        artistItems.sort((a, b) => {
+            const isHiddenA = a.style.display === 'none';
+            const isHiddenB = b.style.display === 'none';
+            return isHiddenA - isHiddenB;
         });
 
         artistItems.forEach(artist => this.artistAutocompleteTarget.appendChild(artist));
@@ -84,10 +101,47 @@ export default class extends Controller {
         this.displayOnlyNonSelectedTagSuggestions();
     }
 
+    selectTagFromInput() {
+        const selectedTag = Array.from(this.tagsAutocompleteTarget.querySelectorAll('div'))
+            .find(tag => tag.style.display === 'block');
+
+        if (!selectedTag) return;
+
+        const selectedTagName = selectedTag.dataset.name;
+
+        const possibleTags = this.tagsAutocompleteTarget.dataset.tags.split(',').map(tag => tag.trim());
+
+        const filterByTagInputValueArray = this.filterByTagsInputTarget.value.split(',').map(tag => tag.trim());
+
+        if (!possibleTags.includes(filterByTagInputValueArray[filterByTagInputValueArray.length - 1])) {
+            filterByTagInputValueArray.pop();
+        }
+
+        filterByTagInputValueArray.push(selectedTagName);
+        this.filterByTagsInputTarget.value = filterByTagInputValueArray.join(', ');
+
+        this.filterByTags();
+        this.displayOnlyNonSelectedTagSuggestions();
+    }
+
     selectArtist(event) {
         const selectedArtist = event.currentTarget.dataset.name;
 
         this.filterByArtistInputTarget.value = selectedArtist;
+
+        this.filterByArtist();
+        this.displayOnlyNonSelectedArtistSuggestions();
+    }
+
+    selectArtistFromInput() {
+        const selectedArtist = Array.from(this.artistAutocompleteTarget.querySelectorAll('div'))
+            .find(artist => artist.style.display === 'block');
+
+        if (!selectedArtist) return;
+
+        const selectedArtistName = selectedArtist.dataset.name;
+
+        this.filterByArtistInputTarget.value = selectedArtistName;
 
         this.filterByArtist();
         this.displayOnlyNonSelectedArtistSuggestions();
