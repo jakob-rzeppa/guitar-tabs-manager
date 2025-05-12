@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Tab;
 use App\Form\TabForm;
+use App\Repository\ArtistRepository;
 use App\Repository\TabRepository;
 use App\Repository\TagRepository;
 use App\Service\FormatService;
@@ -19,11 +20,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class TabController extends AbstractController
 {
     #[Route(name: 'app_tab_index', methods: ['GET'])]
-    public function index(TabRepository $tabRepository, TagRepository $tagRepository): Response
+    public function index(TabRepository $tabRepository, TagRepository $tagRepository, ArtistRepository $artistRepository): Response
     {
         return $this->render('app/tab/index.html.twig', [
             'tabs' => $tabRepository->findAll(),
             'tags' => $tagRepository->findAll(),
+            'artists' => $artistRepository->findAll(),
         ]);
     }
 

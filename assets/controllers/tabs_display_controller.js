@@ -10,7 +10,7 @@ import { Controller } from '@hotwired/stimulus';
  * Delete this file or adapt it for your use!
  */
 export default class extends Controller {
-    static targets = ['tabSearchInput', 'tabItem', 'tabsContainer', 'filterByTagsInput', 'tagsAutocomplete'];
+    static targets = ['tabSearchInput', 'tabItem', 'tabsContainer', 'filterByTagsInput', 'tagsAutocomplete', 'filterByArtistInput', 'artistAutocomplete'];
 
     search() {
         const searchValue = this.tabSearchInputTarget.value.toLowerCase();
@@ -29,7 +29,7 @@ export default class extends Controller {
     }
 
     orderTagSuggestions() {
-        const tagInputValueArray = this.filterByTagsInputTarget.value.toLowerCase().split(' ');
+        const tagInputValueArray = this.filterByTagsInputTarget.value.toLowerCase().split(',').map(tag => tag.trim());
         const searchValue = tagInputValueArray[tagInputValueArray.length - 1];
         const tagItems = Array.from(this.tagsAutocompleteTarget.querySelectorAll('div'));
 
@@ -48,23 +48,49 @@ export default class extends Controller {
         this.displayOnlyNonSelectedTagSuggestions();
     }
 
-    selectTag(event) {
-        const tag = event.currentTarget.dataset.name;
-        const tagInput = this.filterByTagsInputTarget;
+    orderArtistSuggestions() {
+        const artistInputValue = this.filterByArtistInputTarget.value.toLowerCase();
+        const artistItems = Array.from(this.artistAutocompleteTarget.querySelectorAll('div'));
 
+        artistItems.sort((a, b) => {
+            const nameA = a.dataset.name.toLowerCase();
+            const nameB = b.dataset.name.toLowerCase();
+            return (
+                this.calculateSimilarity(artistInputValue, nameB) -
+                this.calculateSimilarity(artistInputValue, nameA)
+            );
+        });
+
+        artistItems.forEach(artist => this.artistAutocompleteTarget.appendChild(artist));
+
+        this.filterByArtist();
+        this.displayOnlyNonSelectedArtistSuggestions();
+    }
+
+    selectTag(event) {
+        const selectedTag = event.currentTarget.dataset.name;
         const possibleTags = this.tagsAutocompleteTarget.dataset.tags.split(',').map(tag => tag.trim());
 
-        const tagInputValueArray = tagInput.value.split(',').map(tag => tag.trim());
+        const filterByTagInputValueArray = this.filterByTagsInputTarget.value.split(',').map(tag => tag.trim());
 
-        if (!possibleTags.includes(tagInputValueArray[tagInputValueArray.length - 1])) {
-            tagInputValueArray.pop();
+        if (!possibleTags.includes(filterByTagInputValueArray[filterByTagInputValueArray.length - 1])) {
+            filterByTagInputValueArray.pop();
         }
 
-        tagInputValueArray.push(tag);
-        this.filterByTagsInputTarget.value = tagInputValueArray.join(', ');
+        filterByTagInputValueArray.push(selectedTag);
+        this.filterByTagsInputTarget.value = filterByTagInputValueArray.join(', ');
 
         this.filterByTags();
         this.displayOnlyNonSelectedTagSuggestions();
+    }
+
+    selectArtist(event) {
+        const selectedArtist = event.currentTarget.dataset.name;
+
+        this.filterByArtistInputTarget.value = selectedArtist;
+
+        this.filterByArtist();
+        this.displayOnlyNonSelectedArtistSuggestions();
     }
 
     filterByTags() {
@@ -79,15 +105,37 @@ export default class extends Controller {
         });
     }
 
+    filterByArtist() {
+        const artistInputValue = this.filterByArtistInputTarget.value.trim();
+        const possibleArtists = this.artistAutocompleteTarget.dataset.artists.split(',').map(artist => artist.trim());
+        const tabItems = Array.from(this.tabItemTargets);
+
+        tabItems.forEach(tab => {
+            const artist = tab.dataset.artist.trim();
+            const isVisible = possibleArtists.includes(artistInputValue) ? artist === artistInputValue : true;
+            tab.style.display = isVisible ? 'block' : 'none';
+        });
+    }
+
     displayOnlyNonSelectedTagSuggestions() {
         const tagInputValueArray = this.filterByTagsInputTarget.value.split(',').map(tag => tag.trim());
-        const possibleTags = this.tagsAutocompleteTarget.dataset.tags.split(',').map(tag => tag.trim());
         const tagItems = Array.from(this.tagsAutocompleteTarget.querySelectorAll('div'));
 
         tagItems.forEach(tag => {
             const tagName = tag.dataset.name;
             const isSelected = tagInputValueArray.includes(tagName);
             tag.style.display = isSelected ? 'none' : 'block';
+        });
+    }
+
+    displayOnlyNonSelectedArtistSuggestions() {
+        const artistInputValue = this.filterByArtistInputTarget.value;
+        const artistItems = Array.from(this.artistAutocompleteTarget.querySelectorAll('div'));
+
+        artistItems.forEach(artist => {
+            const artistName = artist.dataset.name;
+            const isSelected = artistInputValue === artistName;
+            artist.style.display = isSelected ? 'none' : 'block';
         });
     }
 

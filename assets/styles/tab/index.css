@@ -3,7 +3,8 @@
 }
 
 .tabs-search-input,
-.tags-search-input {
+.tags-search-input,
+.artist-search-input {
   width: 100%;
   box-sizing: border-box;
   padding: 10px;
@@ -36,7 +37,13 @@
   display: block;
 }
 
-.tags-autocomplete {
+.artist-search-input:focus+.artist-autocomplete,
+.artist-autocomplete:hover {
+  display: block;
+}
+
+.tags-autocomplete,
+.artist-autocomplete {
   position: absolute;
   background-color: var(--bg-light);
   border: 1px solid var(--border);
@@ -47,16 +54,13 @@
   display: none;
 }
 
-.tags-autocomplete-item {
+.tags-autocomplete-item,
+.artist-autocomplete-item {
   padding: 10px;
   cursor: pointer;
 }
 
-.tags-autocomplete-item:hover {
-  background-color: var(--bg-hover);
-}
-
-.tags-autocomplete-item[data-selected="true"] {
-  background-color: var(--bg-selected);
-  font-weight: bold;
+.tags-autocomplete-item:hover,
+.artist-autocomplete-item:hover {
+  background-color: var(--accent);
 }
