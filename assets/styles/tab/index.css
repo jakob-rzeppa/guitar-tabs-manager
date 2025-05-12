@@ -2,12 +2,14 @@
   margin: 20px;
 }
 
-.tabs-search-input {
+.tabs-search-input,
+.tags-search-input {
   width: 100%;
   box-sizing: border-box;
   padding: 10px;
   border-radius: 8px;
   border: 1px solid var(--border);
+  margin: 1rem 0;
 }
 
 .tabs-display {
@@ -27,4 +29,34 @@
 .tabs-display div pre {
   max-height: 92px;
   overflow: hidden;
+}
+
+.tags-search-input:focus+.tags-autocomplete,
+.tags-autocomplete:hover {
+  display: block;
+}
+
+.tags-autocomplete {
+  position: absolute;
+  background-color: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  display: none;
+}
+
+.tags-autocomplete-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.tags-autocomplete-item:hover {
+  background-color: var(--bg-hover);
+}
+
+.tags-autocomplete-item[data-selected="true"] {
+  background-color: var(--bg-selected);
+  font-weight: bold;
 }

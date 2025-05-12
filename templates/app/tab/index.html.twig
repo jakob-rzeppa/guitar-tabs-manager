@@ -9,7 +9,8 @@
 
 	<div data-controller="tabs-display" class="tabs-display-container">
 		<input class="tabs-search-input" type="text" placeholder="Search..." data-tabs-display-target="tabSearchInput" data-action="input->tabs-display#search">
-		<input class="tabs-search-input" type="text" placeholder="Search..." autocomplete="off" data-tabs-display-target="filterByTagsInput" data-action="input->tabs-display#orderTagSuggestions">
+		<label for="tags">Filter by tags:</label>
+		<input class="tags-search-input" id="tags" type="text" placeholder="Search..." autocomplete="off" data-tabs-display-target="filterByTagsInput" data-action="input->tabs-display#orderTagSuggestions">
 		<div class="tags-autocomplete" data-tabs-display-target="tagsAutocomplete" data-tags="{{ tags|map(tag => tag.name)|join(',') }}">
 			{% for tag in tags %}
 				<div data-name="{{ tag.name }}" class="tags-autocomplete-item" data-action="click->tabs-display#selectTag">

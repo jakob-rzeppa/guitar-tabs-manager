@@ -58,9 +58,10 @@ export default class extends Controller {
 
         if (!possibleTags.includes(tagInputValueArray[tagInputValueArray.length - 1])) {
             tagInputValueArray.pop();
-            tagInputValueArray.push(tag);
-            this.filterByTagsInputTarget.value = tagInputValueArray.join(', ');
         }
+
+        tagInputValueArray.push(tag);
+        this.filterByTagsInputTarget.value = tagInputValueArray.join(', ');
 
         this.filterByTags();
         this.displayOnlyNonSelectedTagSuggestions();
