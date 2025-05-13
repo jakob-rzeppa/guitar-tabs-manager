@@ -10,11 +10,12 @@ body {
 body {
     font-family: "Lato", sans-serif;
     background-color: var(--bg-dark);
-    color: var(--bg-light-text);
+    color: var(--bg-dark-text);
 }
 
 .container {
     background-color: var(--bg-light);
+    color: var(--bg-light-text);
     width: max-content;
     min-width: 70%;
     margin: 0 auto;

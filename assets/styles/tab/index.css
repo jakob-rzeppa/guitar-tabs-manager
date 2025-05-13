@@ -21,6 +21,7 @@
 
 .tabs-display div {
   background-color: var(--bg-light);
+  color: var(--bg-light-text);
   border: 1px solid var(--border);
   overflow: hidden;
   border-radius: 8px;
@@ -46,6 +47,7 @@
 .artist-autocomplete {
   position: absolute;
   background-color: var(--bg-light);
+  color: var(--bg-light-text);
   border: 1px solid var(--border);
   border-radius: 8px;
   max-height: 200px;
