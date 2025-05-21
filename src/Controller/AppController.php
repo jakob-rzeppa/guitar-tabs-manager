@@ -8,8 +8,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class AppController extends AbstractController
 {
-    #[Route('/app', name: 'app_index')]
-    public function index(): Response
+    #[Route(name: 'app_home')]
+    public function home(): Response
     {
         return $this->redirectToRoute('app_tab_index', [], Response::HTTP_SEE_OTHER);
     }

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/app/tag')]
+#[Route('/tag')]
 final class TagController extends AbstractController
 {
     #[Route('/new', name: 'app_tag_new', methods: ['POST'])]

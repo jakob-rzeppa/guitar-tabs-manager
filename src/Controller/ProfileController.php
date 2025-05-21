@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/app/profile')]
+#[Route('/profile')]
 final class ProfileController extends AbstractController
 {
     #[Route(name: 'app_profile_show', methods: ['GET'])]

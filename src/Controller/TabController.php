@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/app/tab')]
+#[Route('/tab')]
 final class TabController extends AbstractController
 {
     #[Route(name: 'app_tab_index', methods: ['GET'])]
