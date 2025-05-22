@@ -10,6 +10,11 @@
 		<li>
 			<a href="{{ path('app_tab_index') }}">Tabs</a>
 		</li>
+		{% if show_admin_link %}
+			<li>
+				<a href="{{ path('app_user_index') }}">Admin</a>
+			</li>
+		{% endif %}
 	</ul>
 	<div class="navbar_auth">
 		<a href="{{ path('app_logout') }}">Logout</a>

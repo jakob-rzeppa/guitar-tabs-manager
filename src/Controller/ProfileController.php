@@ -21,6 +21,7 @@ final class ProfileController extends AbstractController
         return $this->render('app/profile/index.html.twig', [
             'email' => $user->getEmail(),
             'roles' => $user->getRoles(),
+            'show_admin_link' => $this->isGranted('ROLE_ADMIN'),
         ]);
     }
 }
