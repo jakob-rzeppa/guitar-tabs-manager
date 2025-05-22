@@ -242,4 +242,97 @@ class TransposeServiceTest extends TestCase
             'The transposed tab should be equal to the expected tab'
         );
     }
+
+    public function testChordsRightNextToEachOther(): void
+    {
+        $tab = 'C D E';
+        $expected = 'C# D# F';
+
+        $transposeService = new TransposeService();
+        $result = $transposeService->transposeTab($tab, 'up');
+
+        $this->assertEquals(
+            $expected,
+            $result,
+            'The transposed tab should be equal to the expected tab'
+        );
+    }
+
+    public function testChordsWithSpaces(): void
+    {
+        $tab = 'C  D  E';
+        $expected = 'C# D# F';
+
+        $transposeService = new TransposeService();
+        $result = $transposeService->transposeTab($tab, 'up');
+
+        $this->assertEquals(
+            $expected,
+            $result,
+            'The transposed tab should be equal to the expected tab'
+        );
+    }
+
+    public function testChordsWithSuffixes(): void
+    {
+
+        $chords = [
+            'Cmaj7',
+            'C#sus4',
+            'Db7',
+            'Dmaj7',
+            'D#7',
+        ];
+        $expected = [
+            'C#maj7',
+            'Dsus4',
+            'D7',
+            'D#maj7',
+            'E7',
+        ];
+
+        $transposeService = new TransposeService();
+
+        foreach ($chords as $index => $chord) {
+            $result = $transposeService->transposeTab($chord, 'up');
+
+            $this->assertEquals(
+                $expected[$index],
+                trim($result),
+                "The transposed chord should be equal to the expected chord"
+            );
+        }
+    }
+
+    public function testInversedChords(): void
+    {
+        $chords = [
+            'C/E',
+            'C#/B',
+            'Db/F#',
+            'D/A',
+            'D#/C#',
+            'Eb/Bb',
+        ];
+        $expected = [
+            'C#/F',
+            'D/C',
+            'D/G',
+            'D#/A#',
+            'E/D',
+            'E/B',
+        ];
+
+        $transposeService = new TransposeService();
+
+        foreach ($chords as $index => $chord) {
+            $result = $transposeService->transposeTab($chord, 'down');
+
+            $this->assertEquals(
+                $expected[$index],
+                trim($result),
+                "The transposed chord should be equal to the expected chord"
+            );
+        }
+    }
 }
