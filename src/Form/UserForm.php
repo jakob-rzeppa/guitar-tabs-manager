@@ -22,6 +22,12 @@ class UserForm extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
+            ->add('password', null, [
+                'mapped' => false,
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                ],
+            ])
         ;
     }
 
