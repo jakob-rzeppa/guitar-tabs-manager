@@ -56,6 +56,7 @@ final class TabController extends AbstractController
     {
         return $this->render('app/tab/show.html.twig', [
             'tab' => $tab,
+            'show_admin_link' => $this->isGranted('ROLE_ADMIN'),
         ]);
     }
 
