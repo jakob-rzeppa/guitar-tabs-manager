@@ -9,7 +9,7 @@
 		<h1>{{ tab.title }}
 			{% if tab.artist is not empty %}
 				<span style="font-size: smaller; color: gray;">by</span>
-				{{ tab.artist.name }}
+				<a href="{{ path('app_artist_show', {'id': tab.artist.id}) }}">{{ tab.artist.name }}</a>
 			{% endif %}
 		</h1>
 
