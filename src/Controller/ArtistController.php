@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Artist;
+use App\Repository\ArtistRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +13,15 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/artist')]
 final class ArtistController extends AbstractController
 {
+    #[Route(name: 'app_artist_index', methods: ['GET'])]
+    public function index(ArtistRepository $artistRepository)
+    {
+        return $this->render('app/artist/index.html.twig', [
+            'artists' => $artistRepository->findAll(),
+            'show_admin_link' => $this->isGranted('ROLE_ADMIN'),
+        ]);
+    }
+
     #[Route('/new', name: 'app_artist_new', methods: ['POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

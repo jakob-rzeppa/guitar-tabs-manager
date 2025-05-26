@@ -1,0 +1,17 @@
+{% extends 'app/base.html.twig' %}
+
+{% block title %}
+	Artists
+{% endblock %}
+
+{% block content %}
+	<ul>
+		{% for artist in artists %}
+			<li>
+				{{ artist.name }}
+			</li>
+		{% else %}
+			no artists found
+		{% endfor %}
+	</ul>
+{% endblock %}
