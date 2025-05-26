@@ -22,6 +22,15 @@ final class ArtistController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}', name: 'app_artist_show', methods: ['GET'])]
+    public function show(Artist $artist)
+    {
+        return $this->render('app/artist/show.html.twig', [
+            'artist' => $artist,
+            'show_admin_link' => $this->isGranted('ROLE_ADMIN'),
+        ]);
+    }
+
     #[Route('/new', name: 'app_artist_new', methods: ['POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

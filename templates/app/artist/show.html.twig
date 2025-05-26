@@ -1,0 +1,34 @@
+{% extends 'app/base.html.twig' %}
+
+{% block title %}
+	{{ artist.name }}
+{% endblock %}
+
+{% block content %}
+	<h1>{{ artist.name }}</h1>
+
+	<a href="{{ path('app_artist_index') }}" class="link">Back to List</a>
+
+	{% for tab in artist.tabs%}
+		<div>
+			<h2>{{ tab.title }}
+				{% if tab.artist is not empty %}
+					<span>by</span>
+					{{ tab.artist.name }}
+				{% endif %}
+			</h2>
+			{% if tab.tags is not null %}
+				<ul>
+					{% for tag in tab.tags %}
+						<li>{{ tag.name }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+			<pre>{{ tab.content }}</pre>
+			<a href="{{ path('app_tab_show', {'id': tab.id}) }}">Show</a>
+			<a href="{{ path('app_tab_edit', {'id': tab.id}) }}">Edit</a>
+		</div>
+	{% else %}
+		no records found
+	{% endfor %}
+{% endblock %}
