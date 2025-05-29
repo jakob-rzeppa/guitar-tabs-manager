@@ -19,7 +19,7 @@
 
 	{{ include('app/tab/_format_form.html.twig') }}
 
-	<a href="{{ path('app_tab_show', {'id': tab.id}) }}">Back to Tab</a>
+	<a href="{{ path('app_tab_show', {'id': tab.id}) }}" onclick="return confirm('Make sure to save changes to the tab before leaving or they will be lost!');">Back to Tab</a>
 
 	{{ include('app/tab/_delete_form.html.twig') }}
 {% endblock %}
