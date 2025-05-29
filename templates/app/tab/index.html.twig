@@ -31,10 +31,10 @@
 		</div>
 
 		<hr class="devider" style="margin: 20px 0;">
-
+		<h2>Results:</h2>
 		<div class="tabs-display" data-tabs-display-target="tabsContainer">
 			{% for tab in tabs %}
-				<div data-tabs-display-target="tabItem" data-title="{{ tab.title }}" data-tags="{{ tab.tags|map(tag => tag.name)|join(',') }}" data-artist="{{ tab.artist.name|default('') }}">
+				<div onclick="location.href='{{ path('app_tab_show', {'id': tab.id}) }}';" style="cursor:pointer;" data-tabs-display-target="tabItem" data-title="{{ tab.title }}" data-tags="{{ tab.tags|map(tag => tag.name)|join(',') }}" data-artist="{{ tab.artist.name|default('') }}">
 					<h2>{{ tab.title }}
 						{% if tab.artist is not empty %}
 							<span>by</span>
@@ -48,9 +48,6 @@
 							{% endfor %}
 						</ul>
 					{% endif %}
-					<pre>{{ tab.content }}</pre>
-					<a href="{{ path('app_tab_show', {'id': tab.id}) }}">Show</a>
-					<a href="{{ path('app_tab_edit', {'id': tab.id}) }}">Edit</a>
 				</div>
 			{% else %}
 				no records found
