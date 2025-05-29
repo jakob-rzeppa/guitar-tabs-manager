@@ -65,3 +65,23 @@
 .artist-autocomplete-item:hover {
   background-color: var(--accent);
 }
+
+.tags-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 0.5em;
+  flex-wrap: wrap;
+}
+
+.tag-badge {
+  display: inline-block;
+  background-color: var(--accent);
+  border-radius: 12px;
+  padding: 0.2em 0.8em;
+  font-size: 0.9em;
+  font-weight: 500;
+  margin: 0;
+  white-space: nowrap;
+}

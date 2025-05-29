@@ -42,9 +42,9 @@
 						{% endif %}
 					</h2>
 					{% if tab.tags is not null %}
-						<ul>
+						<ul class="tags-list">
 							{% for tag in tab.tags %}
-								<li>{{ tag.name }}</li>
+								<li class="tag-badge">{{ tag.name }}</li>
 							{% endfor %}
 						</ul>
 					{% endif %}

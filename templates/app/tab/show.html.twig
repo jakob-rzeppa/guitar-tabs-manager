@@ -24,13 +24,15 @@
 				<tr>
 					<th>Tags</th>
 					<td>
-						{% for tag in tab.tags %}
-							{{ tag.name }}
-							{% if not loop.last %},
-							{% endif %}
-						{% else %}
-							<em>No tags</em>
-						{% endfor %}
+						<ul class="tags-list">
+							{% for tag in tab.tags %}
+								<li class="tag-badge">
+									{{ tag.name }}
+								</li>
+							{% else %}
+								<em>No tags</em>
+							{% endfor %}
+						</ul>
 					</td>
 				</tr>
 				<tr>
