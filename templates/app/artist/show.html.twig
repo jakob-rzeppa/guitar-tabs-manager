@@ -9,21 +9,24 @@
 
 	<a href="{{ path('app_artist_index') }}" class="link">Back to List</a>
 
-	{% for tab in artist.tabs%}
-		<div>
-			<h2>{{ tab.title }}</h2>
-			{% if tab.tags is not null %}
-				<ul>
-					{% for tag in tab.tags %}
-						<li>{{ tag.name }}</li>
-					{% endfor %}
-				</ul>
-			{% endif %}
-			<pre>{{ tab.content }}</pre>
-			<a href="{{ path('app_tab_show', {'id': tab.id}) }}">Show</a>
-			<a href="{{ path('app_tab_edit', {'id': tab.id}) }}">Edit</a>
-		</div>
-	{% else %}
-		no records found
-	{% endfor %}
+	<hr class="devider" style="margin: 40px 0;">
+
+	<div class="tabs-display">
+		{% for tab in artist.tabs%}
+			<div onclick="location.href='{{ path('app_tab_show', {'id': tab.id}) }}';" style="cursor:pointer;">
+				<h2>
+					{{ tab.title }}
+				</h2>
+				{% if tab.tags is not null %}
+					<ul class="tags-list">
+						{% for tag in tab.tags %}
+							<li class="tag-badge">{{ tag.name }}</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			</div>
+		{% else %}
+			no records found
+		{% endfor %}
+	</div>
 {% endblock %}
