@@ -7,7 +7,7 @@
 				</svg>
 			</a>
 		</div>
-		<button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle navigation">☰</button>
+		<button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle navigation" onclick="toggleNavbar()">☰</button>
 	</div>
 	<ul class="navbar_links">
 		<li>
@@ -28,11 +28,8 @@
 	</div>
 </nav>
 <script>
-	document.addEventListener('DOMContentLoaded', function () {
+	function toggleNavbar() {
 const navbar = document.getElementById('main-navbar');
-const toggle = document.getElementById('navbar-toggle');
-toggle.addEventListener('click', function () {
 navbar.classList.toggle('open');
-});
-});
+}
 </script>

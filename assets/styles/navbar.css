@@ -10,7 +10,6 @@
 .navbar-header {
     display: flex;
     align-items: center;
-    width: 100%;
 }
 
 .navbar_links {
@@ -79,14 +78,6 @@
 
 .navbar-toggle {
     display: none;
-    background: none;
-    border: none;
-    color: var(--bg-dark-text);
-    font-size: 2rem;
-    cursor: pointer;
-    margin-bottom: 0.5rem;
-    margin-left: auto;
-    order: 2;
 }
 
 @media (max-width: 700px) {
@@ -105,10 +96,16 @@
 
     .navbar-toggle {
         display: block;
-        margin-left: auto;
-        margin-bottom: 0;
         order: 2;
         align-self: auto;
+        background: none;
+        border: none;
+        color: var(--bg-dark-text);
+        font-size: 2rem;
+        cursor: pointer;
+        margin-bottom: 0.5rem;
+        margin-left: auto;
+        order: 2;
     }
 
     .navbar_links,
