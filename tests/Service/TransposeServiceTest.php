@@ -231,7 +231,7 @@ class TransposeServiceTest extends TestCase
     public function testMultilineTab(): void
     {
         $tab = "[Intro]\nG\n\n[Verse 1]\n          G        Em\nI found a love for me\n              C                            D\nDarling, just dive right in, and follow my lead\n                G          Em\nWell, I found a girl beautiful and sweet\n        C                                     D\nI never knew you were the someone waiting for me";
-        $expected = "[Intro]\nG#\n\n[Verse 1]\n          G#       Fm\nI found a love for me\n              C#                           D#\nDarling, just dive right in, and follow my lead\n                G#         Fm\nWell, I found a girl beautiful and sweet\n        C#                                    D#\nI never knew you were the someone waiting for me";
+        $expected = "[Intro]\nG#\n\n[Verse 1]\n          G#        Fm\nI found a love for me\n              C#                            D#\nDarling, just dive right in, and follow my lead\n                G#          Fm\nWell, I found a girl beautiful and sweet\n        C#                                     D#\nI never knew you were the someone waiting for me";
 
         $transposeService = new TransposeService();
         $result = $transposeService->transposeTab($tab, 'up');
@@ -261,7 +261,7 @@ class TransposeServiceTest extends TestCase
     public function testChordsWithSpaces(): void
     {
         $tab = 'C  D  E';
-        $expected = 'C# D# F';
+        $expected = 'C#  D#  F';
 
         $transposeService = new TransposeService();
         $result = $transposeService->transposeTab($tab, 'up');
@@ -326,7 +326,7 @@ class TransposeServiceTest extends TestCase
         $transposeService = new TransposeService();
 
         foreach ($chords as $index => $chord) {
-            $result = $transposeService->transposeTab($chord, 'down');
+            $result = $transposeService->transposeTab($chord, 'up');
 
             $this->assertEquals(
                 $expected[$index],

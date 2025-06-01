@@ -13,17 +13,7 @@ class TransposeService
         $result = '';
 
         foreach ($tabRows as $row) {
-            // Skip lines with characters that are not valid chords or symbols
-            if (preg_match('/[^\w\s#bm\d\p{P}()\[\]%\/|\\\\\-_]/u', $row)) {
-                $result .= $row . "\n";
-                continue;
-            }
-
-            // Skip lines with words longer than 3 characters (e.g. lyrics)
-            if (max(array_map('strlen', explode(' ', $row))) > 3) {
-                $result .= $row . "\n";
-                continue;
-            }
+            $transposedRow = '';
 
             if ($direction === 'down') {
                 $transposeTable = $this->getTransposeTableDown();
@@ -44,25 +34,26 @@ class TransposeService
                 foreach ($keys as $key) {
                     if (substr($row, $index, strlen($key)) === $key) {
                         $transposedChord = $transposeTable[$key];
-                        $result .= $transposedChord;
+                        $transposedRow .= $transposedChord;
 
-                        // Add spaces if the transposed chord is shorter than the original chord
-                        if (strlen($transposedChord) < strlen($key)) {
-                            $result .= str_repeat(' ', strlen($key) - strlen($transposedChord));
-                        }
+                        $index += strlen($key) - 1;
 
-                        $index += strlen($key);
                         $matched = true;
                         break;
                     }
                 }
 
                 if (!$matched) {
-                    $result .= $row[$index];
+                    if (!preg_match('/[A-Ga-g#bmj743su,() \/|\\\\]/', $row[$index])) {
+                        $transposedRow = $row;
+                        break;
+                    }
+
+                    $transposedRow .= $row[$index];
                 }
             }
 
-            $result .= "\n";
+            $result .= $transposedRow . "\n";
         }
 
         return rtrim($result, "\n");
@@ -88,23 +79,6 @@ class TransposeService
             'A#' => 'B',
             'Bb' => 'B',
             'B' => 'C',
-            'Cm' => 'C#m',
-            'C#m' => 'Dm',
-            'Dbm' => 'Dm',
-            'Dm' => 'D#m',
-            'D#m' => 'Em',
-            'Ebm' => 'Em',
-            'Em' => 'Fm',
-            'Fm' => 'F#m',
-            'F#m' => 'Gm',
-            'Gbm' => 'Gm',
-            'Gm' => 'G#m',
-            'G#m' => 'Am',
-            'Abm' => 'Am',
-            'Am' => 'A#m',
-            'A#m' => 'Bm',
-            'Bbm' => 'Bm',
-            'Bm' => 'Cm',
         ];
     }
 
@@ -128,23 +102,6 @@ class TransposeService
             'Bb' => 'A',
             'B' => 'A#',
             'C' => 'B',
-            'C#m' => 'Cm',
-            'Dbm' => 'Cm',
-            'Dm' => 'C#m',
-            'D#m' => 'Dm',
-            'Ebm' => 'Dm',
-            'Em' => 'D#m',
-            'Fm' => 'Em',
-            'F#m' => 'Fm',
-            'Gbm' => 'Fm',
-            'Gm' => 'F#m',
-            'G#m' => 'Gm',
-            'Abm' => 'Gm',
-            'Am' => 'G#m',
-            'A#m' => 'Am',
-            'Bbm' => 'Am',
-            'Bm' => 'A#m',
-            'Cm' => 'Bm',
         ];
     }
 }
