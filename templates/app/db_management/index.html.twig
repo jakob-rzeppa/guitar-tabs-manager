@@ -1,0 +1,11 @@
+{% extends 'app/base.html.twig' %}
+
+{% block title %}
+	Database Management
+{% endblock %}
+
+{% block content %}
+	<h1>Database Management</h1>
+
+	<a href="{{ path('app_admin_db_save') }}" class="btn btn-primary">Download Backup</a>
+{% endblock %}
