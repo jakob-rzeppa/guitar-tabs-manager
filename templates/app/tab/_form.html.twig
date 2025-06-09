@@ -1,4 +1,12 @@
-{{ form_start(form) }}
-{{ form_widget(form) }}
-<button class="form-submit">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="form">
+	{{ form_start(form) }}
+	{{ form_row(form.title) }}
+	{{ form_row(form.capo) }}
+	{{ form_row(form.content) }}
+	<div class="form-select">
+		{{ form_row(form.tags) }}
+	</div>
+	{{ form_row(form.artist) }}
+	<button class="form-submit">{{ button_label|default('Save') }}</button>
+	{{ form_end(form) }}
+</div>

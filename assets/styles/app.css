@@ -1,3 +1,15 @@
+@import url('components/navbar.css');
+@import url('components/container.css');
+@import url('components/devider.css');
+@import url('components/form.css');
+
+@import url('tab/index.css');
+@import url('tab/show.css');
+@import url('tab/edit.css');
+
+@import url('tag/form.css');
+@import url('artist/form.css');
+
 body {
     --bg-light: white;
     --bg-light-text: black;
@@ -10,50 +22,5 @@ body {
 body {
     font-family: "Lato", sans-serif;
     background-color: var(--bg-dark);
-    color: var(--bg-dark-text);
-}
-
-.container {
-    background-color: var(--bg-light);
-    color: var(--bg-light-text);
-    max-width: 80%;
-    width: max-content;
-    min-width: 70%;
-    margin: 0 auto;
-    border-left: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    min-height: 100vh;
-}
-
-@media (max-width: 900px) {
-    .container {
-        max-width: 100%;
-        border-left: none;
-        border-right: none;
-    }
-}
-
-.content {
-    padding: 20px;
-}
-
-.devider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 0;
-}
-
-.form-submit {
-    color: var(--bg-dark-text);
-    background-color: var(--bg-dark);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.form-submit:hover {
-    background-color: var(--accent);
     color: var(--bg-dark-text);
 }
