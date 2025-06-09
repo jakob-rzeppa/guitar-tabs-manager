@@ -19,7 +19,6 @@ final class UserController extends AbstractController
     {
         return $this->render('app/user/index.html.twig', [
             'users' => $userRepository->findAll(),
-            'show_admin_link' => $this->isGranted('ROLE_ADMIN'),
         ]);
     }
 
@@ -43,7 +42,6 @@ final class UserController extends AbstractController
         return $this->render('app/user/new.html.twig', [
             'user' => $user,
             'form' => $form,
-            'show_admin_link' => $this->isGranted('ROLE_ADMIN'),
         ]);
     }
 
@@ -52,7 +50,6 @@ final class UserController extends AbstractController
     {
         return $this->render('app/user/show.html.twig', [
             'user' => $user,
-            'show_admin_link' => $this->isGranted('ROLE_ADMIN'),
         ]);
     }
 
@@ -71,7 +68,6 @@ final class UserController extends AbstractController
         return $this->render('app/user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
-            'show_admin_link' => $this->isGranted('ROLE_ADMIN'),
         ]);
     }
 

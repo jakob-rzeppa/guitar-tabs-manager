@@ -18,7 +18,6 @@ final class ArtistController extends AbstractController
     {
         return $this->render('app/artist/index.html.twig', [
             'artists' => $artistRepository->findAll(),
-            'show_admin_link' => $this->isGranted('ROLE_ADMIN'),
         ]);
     }
 
@@ -27,7 +26,6 @@ final class ArtistController extends AbstractController
     {
         return $this->render('app/artist/show.html.twig', [
             'artist' => $artist,
-            'show_admin_link' => $this->isGranted('ROLE_ADMIN'),
         ]);
     }
 

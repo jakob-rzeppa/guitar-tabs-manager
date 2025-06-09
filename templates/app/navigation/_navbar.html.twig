@@ -16,7 +16,7 @@
 		<li>
 			<a href="{{ path('app_artist_index') }}">Artists</a>
 		</li>
-		{% if show_admin_link %}
+		{% if is_granted('ROLE_ADMIN') %}
 			<li>
 				<a href="{{ path('app_admin') }}">Admin</a>
 			</li>

@@ -13,7 +13,6 @@ final class AdminController extends AbstractController
     {
         return $this->render('app/admin/index.html.twig', [
             'controller_name' => 'AdminController',
-            'show_admin_link' => $this->isGranted('ROLE_ADMIN'),
         ]);
     }
 }
