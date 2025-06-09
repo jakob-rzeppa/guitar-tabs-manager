@@ -23,8 +23,12 @@
 		{% endif %}
 	</ul>
 	<div class="navbar_auth">
-		<a href="{{ path('app_logout') }}">Logout</a>
-		<a href="{{ path('app_profile_show') }}">Profile</a>
+		{% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+			<a href="{{ path('app_login') }}">Login</a>
+		{% else %}
+			<a href="{{ path('app_logout') }}">Logout</a>
+			<a href="{{ path('app_profile_show') }}">Profile</a>
+		{% endif %}
 	</div>
 </nav>
 <script>
