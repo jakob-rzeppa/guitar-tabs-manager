@@ -20,6 +20,25 @@ class BackupService
         return ['tables' => $tablesArray];
     }
 
+    public function restoreFromBackup(array $backupData): void
+    {
+        // Clear existing data in the tables
+        $schemaManager = $this->conn->createSchemaManager();
+        $tables = $schemaManager->listTableNames();
+
+        foreach ($tables as $table) {
+            $this->conn->executeStatement("DELETE FROM `$table`");
+        }
+
+        // Insert data from the backup
+        foreach ($backupData['tables'] as $tableData) {
+            $tableName = $tableData['table_name'];
+            foreach ($tableData['content'] as $row) {
+                $this->conn->insert($tableName, $row);
+            }
+        }
+    }
+
     /**
      * Create an array representation of the database tables and their contents.
      *

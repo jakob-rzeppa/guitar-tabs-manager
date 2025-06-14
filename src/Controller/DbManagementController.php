@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 final class DbManagementController extends AbstractController
 {
@@ -32,10 +33,17 @@ final class DbManagementController extends AbstractController
     }
 
     #[Route('/admin/db/restore', name: 'app_admin_db_restore')]
-    public function restore(): Response
+    public function restore(Request $request, BackupService $backupService): Response
     {
-        // Logic to restore the database state will be added here.
+        $JSONBackupData = $request->request->get('json_backup');
 
-        return new Response('Database restored successfully!');
+        $backupData = json_decode($JSONBackupData, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return new Response('Invalid JSON data provided.', 400);
+        }
+
+        $backupService->restoreFromBackup($backupData);
+
+        return new Response('Database restored successfully.', 200);
     }
 }
