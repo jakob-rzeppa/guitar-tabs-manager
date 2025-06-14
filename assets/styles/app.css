@@ -10,6 +10,8 @@
 @import url('tag/form.css');
 @import url('artist/form.css');
 
+@import url('login.css');
+
 body {
     --bg-light: white;
     --bg-light-text: black;
