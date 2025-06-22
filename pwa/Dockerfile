@@ -1,4 +1,17 @@
-FROM node:lts-alpine
+FROM node:lts-alpine as dev
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+CMD [ "npm", "run", "dev" ]
+
+FROM node:lts-alpine as prod
 
 # install simple http server for serving static content
 RUN npm install -g http-server
