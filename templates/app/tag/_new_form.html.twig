@@ -1,7 +1,0 @@
-<form class="tag-form" method="post" action="{{ path('app_tag_new', {'tab_id': tab.id}) }}" onsubmit="return confirm('Make sure to save changes to the tab before creating a new tab or they will be lost!');">
-	{% if tab.id is not null %}
-		<input type="hidden" name="tab_id" value="{{ tab.id }}">
-	{% endif %}
-	<input type="text" name="name" placeholder="Tag Name" required>
-	<button type="submit" class="form-submit">Create Tag</button>
-</form>
