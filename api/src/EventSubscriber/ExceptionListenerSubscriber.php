@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -29,7 +30,11 @@ class ExceptionListenerSubscriber implements EventSubscriberInterface
             'traces' => $exception->getTrace()
         ];
 
-        $jsonResponseBody = $serializer->serialize($responseBody, 'json');
+        try {
+            $jsonResponseBody = $serializer->serialize($responseBody, 'json');
+        } catch (ExceptionInterface $e) {
+            $jsonResponseBody = 'Something went wrong';
+        }
 
         $response = JsonResponse::fromJsonString($jsonResponseBody);
 
