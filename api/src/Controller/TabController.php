@@ -27,8 +27,14 @@ final class TabController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_tab_get_by_id', methods: ['GET'])]
-    public function getById(Tab $tab, SerializerInterface $serializer): JsonResponse
+    public function getById(int $id, TabRepository $tabRepository, SerializerInterface $serializer): JsonResponse
     {
+        $tab = $tabRepository->find($id);
+
+        if (null === $tab) {
+            throw $this->createNotFoundException();
+        }
+
         $jsonResponse = $serializer->serialize([
             'data' => $tab
         ], 'json');
@@ -58,8 +64,14 @@ final class TabController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_tab_update', methods: ['PUT'])]
-    public function update(Tab $tab, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function update(int $id, TabRepository $tabRepository, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
+        $tab = $tabRepository->find($id);
+
+        if (null === $tab) {
+            throw $this->createNotFoundException();
+        }
+
         $requestContent = $request->toArray();
 
         $tab->setTitle($requestContent['title'] ?? $tab->getTitle());
@@ -78,8 +90,14 @@ final class TabController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_tab_delete', methods: ['DELETE'])]
-    public function delete(Tab $tab, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function delete(int $id, TabRepository $tabRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
+        $tab = $tabRepository->find($id);
+
+        if (null === $tab) {
+            throw $this->createNotFoundException();
+        }
+
         $entityManager->remove($tab);
         $entityManager->flush();
 

@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\ArtistRepository;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/artist')]
@@ -27,8 +28,14 @@ final class ArtistController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_artist_get_by_id', methods: ['GET'])]
-    public function getById(Artist $artist, SerializerInterface $serializer): JsonResponse
+    public function getById(int $id, ArtistRepository $artistRepository, SerializerInterface $serializer): JsonResponse
     {
+        $artist = $artistRepository->find($id);
+
+        if (null === $artist) {
+            throw $this->createNotFoundException();
+        }
+
         $jsonResponse = $serializer->serialize([
             'data' => $artist
         ], 'json');
@@ -56,8 +63,14 @@ final class ArtistController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_artist_update', methods: ['PUT'])]
-    public function update(Artist $artist, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function update(int $id, Request $request, ArtistRepository $artistRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
+        $artist = $artistRepository->find($id);
+
+        if (null === $artist) {
+            throw $this->createNotFoundException();
+        }
+
         $requestContent = $request->toArray();
 
         $artist->setName($requestContent['name'] ?? $artist->getName());
@@ -74,8 +87,14 @@ final class ArtistController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_artist_delete', methods: ['DELETE'])]
-    public function delete(Artist $artist, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function delete(int $id, ArtistRepository $artistRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
+        $artist = $artistRepository->find($id);
+
+        if (null === $artist) {
+            throw $this->createNotFoundException();
+        }
+
         $entityManager->remove($artist);
         $entityManager->flush();
 

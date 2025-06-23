@@ -18,8 +18,6 @@ class ExceptionListenerSubscriber implements EventSubscriberInterface
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
-
         // You get the exception object from the received event
         $exception = $event->getThrowable();
 
@@ -30,13 +28,7 @@ class ExceptionListenerSubscriber implements EventSubscriberInterface
             'traces' => $exception->getTrace()
         ];
 
-        try {
-            $jsonResponseBody = $serializer->serialize($responseBody, 'json');
-        } catch (ExceptionInterface $e) {
-            $jsonResponseBody = 'Something went wrong';
-        }
-
-        $response = JsonResponse::fromJsonString($jsonResponseBody);
+        $response = new JsonResponse($responseBody);
 
         // HttpExceptionInterface is a special type of exception that
         // holds status code and header details

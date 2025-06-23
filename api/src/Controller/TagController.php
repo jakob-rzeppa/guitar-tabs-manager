@@ -27,8 +27,14 @@ final class TagController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_tag_get_by_id', methods: ['GET'])]
-    public function getById(Tag $tag, SerializerInterface $serializer): JsonResponse
+    public function getById(int $id, TagRepository $tagRepository, SerializerInterface $serializer): JsonResponse
     {
+        $tag = $tagRepository->find($id);
+
+        if (null === $tag) {
+            throw $this->createNotFoundException();
+        }
+
         $jsonResponse = $serializer->serialize([
             'data' => $tag
         ], 'json');
@@ -56,8 +62,14 @@ final class TagController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_tag_update', methods: ['PUT'])]
-    public function update(Tag $tag, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function update(int $id, TagRepository $tagRepository, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
+        $tag = $tagRepository->find($id);
+
+        if (null === $tag) {
+            throw $this->createNotFoundException();
+        }
+
         $requestContent = $request->toArray();
 
         $tag->setName($requestContent['name'] ?? $tag->getName());
@@ -74,8 +86,14 @@ final class TagController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_tag_delete', methods: ['DELETE'])]
-    public function delete(Tag $tag, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function delete(int $id, TagRepository $tagRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
+        $tag = $tagRepository->find($id);
+
+        if (null === $tag) {
+            throw $this->createNotFoundException();
+        }
+
         $entityManager->remove($tag);
         $entityManager->flush();
 
