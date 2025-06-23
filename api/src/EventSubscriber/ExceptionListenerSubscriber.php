@@ -23,18 +23,16 @@ class ExceptionListenerSubscriber implements EventSubscriberInterface
 
         // Customize your response object to display the exception details
         $responseBody = [
-            'message' => $exception->getMessage(),
-            'code' => $exception->getCode(),
-            'traces' => $exception->getTrace()
+            'error' => [
+                'message' => $exception->getMessage()
+            ]
         ];
 
         $response = new JsonResponse($responseBody);
 
-        // HttpExceptionInterface is a special type of exception that
-        // holds status code and header details
+        // HttpExceptionInterface is a special type of exception that holds status code and header details
         if ($exception instanceof HttpExceptionInterface) {
             $response->setStatusCode($exception->getStatusCode());
-            $response->headers->replace($exception->getHeaders());
         } else {
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
