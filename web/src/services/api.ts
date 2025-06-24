@@ -2,9 +2,13 @@ import axios, { type AxiosResponse, type Method} from 'axios';
 import { ref } from 'vue'
 import type { APIResponse } from "@/types/types.ts";
 
+const baseURL = import.meta.env.VITE_API_ENDPOINT
+
 const axiosInstance = axios.create({
-    baseURL: import.meta.env.VUE_API_ENDPOINT,
+    baseURL,
 });
+
+console.log('Successfully created axios instance with the baseURL:', baseURL);
 
 export function fetchDataFromAPI<T>(route: string, method: Method) {
     const loading = ref(false)
