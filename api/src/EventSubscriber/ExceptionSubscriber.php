@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class ExceptionListenerSubscriber implements EventSubscriberInterface
+class ExceptionSubscriber implements EventSubscriberInterface
 {
 
     public function onKernelException(ExceptionEvent $event): void
