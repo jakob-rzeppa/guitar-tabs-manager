@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import { RouterLink } from "vue-router";
 </script>
 
 <template>
@@ -12,12 +12,12 @@
         <ul
             tabindex="0"
             class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-          <li><a>Homepage</a></li>
+          <li><RouterLink to="/">Homepage</RouterLink></li>
         </ul>
       </div>
     </div>
     <div class="navbar-center">
-      <a class="btn btn-ghost text-xl">Guitar Tab Manager</a>
+      <RouterLink to="/" class="btn btn-ghost text-xl">Guitar Tab Manager</RouterLink>
     </div>
     <div class="navbar-end">
       <button class="btn btn-ghost btn-circle">
