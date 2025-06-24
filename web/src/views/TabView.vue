@@ -3,6 +3,6 @@
 
 <template>
   <main>
-    HomeView
+    TabView: {{ $route.params.id }}
   </main>
 </template>
