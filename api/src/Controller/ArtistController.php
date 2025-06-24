@@ -21,7 +21,7 @@ final class ArtistController extends AbstractController
         $artists = $artistRepository->findAll();
 
         $jsonResponse = $serializer->serialize([
-            'data' => $artists
+            'content' => $artists
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
@@ -37,7 +37,7 @@ final class ArtistController extends AbstractController
         }
 
         $jsonResponse = $serializer->serialize([
-            'data' => $artist
+            'content' => $artist
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
@@ -55,7 +55,7 @@ final class ArtistController extends AbstractController
         $entityManager->flush();
 
         $jsonResponse = $serializer->serialize([
-            'data' => $artist,
+            'content' => $artist,
             'message' => 'Artist created successfully'
         ], 'json');
 
@@ -79,7 +79,7 @@ final class ArtistController extends AbstractController
         $entityManager->flush();
 
         $jsonResponse = $serializer->serialize([
-            'data' => $artist,
+            'content' => $artist,
             'message' => 'Artist created successfully'
         ], 'json');
 

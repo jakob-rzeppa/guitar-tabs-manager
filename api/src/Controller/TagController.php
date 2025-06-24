@@ -20,7 +20,7 @@ final class TagController extends AbstractController
         $tags = $tagRepository->findAll();
 
         $jsonResponse = $serializer->serialize([
-            'data' => $tags
+            'content' => $tags
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
@@ -36,7 +36,7 @@ final class TagController extends AbstractController
         }
 
         $jsonResponse = $serializer->serialize([
-            'data' => $tag
+            'content' => $tag
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
@@ -54,7 +54,7 @@ final class TagController extends AbstractController
         $entityManager->flush();
 
         $jsonResponse = $serializer->serialize([
-            'data' => $tag,
+            'content' => $tag,
             'message' => 'Tag created successfully'
         ], 'json');
 
@@ -78,7 +78,7 @@ final class TagController extends AbstractController
         $entityManager->flush();
 
         $jsonResponse = $serializer->serialize([
-            'data' => $tag,
+            'content' => $tag,
             'message' => 'Tag created successfully'
         ], 'json');
 

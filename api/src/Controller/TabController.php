@@ -20,7 +20,7 @@ final class TabController extends AbstractController
         $tabs = $tabRepository->findAll();
 
         $jsonResponse = $serializer->serialize([
-            'data' => $tabs
+            'content' => $tabs
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
@@ -36,7 +36,7 @@ final class TabController extends AbstractController
         }
 
         $jsonResponse = $serializer->serialize([
-            'data' => $tab
+            'content' => $tab
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
@@ -56,7 +56,7 @@ final class TabController extends AbstractController
         $entityManager->flush();
 
         $jsonResponse = $serializer->serialize([
-            'data' => $tab,
+            'content' => $tab,
             'message' => 'Tab created successfully'
         ], 'json');
 
@@ -82,7 +82,7 @@ final class TabController extends AbstractController
         $entityManager->flush();
 
         $jsonResponse = $serializer->serialize([
-            'data' => $tab,
+            'content' => $tab,
             'message' => 'Tab created successfully'
         ], 'json');
 
