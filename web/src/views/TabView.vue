@@ -31,7 +31,7 @@ watch(
 <template>
   <ErrorDisplay v-if="error !== null" :message="error" />
   <LoadingPlaceholder v-else-if="loading" />
-  <ErrorDisplay v-else-if="response === null || response.data.content === undefined" :message="error" />
+  <ErrorDisplay v-else-if="response === null || response.data.content === undefined" :message="'Data is not available.'" />
   <article v-else class="bg-base-200 min-w-4xl w-1/2 mx-auto border-base-300 border-x-2 min-h-screen">
     <div class="p-10">
       <h1 class="text-4xl">{{response.data.content.title}} <span v-if="response.data.content.artist !== null" class="text-primary">by</span> <span v-if="response.data.content.artist !== null">{{response.data.content.artist.name}}</span></h1>
