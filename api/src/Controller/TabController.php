@@ -35,8 +35,28 @@ final class TabController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $artist = [
+            'id' => $tab->getArtist()->getId(),
+            'name' => $tab->getArtist()->getName(),
+        ];
+
+        $tags = [];
+        foreach ($tab->getTags() as $tag) {
+            $tags[] = [
+                'id' => $tag->getId(),
+                'name' => $tag->getName()
+            ];
+        }
+
         $jsonResponse = $serializer->serialize([
-            'content' => $tab
+            'content' => [
+                'id' => $tab->getId(),
+                'title' => $tab->getTitle(),
+                'tags' => $tags,
+                'artist' => $artist,
+                'capo' => $tab->getCapo(),
+                'content' => $tab->getContent()
+            ]
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
@@ -55,9 +75,28 @@ final class TabController extends AbstractController
         $entityManager->persist($tab);
         $entityManager->flush();
 
+        $artist = [
+            'id' => $tab->getArtist()->getId(),
+            'name' => $tab->getArtist()->getName(),
+        ];
+
+        $tags = [];
+        foreach ($tab->getTags() as $tag) {
+            $tags[] = [
+                'id' => $tag->getId(),
+                'name' => $tag->getName()
+            ];
+        }
+
         $jsonResponse = $serializer->serialize([
-            'content' => $tab,
-            'message' => 'Tab created successfully'
+            'content' => [
+                'id' => $tab->getId(),
+                'title' => $tab->getTitle(),
+                'tags' => $tags,
+                'artist' => $artist,
+                'capo' => $tab->getCapo(),
+                'content' => $tab->getContent()
+            ]
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
@@ -81,9 +120,28 @@ final class TabController extends AbstractController
         $entityManager->persist($tab);
         $entityManager->flush();
 
+        $artist = [
+            'id' => $tab->getArtist()->getId(),
+            'name' => $tab->getArtist()->getName(),
+        ];
+
+        $tags = [];
+        foreach ($tab->getTags() as $tag) {
+            $tags[] = [
+                'id' => $tag->getId(),
+                'name' => $tag->getName()
+            ];
+        }
+
         $jsonResponse = $serializer->serialize([
-            'content' => $tab,
-            'message' => 'Tab created successfully'
+            'content' => [
+                'id' => $tab->getId(),
+                'title' => $tab->getTitle(),
+                'tags' => $tags,
+                'artist' => $artist,
+                'capo' => $tab->getCapo(),
+                'content' => $tab->getContent()
+            ]
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
