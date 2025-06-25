@@ -32,7 +32,7 @@ watch(
   <ErrorDisplay v-if="error !== null" :message="error" />
   <LoadingPlaceholder v-else-if="loading" />
   <ErrorDisplay v-else-if="response === null || response.data.content === undefined" :message="'Data is not available.'" />
-  <article v-else class="bg-base-200 min-w-4xl w-1/2 mx-auto border-base-300 border-x-2 min-h-screen">
+  <main v-else class="bg-base-200 md:w-2/3 max-w-4xl  mx-auto border-base-300 border-x-2 min-h-screen">
     <div class="p-10">
       <h1 class="text-4xl">{{response.data.content.title}} <span v-if="response.data.content.artist !== null" class="text-primary">by</span> <span v-if="response.data.content.artist !== null">{{response.data.content.artist.name}}</span></h1>
       <ul class="flex flex-row flex-wrap gap-1.5">
@@ -44,5 +44,5 @@ watch(
       <div class="divider"></div>
       {{response.data.content.content}}
     </div>
-  </article>
+  </main>
 </template>
