@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse, type Method} from 'axios';
-import { ref } from 'vue'
+import {type Ref} from 'vue'
 import type { APIResponse } from "@/types/types.ts";
 
 const baseURL = import.meta.env.VITE_API_ENDPOINT
@@ -10,31 +10,23 @@ const axiosInstance = axios.create({
 
 console.log('Successfully created axios instance with the baseURL:', baseURL);
 
-export function fetchDataFromAPI<T>(route: string, method: Method) {
-    const loading = ref(false)
-    const response = ref<AxiosResponse<APIResponse<T>> | null>(null)
-    const error = ref<string | null>(null)
+export async function fetchFromAPI<T>(route: string, method: Method, refs: {loading: Ref<boolean>, response: Ref<AxiosResponse<APIResponse<T>> | null>, error: Ref<string | null>}) {
+    const {loading, response, error} = refs
 
-    const executeFetch = async () => {
-        error.value = response.value = null
-        loading.value = true
+    error.value = response.value = null
+    loading.value = true
 
-        try {
-            response.value = await axiosInstance.request<APIResponse<T>>({
-                url: route,
-                method
-            })
-            console.log(response)
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                error.value = err.toString()
-            }
-        } finally {
-            loading.value = false
+    try {
+        response.value = await axiosInstance.request<APIResponse<T>>({
+            url: route,
+            method
+        })
+        console.log(response)
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            error.value = err.toString()
         }
+    } finally {
+        loading.value = false
     }
-
-    executeFetch().then()
-
-    return {loading, response, error}
 }
