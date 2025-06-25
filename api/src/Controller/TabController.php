@@ -19,8 +19,33 @@ final class TabController extends AbstractController
     {
         $tabs = $tabRepository->findAll();
 
+        $reducedTabs = [];
+
+        foreach ($tabs as $tab) {
+            $artist = $tab->getArtist() !== null ? [
+                'id' => $tab->getArtist()->getId(),
+                'name' => $tab->getArtist()->getName(),
+            ] : null;
+
+            $tags = [];
+            foreach ($tab->getTags() as $tag) {
+                $tags[] = [
+                    'id' => $tag->getId(),
+                    'name' => $tag->getName()
+                ];
+            }
+
+            $reducedTabs[] = [
+                'id' => $tab->getId(),
+                'title' => $tab->getTitle(),
+                'artist' => $artist,
+                'tags' => $tags
+            ];
+        }
+
+
         $jsonResponse = $serializer->serialize([
-            'content' => $tabs
+            'content' => $reducedTabs,
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
