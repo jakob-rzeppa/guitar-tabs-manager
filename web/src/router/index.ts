@@ -10,11 +10,15 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/tabSearch',
+      name: 'tabSearch',
+      // route level code-splitting
+      component: () => import('../views/TabSearchView.vue')
+    },
+    {
       path: '/tab/:id',
       name: 'tab',
       // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/TabView.vue'),
     },
   ],
