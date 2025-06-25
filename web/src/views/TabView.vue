@@ -30,11 +30,11 @@ watch(
 </script>
 
 <template>
-  <ErrorDisplay v-if="error !== null" :message="error" />
-  <LoadingPlaceholder v-else-if="loading" />
-  <ErrorDisplay v-else-if="response === null || response.data.content === undefined" :message="'Data is not available.'" />
-  <ContentWrapper v-else>
-    <div class="p-10">
+  <ContentWrapper>
+    <ErrorDisplay v-if="error !== null" :message="error" />
+    <LoadingPlaceholder v-else-if="loading" />
+    <ErrorDisplay v-else-if="response === null || response.data.content === undefined" :message="'Data is not available.'" />
+    <div v-else class="p-10">
       <h1 class="text-4xl">{{response.data.content.title}} <span v-if="response.data.content.artist !== null" class="text-primary">by</span> <span v-if="response.data.content.artist !== null">{{response.data.content.artist.name}}</span></h1>
       <ul class="flex flex-row flex-wrap gap-1.5">
         <li v-for="tag in response.data.content.tags" class="badge badge-secondary">
