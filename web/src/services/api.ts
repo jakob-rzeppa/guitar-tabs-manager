@@ -21,7 +21,6 @@ export async function fetchFromAPI<T>(route: string, method: Method, refs: {load
             url: route,
             method
         })
-        console.log(response)
     } catch (err: unknown) {
         if (err instanceof Error) {
             error.value = err.toString()
