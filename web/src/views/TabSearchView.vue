@@ -35,7 +35,10 @@ function orderTabs(event: Event) {
 <template>
   <ContentWrapper>
     <div>
-      <input type="text" placeholder="Type here" class="input" @input="orderTabs" />
+      <label class="input box-border w-[calc(100%-4rem)] m-8">
+        <span class="label">Tab Search:</span>
+        <input type="text" placeholder="Type here" @input="orderTabs" />
+      </label>
     </div>
     <ErrorDisplay v-if="error !== null" :message="error" />
     <LoadingPlaceholder v-else-if="loading" />
