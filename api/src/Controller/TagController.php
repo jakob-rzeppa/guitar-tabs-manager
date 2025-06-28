@@ -19,8 +19,17 @@ final class TagController extends AbstractController
     {
         $tags = $tagRepository->findAll();
 
+        $reducedTags = [];
+
+        foreach ($tags as $tag) {
+            $reducedTags[] = [
+                'id' => $tag->getId(),
+                'name' => $tag->getName(),
+            ];
+        }
+
         $jsonResponse = $serializer->serialize([
-            'content' => $tags
+            'content' => $reducedTags,
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
