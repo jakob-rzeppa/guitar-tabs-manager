@@ -8,6 +8,7 @@ import LoadingPlaceholder from "@/components/LoadingPlaceholder.vue";
 import ContentWrapper from "@/components/ContentWrapper.vue";
 import TabsDisplay from "@/components/TabsDisplay.vue";
 import calculateSimilarity from "@/services/calculateSimilarity.ts";
+import SelectArtist from "@/components/SelectArtist.vue";
 
 const loading = ref(false)
 const response = ref<AxiosResponse<APIResponse<Tab[]>> | null>(null)
@@ -30,6 +31,15 @@ function orderTabs(event: Event) {
     )
   })
 }
+
+function filterByArtist(event: Event) {
+  const searchValue = (event.target as HTMLInputElement).value
+  if (!response.value || !response.value.data.content) {
+    return;
+  }
+
+  response.value.data.content.filter((item) => item.artist.name.toLowerCase() === searchValue);
+}
 </script>
 
 <template>
@@ -44,10 +54,7 @@ function orderTabs(event: Event) {
         <input type="checkbox" />
         <div class="collapse-title font-semibold">Filter</div>
         <div class="collapse-content flex flex-col gap-4">
-          <label class="input box-border w-full">
-            <span class="label">Artist</span>
-            <input type="text" placeholder="Type here" />
-          </label>
+          <SelectArtist />
           <label class="input box-border w-full">
             <span class="label">Tags</span>
             <input type="text" placeholder="Type here" />
@@ -58,7 +65,7 @@ function orderTabs(event: Event) {
     <div class="divider"></div>
     <ErrorDisplay v-if="error !== null" :message="error" />
     <LoadingPlaceholder v-else-if="loading" />
-    <ErrorDisplay v-else-if="response === null || response.data.content === undefined" :message="'Data is not available.'" />
+    <ErrorDisplay v-else-if="!response || !response.data.content" :message="'Data is not available.'" />
     <TabsDisplay v-else :tabs="response.data.content" />
   </ContentWrapper>
 </template>
