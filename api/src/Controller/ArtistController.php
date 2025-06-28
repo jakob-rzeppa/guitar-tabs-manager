@@ -20,8 +20,17 @@ final class ArtistController extends AbstractController
     {
         $artists = $artistRepository->findAll();
 
+        $reducedArtists = [];
+
+        foreach ($artists as $artist) {
+            $reducedArtists[] = [
+                'id' => $artist->getId(),
+                'name' => $artist->getName(),
+            ];
+        }
+
         $jsonResponse = $serializer->serialize([
-            'content' => $artists
+            'content' => $reducedArtists,
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
