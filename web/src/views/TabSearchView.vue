@@ -9,6 +9,7 @@ import ContentWrapper from "@/components/ContentWrapper.vue";
 import TabsDisplay from "@/components/TabsDisplay.vue";
 import calculateSimilarity from "@/services/calculateSimilarity.ts";
 import SelectArtist from "@/components/SelectArtist.vue";
+import SelectTags from "@/components/SelectTags.vue";
 
 const loading = ref(false)
 const response = ref<AxiosResponse<APIResponse<Tab[]>> | null>(null)
@@ -55,10 +56,7 @@ function filterByArtist(event: Event) {
         <div class="collapse-title font-semibold">Filter</div>
         <div class="collapse-content flex flex-col gap-4">
           <SelectArtist />
-          <label class="input box-border w-full">
-            <span class="label">Tags</span>
-            <input type="text" placeholder="Type here" />
-          </label>
+          <SelectTags />
         </div>
       </div>
     </div>
