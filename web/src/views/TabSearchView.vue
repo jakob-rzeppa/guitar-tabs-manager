@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref, toRaw} from "vue";
 import type {AxiosResponse} from "axios";
-import type {APIResponse, Artist, Tab} from "@/types/types.ts";
+import type {APIResponse, Artist, Tab, Tag} from "@/types/types.ts";
 import {fetchFromAPI} from "@/services/api.ts";
 import ErrorDisplay from "@/components/ErrorDisplay.vue";
 import LoadingPlaceholder from "@/components/LoadingPlaceholder.vue";
@@ -68,6 +68,26 @@ function filterByArtist(artist: Artist | null) {
     return item.artist.id === artist.id
   })
 }
+
+function filterByTags(tags: Tag[]) {
+  if (!response.value || !response.value.data.content) {
+    throw new Error("Response object is empty.")
+  }
+
+  if (tags.length === 0) {
+    displayedTabs.value = response.value.data.content
+    return
+  }
+
+  displayedTabs.value = response.value.data.content.filter((item) => {
+    if (item.tags.length === 0) {
+      return false
+    }
+
+    const itemTagIds = item.tags.map(tag => tag.id)
+    return tags.every(filterTag => itemTagIds.includes(filterTag.id))
+  })
+}
 </script>
 
 <template>
@@ -83,7 +103,7 @@ function filterByArtist(artist: Artist | null) {
         <div class="collapse-title font-semibold">Filter</div>
         <div class="collapse-content flex flex-col gap-4">
           <SelectArtist :artist="null" @select="filterByArtist" />
-          <SelectTags />
+          <SelectTags :initial-tags="[]" @select="filterByTags" />
         </div>
       </div>
     </div>

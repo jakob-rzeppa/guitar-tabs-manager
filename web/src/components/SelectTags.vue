@@ -7,14 +7,29 @@ import {fetchFromAPI} from "@/services/api.ts";
 import ErrorDisplay from "@/components/ErrorDisplay.vue";
 import LoadingPlaceholder from "@/components/LoadingPlaceholder.vue";
 
+interface Props {
+  initialTags: Tag[]
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits(['select'])
+
 const loading = ref(false)
 const response = ref<AxiosResponse<APIResponse<Tag[]>> | null>(null)
 const error = ref<string | null>(null)
 
 fetchFromAPI<Tag[]>('/tag', 'GET', {loading, response, error}).then();
 
-const activeTags = ref<Tag[]>([])
+const activeTags = ref<Tag[]>(props.initialTags)
 const errorMessage = ref<string | null>(null)
+
+function displayError(message: string) {
+  errorMessage.value = message
+}
+
+function removeError() {
+  errorMessage.value = null
+}
 
 function addActiveTag(event: Event) {
   const inputElement = event.currentTarget as HTMLInputElement
@@ -47,6 +62,8 @@ function addActiveTag(event: Event) {
 
   inputElement.value = ''
   removeError()
+
+  emit('select', activeTags.value)
 }
 
 function removeActiveTag(event: Event) {
@@ -56,9 +73,9 @@ function removeActiveTag(event: Event) {
     throw new Error("Response object is empty.")
   }
 
-  const indexToRemove = activeTags.value.findIndex((tag) => tag.id === parseInt(element.value))
+  const indexToRemove = activeTags.value.findIndex((tag) => tag.id === parseInt(element.id))
 
-  if (!indexToRemove) {
+  if (indexToRemove === -1) {
     displayError('Something went wrong.');
     return
   }
@@ -66,14 +83,8 @@ function removeActiveTag(event: Event) {
   activeTags.value.splice(indexToRemove, 1)
 
   removeError()
-}
 
-function displayError(message: string) {
-  errorMessage.value = message
-}
-
-function removeError() {
-  errorMessage.value = null
+  emit('select', activeTags.value)
 }
 </script>
 
@@ -85,10 +96,8 @@ function removeError() {
     <label class="input box-border w-full" :class="{ 'input-error': errorMessage }">
       <span class="label">Tags</span>
       <span v-if="activeTags.length > 0" class="label">
-        <span v-for="tag in activeTags" class="tooltip" data-tip="deselect">
-          <span class="bg-primary px-3 py-1 rounded-lg group hover:brightness-80 cursor-pointer" @click="removeActiveTag" :id="tag.id.toString()">
-            {{tag.name}}
-          </span>
+        <span v-for="tag in activeTags" class="bg-primary px-3 py-1 rounded-lg group hover:brightness-80 cursor-pointer" @click="removeActiveTag" :id="tag.id.toString()">
+          {{tag.name}}
         </span>
       </span>
       <input type="text" list="tags" placeholder="Type here" @keyup.enter="addActiveTag" />
