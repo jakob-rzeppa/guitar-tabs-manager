@@ -21,6 +21,12 @@ const router = createRouter({
       // route level code-splitting
       component: () => import('../views/TabView.vue'),
     },
+    {
+      path: '/tab/:id/edit',
+      name: 'tabEdit',
+      // route level code-splitting
+      component: () => import('../views/TabEditView.vue'),
+    }
   ],
 })
 
