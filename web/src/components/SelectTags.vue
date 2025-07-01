@@ -53,8 +53,7 @@ function removeActiveTag(event: Event) {
   const element = event.currentTarget as HTMLInputElement
 
   if (!response || !response.value || !response.value.data.content) {
-    displayError('Something went wrong. Please try reloading the page.');
-    return
+    throw new Error("Response object is empty.")
   }
 
   const indexToRemove = activeTags.value.findIndex((tag) => tag.id === parseInt(element.value))
