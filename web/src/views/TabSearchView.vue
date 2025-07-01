@@ -17,8 +17,6 @@ const error = ref<string | null>(null)
 
 const displayedTabs = ref<Tab[]>([])
 
-const artistFilter = ref<Artist | null>(null)
-
 fetchFromAPI<Tab[]>('/tab', 'GET', {loading, response, error}).then(() => {
   if (!response.value || !response.value.data.content) {
     throw new Error("Response object is empty.")
@@ -84,7 +82,7 @@ function filterByArtist(artist: Artist | null) {
         <input type="checkbox" />
         <div class="collapse-title font-semibold">Filter</div>
         <div class="collapse-content flex flex-col gap-4">
-          <SelectArtist :artist="artistFilter" @select="filterByArtist" />
+          <SelectArtist :artist="null" @select="filterByArtist" />
           <SelectTags />
         </div>
       </div>
