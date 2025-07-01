@@ -11,7 +11,7 @@ interface Props {
   artist: Artist | null
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits(['select'])
 
@@ -46,9 +46,9 @@ function handleInput(event: Event) {
   <ErrorDisplay v-else-if="!response || !response.data.content" message="Something went wrong while retrieving artists." />
   <label v-else class="input box-border w-full">
     <span class="label">Artist</span>
-    <input list="artists" type="text" placeholder="Type here" :value="artist" @input="handleInput" />
+    <input list="artists" type="text" placeholder="Type here" :value="artist ? artist.name : ''" @input="handleInput" />
     <datalist id="artists">
-      <option v-for="artist in response.data.content" :value="artist.name" />
+      <option v-for="possibleArtist in response.data.content" :value="possibleArtist.name" />
     </datalist>
   </label>
 </template>
