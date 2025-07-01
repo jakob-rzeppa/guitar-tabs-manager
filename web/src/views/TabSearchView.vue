@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref, toRaw} from "vue";
 import type {AxiosResponse} from "axios";
 import type {APIResponse, Artist, Tab} from "@/types/types.ts";
 import {fetchFromAPI} from "@/services/api.ts";
@@ -21,7 +21,7 @@ fetchFromAPI<Tab[]>('/tab', 'GET', {loading, response, error}).then(() => {
   if (!response.value || !response.value.data.content) {
     throw new Error("Response object is empty.")
   }
-  displayedTabs.value = response.value.data.content
+  displayedTabs.value = structuredClone(toRaw(response.value.data.content))
 });
 
 function orderTabs(event: Event) {
