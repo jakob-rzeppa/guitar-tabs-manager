@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import type {AxiosResponse} from "axios";
-import type {APIResponse, Tab} from "@/types/types.ts";
+import type {APIResponse, Artist, Tab} from "@/types/types.ts";
 import {fetchFromAPI} from "@/services/api.ts";
 import ErrorDisplay from "@/components/ErrorDisplay.vue";
 import LoadingPlaceholder from "@/components/LoadingPlaceholder.vue";
@@ -15,14 +15,34 @@ const loading = ref(false)
 const response = ref<AxiosResponse<APIResponse<Tab[]>> | null>(null)
 const error = ref<string | null>(null)
 
-fetchFromAPI<Tab[]>('/tab', 'GET', {loading, response, error}).then();
+const displayedTabs = ref<Tab[]>([])
+
+const artistFilter = ref<Artist | null>(null)
+
+fetchFromAPI<Tab[]>('/tab', 'GET', {loading, response, error}).then(() => {
+  if (!response.value || !response.value.data.content) {
+    throw new Error("Response object is empty.")
+  }
+  displayedTabs.value = response.value.data.content
+});
 
 function orderTabs(event: Event) {
   const searchValue = (event.target as HTMLInputElement).value
+
   if (!response.value || !response.value.data.content) {
-    return;
+    throw new Error("Response object is empty.")
   }
 
+  displayedTabs.value.sort((a, b) => {
+    const titleA = a.title.toLowerCase()
+    const titleB = b.title.toLowerCase()
+    return (
+        calculateSimilarity(searchValue, titleB) -
+        calculateSimilarity(searchValue, titleA)
+    )
+  })
+
+  // needs to be sorted as well, so that the right order is present when the artist or tabs are changed
   response.value.data.content.sort((a, b) => {
     const titleA = a.title.toLowerCase()
     const titleB = b.title.toLowerCase()
@@ -33,13 +53,22 @@ function orderTabs(event: Event) {
   })
 }
 
-function filterByArtist(event: Event) {
-  const searchValue = (event.target as HTMLInputElement).value
+function filterByArtist(artist: Artist | null) {
   if (!response.value || !response.value.data.content) {
-    return;
+    throw new Error("Response object is empty.")
   }
 
-  response.value.data.content.filter((item) => item.artist.name.toLowerCase() === searchValue);
+  if (!artist) {
+    displayedTabs.value = response.value.data.content
+    return
+  }
+
+  displayedTabs.value = response.value.data.content.filter((item) => {
+    if (item.artist === null) {
+      return false
+    }
+    return item.artist.id === artist.id
+  })
 }
 </script>
 
@@ -55,7 +84,7 @@ function filterByArtist(event: Event) {
         <input type="checkbox" />
         <div class="collapse-title font-semibold">Filter</div>
         <div class="collapse-content flex flex-col gap-4">
-          <SelectArtist />
+          <SelectArtist :artist="artistFilter" @select="filterByArtist" />
           <SelectTags />
         </div>
       </div>
@@ -63,7 +92,6 @@ function filterByArtist(event: Event) {
     <div class="divider"></div>
     <ErrorDisplay v-if="error !== null" :message="error" />
     <LoadingPlaceholder v-else-if="loading" />
-    <ErrorDisplay v-else-if="!response || !response.data.content" :message="'Data is not available.'" />
-    <TabsDisplay v-else :tabs="response.data.content" />
+    <TabsDisplay v-else :tabs="displayedTabs" />
   </ContentWrapper>
 </template>
