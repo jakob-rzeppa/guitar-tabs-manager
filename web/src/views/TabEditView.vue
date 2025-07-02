@@ -68,6 +68,11 @@ function saveTab() {
       tagIds && {tag_ids: tagIds},
   );
 
+  if (Object.keys(dto).length === 0) {
+    console.log("No tab changes to save.")
+    return
+  }
+
   console.log("Saving tab changes: ", dto)
   fetchFromAPI<Tab>('/tab/' + route.params.id, 'PUT', dto, {loading, response, error}).then(() => {
     if (!response.value || !response.value.data || !response.value.data.content) {
