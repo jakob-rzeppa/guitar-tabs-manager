@@ -18,7 +18,7 @@ const loading = ref(false)
 const response = ref<AxiosResponse<APIResponse<Tag[]>> | null>(null)
 const error = ref<string | null>(null)
 
-fetchFromAPI<Tag[]>('/tag', 'GET', {loading, response, error}).then();
+fetchFromAPI<Tag[]>('/tag', 'GET', null, {loading, response, error}).then();
 
 const activeTags = ref<Tag[]>(props.initialTags)
 const errorMessage = ref<string | null>(null)

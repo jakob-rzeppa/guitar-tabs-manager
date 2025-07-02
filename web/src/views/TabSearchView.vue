@@ -17,7 +17,7 @@ const error = ref<string | null>(null)
 
 const displayedTabs = ref<Tab[]>([])
 
-fetchFromAPI<Tab[]>('/tab', 'GET', {loading, response, error}).then(() => {
+fetchFromAPI<Tab[]>('/tab', 'GET', null, {loading, response, error}).then(() => {
   if (!response.value || !response.value.data.content) {
     throw new Error("Response object is empty.")
   }

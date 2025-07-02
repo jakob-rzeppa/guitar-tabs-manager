@@ -19,7 +19,7 @@ const loading = ref(false)
 const response = ref<AxiosResponse<APIResponse<Artist[]>> | null>(null)
 const error = ref<string | null>(null)
 
-fetchFromAPI<Artist[]>('/artist', 'GET', {loading, response, error}).then();
+fetchFromAPI<Artist[]>('/artist', 'GET', null, {loading, response, error}).then();
 
 function handleInput(event: Event) {
   const value = (event.target as HTMLInputElement).value

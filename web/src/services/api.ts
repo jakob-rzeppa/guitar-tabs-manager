@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 
 console.log('Successfully created axios instance with the baseURL:', baseURL);
 
-export async function fetchFromAPI<T>(route: string, method: Method, refs: {loading: Ref<boolean>, response: Ref<AxiosResponse<APIResponse<T>> | null>, error: Ref<string | null>}) {
+export async function fetchFromAPI<T>(route: string, method: Method, data: Object | null, refs: {loading: Ref<boolean>, response: Ref<AxiosResponse<APIResponse<T>> | null>, error: Ref<string | null>}) {
     const {loading, response, error} = refs
 
     error.value = response.value = null
@@ -19,7 +19,8 @@ export async function fetchFromAPI<T>(route: string, method: Method, refs: {load
     try {
         response.value = await axiosInstance.request<APIResponse<T>>({
             url: route,
-            method
+            method,
+            data
         })
     } catch (err: unknown) {
         if (err instanceof Error) {
