@@ -23,7 +23,7 @@ watch(
         id = id[0];
       }
 
-      fetchFromAPI<Tab>('/tab/' + id, 'GET', {loading, response, error}).then();
+      fetchFromAPI<Tab>('/tab/' + id, 'GET', null, {loading, response, error}).then();
     }, { immediate: true }
 )
 
