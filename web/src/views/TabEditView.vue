@@ -54,12 +54,8 @@ function saveTab() {
 
   let tagIds: number[] | null = tab.value.tags.map(tag => tag.id).sort((a, b) => a - b)
   const oldTagIds = response.value.data.content.tags.map(tag => tag.id).sort((a, b) => a - b)
-  console.log(tagIds, oldTagIds)
-  const arraysEqual = (a: number[], b: number[]) =>
-      a.length === b.length && a.every((val, i) => val === b[i]);
 
-  if (arraysEqual(tagIds, oldTagIds)) {
-    console.log('hi')
+  if (tagIds.length === oldTagIds.length && tagIds.every((val, i) => val === oldTagIds[i])) {
     tagIds = null;
   }
 
@@ -72,8 +68,8 @@ function saveTab() {
       tagIds && {tag_ids: tagIds},
   );
 
-  console.log(dto)
-  fetchFromAPI<Tab>('/tab/5', 'PUT', dto, {loading, response, error}).then(() => {
+  console.log("Saving tab changes: ", dto)
+  fetchFromAPI<Tab>('/tab/' + route.params.id, 'PUT', dto, {loading, response, error}).then(() => {
     if (!response.value || !response.value.data || !response.value.data.content) {
       return
     }
