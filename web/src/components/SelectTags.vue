@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {ref} from "vue";
+import {ref, toRaw} from "vue";
 import type {AxiosResponse} from "axios";
 import type {APIResponse, Tag} from "@/types/types.ts";
 import {fetchFromAPI} from "@/services/api.ts";
@@ -20,7 +20,7 @@ const error = ref<string | null>(null)
 
 fetchFromAPI<Tag[]>('/tag', 'GET', null, {loading, response, error}).then();
 
-const activeTags = ref<Tag[]>(props.initialTags)
+const activeTags = ref<Tag[]>(structuredClone(toRaw(props.initialTags)))
 const errorMessage = ref<string | null>(null)
 
 function displayError(message: string) {
