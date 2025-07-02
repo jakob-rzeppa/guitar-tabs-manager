@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Tab;
+use App\Repository\ArtistRepository;
+use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,7 +45,6 @@ final class TabController extends AbstractController
             ];
         }
 
-
         $jsonResponse = $serializer->serialize([
             'content' => $reducedTabs,
         ], 'json');
@@ -60,10 +61,10 @@ final class TabController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $artist = [
+        $artist = $tab->getArtist() !== null ? [
             'id' => $tab->getArtist()->getId(),
             'name' => $tab->getArtist()->getName(),
-        ];
+        ] : null;
 
         $tags = [];
         foreach ($tab->getTags() as $tag) {
@@ -88,7 +89,12 @@ final class TabController extends AbstractController
     }
 
     #[Route('', name: 'app_tab_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function create(
+        Request $request,
+        ArtistRepository $artistRepository,
+        TagRepository $tagRepository,
+        EntityManagerInterface $entityManager,
+        SerializerInterface $serializer): JsonResponse
     {
         $requestContent = $request->toArray();
 
@@ -97,13 +103,30 @@ final class TabController extends AbstractController
         $tab->setContent($requestContent['content']);
         $tab->setCapo($requestContent['capo']);
 
+        $artistId = $requestContent['artist_id'] ?? null;
+        if ($artistId !== null) {
+            $artist = $artistRepository->find($artistId);
+
+            $tab->setArtist($artist);
+        }
+
+        $tagIds = $requestContent['tag_ids'] ?? null;
+        if ($tagIds !== null) {
+            $tab->getTags()->clear();
+
+            $tags = $tagRepository->findBy(['id' => $tagIds]);
+            foreach ($tags as $tag) {
+                $tab->addTag($tag);
+            }
+        }
+
         $entityManager->persist($tab);
         $entityManager->flush();
 
-        $artist = [
+        $artist = $tab->getArtist() !== null ? [
             'id' => $tab->getArtist()->getId(),
             'name' => $tab->getArtist()->getName(),
-        ];
+        ] : null;
 
         $tags = [];
         foreach ($tab->getTags() as $tag) {
@@ -128,7 +151,15 @@ final class TabController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_tab_update', methods: ['PUT'])]
-    public function update(int $id, TabRepository $tabRepository, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function update(
+        int $id,
+        TabRepository $tabRepository,
+        ArtistRepository $artistRepository,
+        TagRepository $tagRepository,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        SerializerInterface $serializer
+    ): JsonResponse
     {
         $tab = $tabRepository->find($id);
 
@@ -142,13 +173,30 @@ final class TabController extends AbstractController
         $tab->setContent($requestContent['content'] ?? $tab->getContent());
         $tab->setCapo($requestContent['capo'] ?? $tab->getCapo());
 
+        $artistId = $requestContent['artist_id'] ?? null;
+        if ($artistId !== null) {
+            $artist = $artistRepository->find($artistId);
+
+            $tab->setArtist($artist);
+        }
+
+        $tagIds = $requestContent['tag_ids'] ?? null;
+        if ($tagIds !== null) {
+            $tab->getTags()->clear();
+
+            $tags = $tagRepository->findBy(['id' => $tagIds]);
+            foreach ($tags as $tag) {
+                $tab->addTag($tag);
+            }
+        }
+
         $entityManager->persist($tab);
         $entityManager->flush();
 
-        $artist = [
+        $artist = $tab->getArtist() !== null ? [
             'id' => $tab->getArtist()->getId(),
             'name' => $tab->getArtist()->getName(),
-        ];
+        ] : null;
 
         $tags = [];
         foreach ($tab->getTags() as $tag) {
