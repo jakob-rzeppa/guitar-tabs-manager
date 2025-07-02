@@ -43,7 +43,7 @@ watch(
       </ul>
       <p class="">Capo: {{response.data.content.capo}}</p>
       <div class="divider"></div>
-      {{response.data.content.content}}
+      <pre class="text-sm">{{response.data.content.content}}</pre>
     </div>
   </ContentWrapper>
 </template>
