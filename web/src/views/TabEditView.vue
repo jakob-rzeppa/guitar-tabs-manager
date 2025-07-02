@@ -27,7 +27,7 @@ watch(
       id = id[0];
     }
 
-    fetchFromAPI<Tab>('/tab/' + id, 'GET', {loading, response, error}).then(() => {
+    fetchFromAPI<Tab>('/tab/' + id, 'GET', null, {loading, response, error}).then(() => {
       if (!response.value || !response.value.data || !response.value.data.content) {
         return
       }
@@ -35,6 +35,51 @@ watch(
     });
   }, { immediate: true }
 )
+
+function saveTab() {
+  if (!tab.value) {
+    return
+  }
+  if (!response.value || !response.value.data || !response.value.data.content) {
+    return
+  }
+
+  const title = response.value.data.content.title !== tab.value.title ? tab.value.title : null
+  const capo = response.value.data.content.capo !== tab.value.capo ? tab.value.capo : null
+  const content = response.value.data.content.content !== tab.value.content ? tab.value.content : null
+
+  const artistId = response.value.data.content.artist?.id !== tab.value.artist.id
+      ? tab.value.artist.id
+      : null
+
+  let tagIds: number[] | null = tab.value.tags.map(tag => tag.id).sort((a, b) => a - b)
+  const oldTagIds = response.value.data.content.tags.map(tag => tag.id).sort((a, b) => a - b)
+  console.log(tagIds, oldTagIds)
+  const arraysEqual = (a: number[], b: number[]) =>
+      a.length === b.length && a.every((val, i) => val === b[i]);
+
+  if (arraysEqual(tagIds, oldTagIds)) {
+    console.log('hi')
+    tagIds = null;
+  }
+
+
+  const dto = Object.assign({},
+      title && {title},
+      capo && {capo},
+      content && {content},
+      artistId && {artist_id: artistId},
+      tagIds && {tag_ids: tagIds},
+  );
+
+  console.log(dto)
+  fetchFromAPI<Tab>('/tab/5', 'PUT', dto, {loading, response, error}).then(() => {
+    if (!response.value || !response.value.data || !response.value.data.content) {
+      return
+    }
+    tab.value = structuredClone(toRaw(response.value.data.content))
+  })
+}
 </script>
 
 <template>
@@ -56,7 +101,7 @@ watch(
         </label>
         <SelectArtist :artist="response.data.content.artist" @select="artist => tab!.artist = artist" />
         <SelectTags :initial-tags="response.data.content.tags" @select="tags => tab!.tags = tags" />
-        <button class="btn btn-success w-fit" @click="console.log(tab)">Save</button>
+        <button class="btn btn-success w-fit" @click="saveTab">Save</button>
       </div>
       <div class="divider"></div>
       <textarea class="textarea w-full" :value="tab.content" @input="event => tab!.content = (event.target as HTMLInputElement).value"></textarea>
