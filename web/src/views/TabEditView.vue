@@ -29,13 +29,37 @@ watch(
 
     fetchFromAPI<Tab>('/tab/' + id, 'GET', null, {loading, response, error}).then(() => {
       if (!response.value || !response.value.data || !response.value.data.content) {
-        console.error("API Response not found");
+        console.error("API Response not found.");
         return
       }
       tab.value = structuredClone(toRaw(response.value.data.content))
     });
   }, { immediate: true }
 )
+
+function formatTab() {
+  if (!tab.value) {
+    console.error("Tab not found for formating.")
+    return
+  }
+
+  const prevTabContent = tab.value.content;
+
+  const formatResponse = ref<AxiosResponse<APIResponse<string>> | null>(null)
+
+  fetchFromAPI<string>('/tab/format', 'POST', {content: prevTabContent}, {loading, response: formatResponse, error}).then(() => {
+    if (!formatResponse.value || !formatResponse.value.data.content) {
+      console.error("API Format Response not found.")
+      return
+    }
+    if (!tab.value) {
+      console.error("Tab not found for formating.")
+      return
+    }
+    tab.value.content = formatResponse.value.data.content;
+    console.log('Tab formated successfully.');
+  })
+}
 
 function saveTab() {
   if (!tab.value) {
@@ -79,7 +103,7 @@ function saveTab() {
   console.log("Saving tab changes: ", dto)
   fetchFromAPI<Tab>('/tab/' + route.params.id, 'PUT', dto, {loading, response, error}).then(() => {
     if (!response.value || !response.value.data || !response.value.data.content) {
-      console.error("API Response not found");
+      console.error("API Response not found.");
       return
     }
     tab.value = structuredClone(toRaw(response.value.data.content))
@@ -109,7 +133,11 @@ function saveTab() {
         <button class="btn btn-success w-fit" @click="saveTab">Save</button>
       </div>
       <div class="divider"></div>
-      <textarea class="textarea w-full" :value="tab.content" @input="event => tab!.content = (event.target as HTMLInputElement).value"></textarea>
+      <div class="flex flex-col gap-4">
+        <button class="btn w-fit" @click="formatTab">Format</button>
+        <p class="text-info hidden">Dont forget to save changes.</p>
+        <textarea class="textarea w-full" :value="tab.content" @input="event => tab!.content = (event.target as HTMLInputElement).value"></textarea>
+      </div>
     </div>
   </ContentWrapper>
 </template>
