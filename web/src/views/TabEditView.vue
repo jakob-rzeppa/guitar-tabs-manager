@@ -29,6 +29,7 @@ watch(
 
     fetchFromAPI<Tab>('/tab/' + id, 'GET', null, {loading, response, error}).then(() => {
       if (!response.value || !response.value.data || !response.value.data.content) {
+        console.error("API Response not found");
         return
       }
       tab.value = structuredClone(toRaw(response.value.data.content))
@@ -38,9 +39,11 @@ watch(
 
 function saveTab() {
   if (!tab.value) {
+    console.error("Tab not found");
     return
   }
   if (!response.value || !response.value.data || !response.value.data.content) {
+    console.error("API Response not found");
     return
   }
 
@@ -76,6 +79,7 @@ function saveTab() {
   console.log("Saving tab changes: ", dto)
   fetchFromAPI<Tab>('/tab/' + route.params.id, 'PUT', dto, {loading, response, error}).then(() => {
     if (!response.value || !response.value.data || !response.value.data.content) {
+      console.error("API Response not found");
       return
     }
     tab.value = structuredClone(toRaw(response.value.data.content))
