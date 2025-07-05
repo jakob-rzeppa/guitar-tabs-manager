@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Tab;
 use App\Repository\ArtistRepository;
 use App\Repository\TagRepository;
+use App\Service\FormatService;
+use App\Service\TransposeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -237,5 +239,30 @@ final class TabController extends AbstractController
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
+    }
+
+    #[Route('/format', name: 'app_tab_format', methods: ['POST'])]
+    public function format(Request $request, FormatService $formatService): JsonResponse
+    {
+        $requestContent = $request->toArray();
+
+        $tabContent = $requestContent['tab_content'];
+
+        $tabContent = $formatService->formatTab($tabContent);
+
+        return $this->json(['tab_content' => $tabContent]);
+    }
+
+    #[Route('/transpose', name: 'app_tab_transpose', methods: ['POST'])]
+    public function transpose(Request $request, TransposeService $transposeService): JsonResponse
+    {
+        $requestContent = $request->toArray();
+
+        $tabContent = $requestContent['tab_content'];
+        $dir = $requestContent['dir'];
+
+        $tabContent = $transposeService->transposeTab($tabContent, $dir);
+
+        return $this->json(['tab_content' => $tabContent]);
     }
 }
