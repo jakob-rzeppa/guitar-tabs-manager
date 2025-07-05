@@ -246,11 +246,11 @@ final class TabController extends AbstractController
     {
         $requestContent = $request->toArray();
 
-        $tabContent = $requestContent['tab_content'];
+        $tabContent = $requestContent['content'];
 
         $tabContent = $formatService->formatTab($tabContent);
 
-        return $this->json(['tab_content' => $tabContent]);
+        return $this->json(['content' => $tabContent]);
     }
 
     #[Route('/transpose', name: 'app_tab_transpose', methods: ['POST'])]
@@ -258,11 +258,11 @@ final class TabController extends AbstractController
     {
         $requestContent = $request->toArray();
 
-        $tabContent = $requestContent['tab_content'];
+        $tabContent = $requestContent['content'];
         $dir = $requestContent['dir'];
 
         $tabContent = $transposeService->transposeTab($tabContent, $dir);
 
-        return $this->json(['tab_content' => $tabContent]);
+        return $this->json(['content' => $tabContent]);
     }
 }
