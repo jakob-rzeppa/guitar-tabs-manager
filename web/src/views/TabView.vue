@@ -1,49 +1,38 @@
 <script setup lang="ts">
 
 import {useRoute} from "vue-router";
-import type {APIResponse, Tab} from "@/types/types.ts";
-import {ref, watch} from "vue";
-import type {AxiosResponse} from "axios";
-import {fetchFromAPI} from "@/services/api.ts";
 import ErrorDisplay from "@/components/ErrorDisplay.vue";
 import LoadingPlaceholder from "@/components/LoadingPlaceholder.vue";
 import ContentWrapper from "@/components/ContentWrapper.vue";
+import {useTabByIdStore} from "@/stores/tabById.ts";
+import {computed, onMounted} from "vue";
 
 const route = useRoute()
+const tabByIdStore = useTabByIdStore()
 
-const loading = ref(false)
-const response = ref<AxiosResponse<APIResponse<Tab>> | null>(null)
-const error = ref<string | null>(null)
+const tabId = computed(() => route.params.id as string)
+const currentTab = computed(() => tabByIdStore.tabs[tabId.value])
 
-watch(
-    () => route.params.id,
-    (newId) => {
-      let id = newId;
-      if (Array.isArray(id)) {
-        id = id[0];
-      }
-
-      fetchFromAPI<Tab>('/tab/' + id, 'GET', null, {loading, response, error}).then();
-    }, { immediate: true }
-)
-
+onMounted(async () => {
+  await tabByIdStore.fetchTab(tabId.value)
+})
 </script>
 
 <template>
   <ContentWrapper>
-    <ErrorDisplay v-if="error !== null" :message="error" />
-    <LoadingPlaceholder v-else-if="loading" />
-    <ErrorDisplay v-else-if="response === null || response.data.content === undefined" :message="'Data is not available.'" />
+    <LoadingPlaceholder v-if="tabByIdStore.loading" />
+    <ErrorDisplay v-else-if="tabByIdStore.error" :message="tabByIdStore.error" />
+    <ErrorDisplay v-else-if="!currentTab || !currentTab.content" message="No content." />
     <div v-else class="p-10">
-      <h1 class="text-4xl">{{response.data.content.title}} <span v-if="response.data.content.artist !== null" class="text-primary">by</span> <span v-if="response.data.content.artist !== null">{{response.data.content.artist.name}}</span></h1>
+      <h1 class="text-4xl">{{currentTab.content.title}} <span v-if="currentTab.content.artist !== null" class="text-primary">by</span> <span v-if="currentTab.content.artist !== null">{{currentTab.content.artist.name}}</span></h1>
       <ul class="flex flex-row flex-wrap gap-1.5">
-        <li v-for="tag in response.data.content.tags" class="badge badge-secondary">
+        <li v-for="tag in currentTab.content.tags" class="badge badge-secondary">
           {{tag.name}}
         </li>
       </ul>
-      <p class="">Capo: {{response.data.content.capo}}</p>
+      <p class="">Capo: {{currentTab.content.capo}}</p>
       <div class="divider"></div>
-      <pre class="text-sm">{{response.data.content.content}}</pre>
+      <pre class="text-sm">{{currentTab.content.content}}</pre>
     </div>
   </ContentWrapper>
 </template>

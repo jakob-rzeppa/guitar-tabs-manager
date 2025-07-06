@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import {ref, toRaw} from "vue";
-import type {AxiosResponse} from "axios";
 import type {APIResponse, Artist, Tab, Tag} from "@/types/types.ts";
-import {fetchFromAPI} from "@/services/api.ts";
 import ErrorDisplay from "@/components/ErrorDisplay.vue";
 import LoadingPlaceholder from "@/components/LoadingPlaceholder.vue";
 import ContentWrapper from "@/components/ContentWrapper.vue";
@@ -10,24 +8,27 @@ import TabsDisplay from "@/components/TabsDisplay.vue";
 import calculateSimilarity from "@/services/calculateSimilarity.ts";
 import SelectArtist from "@/components/SelectArtist.vue";
 import SelectTags from "@/components/SelectTags.vue";
+import { useApi } from "@/services/api.ts";
+import api from "@/services/api.ts";
 
 const loading = ref(false)
-const response = ref<AxiosResponse<APIResponse<Tab[]>> | null>(null)
 const error = ref<string | null>(null)
+const response = ref<APIResponse<Tab[]> | null>(null)
+const apiCall = () => api.get('/tab')
 
 const displayedTabs = ref<Tab[]>([])
 
-fetchFromAPI<Tab[]>('/tab', 'GET', null, {loading, response, error}).then(() => {
-  if (!response.value || !response.value.data.content) {
+useApi({loading, error, response, apiCall}).then(() => {
+  if (!response.value || !response.value.content) {
     throw new Error("Response object is empty.")
   }
-  displayedTabs.value = structuredClone(toRaw(response.value.data.content))
-});
+  displayedTabs.value = structuredClone(toRaw(response.value.content))
+})
 
 function orderTabs(event: Event) {
   const searchValue = (event.target as HTMLInputElement).value
 
-  if (!response.value || !response.value.data.content) {
+  if (!response.value || !response.value.content) {
     throw new Error("Response object is empty.")
   }
 
@@ -41,7 +42,7 @@ function orderTabs(event: Event) {
   })
 
   // needs to be sorted as well, so that the right order is present when the artist or tabs are changed
-  response.value.data.content.sort((a, b) => {
+  response.value.content.sort((a, b) => {
     const titleA = a.title.toLowerCase()
     const titleB = b.title.toLowerCase()
     return (
@@ -52,16 +53,16 @@ function orderTabs(event: Event) {
 }
 
 function filterByArtist(artist: Artist | null) {
-  if (!response.value || !response.value.data.content) {
+  if (!response.value || !response.value.content) {
     throw new Error("Response object is empty.")
   }
 
   if (!artist) {
-    displayedTabs.value = response.value.data.content
+    displayedTabs.value = response.value.content
     return
   }
 
-  displayedTabs.value = response.value.data.content.filter((item) => {
+  displayedTabs.value = response.value.content.filter((item) => {
     if (item.artist === null) {
       return false
     }
@@ -70,16 +71,16 @@ function filterByArtist(artist: Artist | null) {
 }
 
 function filterByTags(tags: Tag[]) {
-  if (!response.value || !response.value.data.content) {
+  if (!response.value || !response.value.content) {
     throw new Error("Response object is empty.")
   }
 
   if (tags.length === 0) {
-    displayedTabs.value = response.value.data.content
+    displayedTabs.value = response.value.content
     return
   }
 
-  displayedTabs.value = response.value.data.content.filter((item) => {
+  displayedTabs.value = response.value.content.filter((item) => {
     if (item.tags.length === 0) {
       return false
     }

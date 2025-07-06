@@ -1,91 +1,80 @@
 <script setup lang="ts">
 
 import {useRoute} from "vue-router";
-import {ref, toRaw, watch} from "vue";
-import type {AxiosResponse} from "axios";
+import {computed, onMounted, ref, toRaw} from "vue";
 import type {APIResponse, Tab} from "@/types/types.ts";
-import {fetchFromAPI} from "@/services/api.ts";
 import ContentWrapper from "@/components/ContentWrapper.vue";
 import ErrorDisplay from "@/components/ErrorDisplay.vue";
 import LoadingPlaceholder from "@/components/LoadingPlaceholder.vue";
 import SelectArtist from "@/components/SelectArtist.vue";
 import SelectTags from "@/components/SelectTags.vue";
+import {useTabByIdStore} from "@/stores/tabById.ts";
+import api, {useApi} from "@/services/api.ts";
 
 const route = useRoute()
+const tabByIdStore = useTabByIdStore()
 
-const loading = ref(false)
-const response = ref<AxiosResponse<APIResponse<Tab>> | null>(null)
-const error = ref<string | null>(null)
+const tabId = computed(() => route.params.id as string)
+const currentTab = computed(() => tabByIdStore.tabs[tabId.value])
 
-const tab = ref<Tab | null>(null)
+const localTab = ref<Tab | null>(null)
 
-watch(
-  () => route.params.id,
-  (newId) => {
-    let id = newId;
-    if (Array.isArray(id)) {
-      id = id[0];
-    }
-
-    fetchFromAPI<Tab>('/tab/' + id, 'GET', null, {loading, response, error}).then(() => {
-      if (!response.value || !response.value.data || !response.value.data.content) {
-        console.error("API Response not found.");
-        return
-      }
-      tab.value = structuredClone(toRaw(response.value.data.content))
-    });
-  }, { immediate: true }
-)
+const formatLoading = ref<boolean>(false);
+const formatError = ref<string | null>(null);
+const formatResponse = ref<APIResponse<string> | null>(null)
 
 function formatTab() {
-  if (!tab.value) {
+  if (!localTab.value) {
     console.error("Tab not found for formating.")
     return
   }
 
-  const prevTabContent = tab.value.content;
+  const prevTabContent = localTab.value.content;
 
-  const formatResponse = ref<AxiosResponse<APIResponse<string>> | null>(null)
-
-  fetchFromAPI<string>('/tab/format', 'POST', {content: prevTabContent}, {loading, response: formatResponse, error}).then(() => {
-    if (!formatResponse.value || !formatResponse.value.data.content) {
+  useApi({
+    loading: formatLoading,
+    error: formatError,
+    response: formatResponse,
+    apiCall: () => api.post('/tab/format', {content: prevTabContent})
+  }).then(() => {
+    if (!formatResponse.value || !formatResponse.value.content) {
       console.error("API Format Response not found.")
       return
     }
-    if (!tab.value) {
+    if (!localTab.value) {
       console.error("Tab not found for formating.")
       return
     }
-    tab.value.content = formatResponse.value.data.content;
+    localTab.value.content = formatResponse.value.content;
     console.log('Tab formated successfully.');
   })
 }
 
 function saveTab() {
-  if (!tab.value) {
-    console.error("Tab not found");
-    return
-  }
-  if (!response.value || !response.value.data || !response.value.data.content) {
-    console.error("API Response not found");
+  if (!localTab.value) {
+    console.error("Tab not found")
     return
   }
 
-  const title = response.value.data.content.title !== tab.value.title ? tab.value.title : null
-  const capo = response.value.data.content.capo !== tab.value.capo ? tab.value.capo : null
-  const content = response.value.data.content.content !== tab.value.content ? tab.value.content : null
+  if (!currentTab.value.content) {
+    console.error("Current tab not found");
+    return
+  }
 
-  const artistId = response.value.data.content.artist?.id !== tab.value.artist.id
-      ? tab.value.artist.id
+  const title = currentTab.value.content.title !== localTab.value.title ? localTab.value.title : null
+  const capo = currentTab.value.content.capo !== localTab.value.capo ? localTab.value.capo : null
+  const content = currentTab.value.content.content !== localTab.value.content ? localTab.value.content : null
+
+  const artistId = currentTab.value.content.artist?.id !== localTab.value.artist.id
+      ? localTab.value.artist.id
       : null
 
-  let tagIds: number[] | null = tab.value.tags.map(tag => tag.id).sort((a, b) => a - b)
-  const oldTagIds = response.value.data.content.tags.map(tag => tag.id).sort((a, b) => a - b)
+  let tagIds: number[] | null = localTab.value.tags.map(tag => tag.id).sort((a, b) => a - b)
+  const oldTagIds = currentTab.value.content.tags.map(tag => tag.id).sort((a, b) => a - b)
 
   if (tagIds.length === oldTagIds.length && tagIds.every((val, i) => val === oldTagIds[i])) {
     tagIds = null;
   }
-
 
   const dto = Object.assign({},
       title && {title},
@@ -101,42 +90,43 @@ function saveTab() {
   }
 
   console.log("Saving tab changes: ", dto)
-  fetchFromAPI<Tab>('/tab/' + route.params.id, 'PUT', dto, {loading, response, error}).then(() => {
-    if (!response.value || !response.value.data || !response.value.data.content) {
-      console.error("API Response not found.");
-      return
-    }
-    tab.value = structuredClone(toRaw(response.value.data.content))
-  })
+  tabByIdStore.updateTab(currentTab.value.content.id.toString(), dto)
 }
+
+onMounted(async () => {
+  await tabByIdStore.fetchTab(tabId.value)
+  localTab.value = structuredClone(toRaw(currentTab.value.content!))
+})
 </script>
 
 <template>
   <ContentWrapper>
-    <ErrorDisplay v-if="error !== null" :message="error" />
-    <LoadingPlaceholder v-else-if="loading" />
-    <ErrorDisplay v-else-if="response === null || response.data.content === undefined" message="Data is not available." />
-    <ErrorDisplay v-else-if="tab === null" message="Something went wrong while retrieving tabs." />
+    <LoadingPlaceholder v-if="tabByIdStore.loading" />
+    <ErrorDisplay v-else-if="tabByIdStore.error !== null" :message="tabByIdStore.error" />
+    <ErrorDisplay v-else-if="!currentTab || !currentTab.content" message="No content." />
+    <ErrorDisplay v-else-if="localTab === null" message="Something went wrong while retrieving tabs." />
     <div v-else class="p-10">
       <h1 class="text-4xl">Edit Tab</h1>
       <div class="flex flex-col gap-4 pt-4">
         <label class="input w-full">
           <span class="label">title</span>
-          <input type="text" :value="tab.title" @input="event => tab!.title = (event.target as HTMLInputElement).value" />
+          <input type="text" :value="localTab.title" @input="event => localTab!.title = (event.target as HTMLInputElement).value" />
         </label>
         <label class="input w-full">
           <span class="label">capo</span>
-          <input type="number" :value="tab.capo" @input="event => tab!.capo = parseInt((event.target as HTMLInputElement).value)" />
+          <input type="number" :value="localTab.capo" @input="event => localTab!.capo = parseInt((event.target as HTMLInputElement).value)" />
         </label>
-        <SelectArtist :artist="response.data.content.artist" @select="artist => tab!.artist = artist" />
-        <SelectTags :initial-tags="response.data.content.tags" @select="tags => tab!.tags = tags" />
+        <SelectArtist :artist="currentTab.content.artist" @select="artist => localTab!.artist = artist" />
+        <SelectTags :initial-tags="currentTab.content.tags" @select="tags => localTab!.tags = tags" />
         <button class="btn btn-success w-fit" @click="saveTab">Save</button>
       </div>
       <div class="divider"></div>
-      <div class="flex flex-col gap-4">
+      <LoadingPlaceholder v-if="formatLoading" />
+      <ErrorDisplay v-else-if="formatError !== null" :message="formatError" />
+      <div v-else class="flex flex-col gap-4">
         <button class="btn w-fit" @click="formatTab">Format</button>
         <p class="text-info hidden">Dont forget to save changes.</p>
-        <textarea class="textarea w-full" :value="tab.content" @input="event => tab!.content = (event.target as HTMLInputElement).value"></textarea>
+        <textarea class="textarea w-full h-screen" :value="localTab.content" @input="event => localTab!.content = (event.target as HTMLInputElement).value"></textarea>
       </div>
     </div>
   </ContentWrapper>

@@ -1,11 +1,10 @@
 <script setup lang="ts">
 
 import {ref, toRaw} from "vue";
-import type {AxiosResponse} from "axios";
 import type {APIResponse, Tag} from "@/types/types.ts";
-import {fetchFromAPI} from "@/services/api.ts";
 import ErrorDisplay from "@/components/ErrorDisplay.vue";
 import LoadingPlaceholder from "@/components/LoadingPlaceholder.vue";
+import api, {useApi} from "@/services/api.ts";
 
 interface Props {
   initialTags: Tag[]
@@ -15,10 +14,11 @@ const props = defineProps<Props>()
 const emit = defineEmits(['select'])
 
 const loading = ref(false)
-const response = ref<AxiosResponse<APIResponse<Tag[]>> | null>(null)
+const response = ref<APIResponse<Tag[]> | null>(null)
 const error = ref<string | null>(null)
+const apiCall = () => api.get('/tag')
 
-fetchFromAPI<Tag[]>('/tag', 'GET', null, {loading, response, error}).then();
+useApi({loading, error, response, apiCall})
 
 const activeTags = ref<Tag[]>(structuredClone(toRaw(props.initialTags)))
 const errorMessage = ref<string | null>(null)
@@ -39,12 +39,12 @@ function addActiveTag(event: Event) {
     return
   }
 
-  if (!response || !response.value || !response.value.data.content) {
+  if (!response || !response.value || !response.value.content) {
     displayError('Something went wrong. Please try reloading the page.');
     return
   }
 
-  const tagToAdd = response.value.data.content.find(
+  const tagToAdd = response.value.content.find(
       (tag) => tag.name.toLowerCase() === inputElement.value.toLowerCase()
   )
 
@@ -69,7 +69,7 @@ function addActiveTag(event: Event) {
 function removeActiveTag(event: Event) {
   const element = event.currentTarget as HTMLInputElement
 
-  if (!response || !response.value || !response.value.data.content) {
+  if (!response || !response.value || !response.value.content) {
     throw new Error("Response object is empty.")
   }
 
@@ -91,7 +91,7 @@ function removeActiveTag(event: Event) {
 <template>
   <LoadingPlaceholder v-if="loading" />
   <ErrorDisplay v-else-if="error" :message="error" />
-  <ErrorDisplay v-else-if="!response || !response.data.content" message="Something went wrong while retrieving artists." />
+  <ErrorDisplay v-else-if="!response || !response.content" message="Something went wrong while retrieving artists." />
   <div v-else class="">
     <label class="input box-border w-full" :class="{ 'input-error': errorMessage }">
       <span class="label">Tags</span>
@@ -102,7 +102,7 @@ function removeActiveTag(event: Event) {
       </span>
       <input type="text" list="tags" placeholder="Type here" @keyup.enter="addActiveTag" />
       <datalist id="tags">
-        <option v-for="tag in response.data.content.filter( (el) => !activeTags.includes( el ))" :value="tag.name" />
+        <option v-for="tag in response.content.filter( (el) => !activeTags.includes( el ))" :value="tag.name" />
       </datalist>
     </label>
     <div class="mt-1 text-error" :class="{ 'hidden': !errorMessage }">{{errorMessage}}</div>
