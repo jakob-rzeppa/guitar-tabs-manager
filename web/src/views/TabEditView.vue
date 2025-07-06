@@ -18,38 +18,6 @@ const tabId = computed(() => route.params.id as string)
 const currentTab = computed(() => tabByIdStore.tabs[tabId.value])
 
 const localTab = ref<Tab | null>(null)
-
-const formatLoading = ref<boolean>(false);
-const formatError = ref<string | null>(null);
-const formatResponse = ref<APIResponse<string> | null>(null)
-
-function formatTab() {
-  if (!localTab.value) {
-    console.error("Tab not found for formating.")
-    return
-  }
-
-  const prevTabContent = localTab.value.content;
-
-  useApi({
-    loading: formatLoading,
-    error: formatError,
-    response: formatResponse,
-    apiCall: () => api.post('/tab/format', {content: prevTabContent})
-  }).then(() => {
-    if (!formatResponse.value || !formatResponse.value.content) {
-      console.error("API Format Response not found.")
-      return
-    }
-    if (!localTab.value) {
-      console.error("Tab not found for formating.")
-      return
-    }
-    localTab.value.content = formatResponse.value.content;
-    console.log('Tab formated successfully.');
-  })
-}
-
 function saveTab() {
   if (!localTab.value) {
     console.error("Tab not found")
@@ -97,6 +65,82 @@ onMounted(async () => {
   await tabByIdStore.fetchTab(tabId.value)
   localTab.value = structuredClone(toRaw(currentTab.value.content!))
 })
+
+// FORMAT
+const formatLoading = ref<boolean>(false);
+const formatError = ref<string | null>(null);
+const formatResponse = ref<APIResponse<string> | null>(null)
+
+function formatTab() {
+  if (!localTab.value) {
+    console.error("Tab not found for formating.")
+    return
+  }
+
+  const prevTabContent = localTab.value.content;
+
+  useApi({
+    loading: formatLoading,
+    error: formatError,
+    response: formatResponse,
+    apiCall: () => api.post('/tab/format', {content: prevTabContent})
+  }).then(() => {
+    if (!formatResponse.value || !formatResponse.value.content) {
+      console.error("API Format Response not found.")
+      return
+    }
+    if (!localTab.value) {
+      console.error("Tab not found for formating.")
+      return
+    }
+    localTab.value.content = formatResponse.value.content;
+    console.log('Tab formated successfully.');
+  })
+}
+
+// TRANSPOSE
+const transposeDir = ref<'up' | 'down'>('down')
+const transposeLoading = ref<boolean>(false);
+const transposeError = ref<string | null>(null);
+const transposeResponse = ref<APIResponse<string> | null>(null)
+const transposeAndMoveCapo = ref(true)
+
+function transposeTab() {
+  if (!localTab.value) {
+    console.error("Tab not found for transposing.")
+    return
+  }
+
+  const prevTabContent = localTab.value.content;
+
+  useApi({
+    loading: transposeLoading,
+    error: transposeError,
+    response: transposeResponse,
+    apiCall: () => api.post('/tab/transpose', {content: prevTabContent, dir: transposeDir.value})
+  }).then(() => {
+    if (!transposeResponse.value || !transposeResponse.value.content) {
+      console.error("API Transpose Response not found.")
+      return
+    }
+    if (!localTab.value) {
+      console.error("Tab not found for transposing.")
+      return
+    }
+    if (transposeAndMoveCapo.value === true) {
+      if (transposeDir.value === 'up') {
+        localTab.value.capo--
+      } else if (transposeDir.value === 'down') {
+        localTab.value.capo++
+      } else {
+        console.error("Something went wrong when changing the capo.")
+        return
+      }
+    }
+    localTab.value.content = transposeResponse.value.content;
+    console.log('Tab transposed ' + (transposeAndMoveCapo.value === true && 'and capo changed ') + 'successfully.');
+  })
+}
 </script>
 
 <template>
@@ -121,10 +165,22 @@ onMounted(async () => {
         <button class="btn btn-success w-fit" @click="saveTab">Save</button>
       </div>
       <div class="divider"></div>
-      <LoadingPlaceholder v-if="formatLoading" />
+      <LoadingPlaceholder v-if="formatLoading || transposeLoading" />
       <ErrorDisplay v-else-if="formatError !== null" :message="formatError" />
+      <ErrorDisplay v-else-if="transposeError !== null" :message="transposeError" />
       <div v-else class="flex flex-col gap-4">
         <button class="btn w-fit" @click="formatTab">Format</button>
+        <div class="flex gap-2">
+          <select class="select w-max" v-model="transposeAndMoveCapo">
+            <option :value="true">change Capo</option>
+            <option :value="false">transpose</option>
+          </select>
+          <select class="select w-min" v-model="transposeDir">
+            <option>up</option>
+            <option>down</option>
+          </select>
+          <button class="btn w-fit" @click="transposeTab">{{ transposeAndMoveCapo ? 'Change Capo' : 'Transpose'}}</button>
+        </div>
         <p class="text-info hidden">Dont forget to save changes.</p>
         <textarea class="textarea w-full h-screen" :value="localTab.content" @input="event => localTab!.content = (event.target as HTMLInputElement).value"></textarea>
       </div>
