@@ -31,6 +31,7 @@ onMounted(async () => {
         </li>
       </ul>
       <p class="">Capo: {{currentTab.content.capo}}</p>
+      <RouterLink class="btn btn-primary" :to="`/tab/${tabId}/edit`">Edit</RouterLink>
       <div class="divider"></div>
       <pre class="text-sm">{{currentTab.content.content}}</pre>
     </div>
