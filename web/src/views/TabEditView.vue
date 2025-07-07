@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {computed, onMounted, ref, toRaw} from "vue";
 import type {APIResponse, Tab} from "@/types/types.ts";
 import ContentWrapper from "@/components/ContentWrapper.vue";
@@ -12,6 +12,7 @@ import {useTabByIdStore} from "@/stores/tabById.ts";
 import api, {useApi} from "@/services/api.ts";
 
 const route = useRoute()
+const router = useRouter()
 const tabByIdStore = useTabByIdStore()
 
 const tabId = computed(() => route.params.id as string)
@@ -54,11 +55,14 @@ function saveTab() {
 
   if (Object.keys(dto).length === 0) {
     console.log("No tab changes to save.")
+    router.push({name: 'tab', params: {id: tabId.value}})
     return
   }
 
   console.log("Saving tab changes: ", dto)
   tabByIdStore.updateTab(currentTab.value.content.id.toString(), dto)
+
+  router.push({name: 'tab', params: {id: tabId.value}})
 }
 
 onMounted(async () => {
@@ -141,6 +145,29 @@ function transposeTab() {
     console.log('Tab transposed ' + (transposeAndMoveCapo.value === true && 'and capo changed ') + 'successfully.');
   })
 }
+
+function discardChanges() {
+  if (!localTab.value || !currentTab.value.content) {
+    console.error("Tab not found when discarding changes.")
+    router.push({name: 'tab', params: {id: tabId.value}})
+    return
+  }
+
+  let tagIds: number[] | null = localTab.value.tags.map(tag => tag.id).sort((a, b) => a - b)
+  const oldTagIds = currentTab.value.content.tags.map(tag => tag.id).sort((a, b) => a - b)
+
+  if (
+      currentTab.value.content.title !== localTab.value.title ||
+      currentTab.value.content.capo !== localTab.value.capo ||
+      currentTab.value.content.content !== localTab.value.content ||
+      currentTab.value.content.artist?.id !== localTab.value.artist.id ||
+      tagIds.length !== oldTagIds.length || tagIds.every((val, i) => val !== oldTagIds[i])
+  ) {
+    alert('Are you sure you want to discard all changes?')
+  }
+
+  router.push({name: 'tab', params: {id: tabId.value}})
+}
 </script>
 
 <template>
@@ -162,7 +189,10 @@ function transposeTab() {
         </label>
         <SelectArtist :artist="currentTab.content.artist" @select="artist => localTab!.artist = artist" />
         <SelectTags :initial-tags="currentTab.content.tags" @select="tags => localTab!.tags = tags" />
-        <button class="btn btn-success w-fit" @click="saveTab">Save</button>
+        <div class="flex flex-row gap-4">
+          <button class="btn btn-error w-fit" @click="discardChanges">Discard Changes</button>
+          <button class="btn btn-success w-fit" @click="saveTab">Save</button>
+        </div>
       </div>
       <div class="divider"></div>
       <LoadingPlaceholder v-if="formatLoading || transposeLoading" />
