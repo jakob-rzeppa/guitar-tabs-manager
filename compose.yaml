@@ -4,7 +4,7 @@ services:
       context: ./api
       dockerfile: Dockerfile
     volumes:
-      - ./api:/var/www/html   # Mount only ./api to avoid mismatches
+      - ./api:/var/www/html
     environment:
       APP_ENV: prod
       APP_DEBUG: 0
@@ -23,5 +23,3 @@ services:
     build: ./web/
     ports:
       - "8080:8080"
-    depends_on:
-      - api
