@@ -11,10 +11,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\TagRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route('/tag')]
+#[Route('/tags')]
 final class TagController extends AbstractController
 {
-    #[Route('', name: 'app_tag_get_all', methods: ['GET'])]
+    #[Route('', name: 'app_tags_get_all', methods: ['GET'])]
     public function getAll(TagRepository $tagRepository, SerializerInterface $serializer): JsonResponse
     {
         $tags = $tagRepository->findAll();
@@ -35,7 +35,7 @@ final class TagController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/{id}', name: 'app_tag_get_by_id', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_tags_get_by_id', methods: ['GET'])]
     public function getById(int $id, TagRepository $tagRepository, SerializerInterface $serializer): JsonResponse
     {
         $tag = $tagRepository->find($id);
@@ -51,7 +51,7 @@ final class TagController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('', name: 'app_tag_create', methods: ['POST'])]
+    #[Route('', name: 'app_tags_create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $requestContent = $request->toArray();
@@ -70,7 +70,7 @@ final class TagController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/{id}', name: 'app_tag_update', methods: ['PUT'])]
+    #[Route('/{id}', name: 'app_tags_update', methods: ['PUT'])]
     public function update(int $id, TagRepository $tagRepository, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $tag = $tagRepository->find($id);
@@ -94,7 +94,7 @@ final class TagController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/{id}', name: 'app_tag_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'app_tags_delete', methods: ['DELETE'])]
     public function delete(int $id, TagRepository $tagRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $tag = $tagRepository->find($id);

@@ -21,7 +21,7 @@ export const useTabByIdStore = defineStore('tabById', {
 
       await useApiInStore<Tab>({
         store: this,
-        apiCall: () => api.get(`/tab/${id}`),
+        apiCall: () => api.get(`/tabs/${id}`),
         onSuccess: ({ data }) => {
           this.tabs[id] = data
         }
@@ -31,7 +31,7 @@ export const useTabByIdStore = defineStore('tabById', {
     async createTab(payload: Omit<Tab, 'id'>): Promise<void> {
       await useApiInStore<Tab>({
         store: this,
-        apiCall: () => api.post('/tab', payload),
+        apiCall: () => api.post('/tabs', payload),
         onSuccess: ({ data }) => {
           if (!data.content) {
             this.error = 'Request content is empty'
@@ -45,7 +45,7 @@ export const useTabByIdStore = defineStore('tabById', {
     async updateTab(id: string, payload: Partial<Tab>): Promise<void> {
       await useApiInStore<Tab>({
         store: this,
-        apiCall: () => api.put(`/tab/${id}`, payload),
+        apiCall: () => api.put(`/tabs/${id}`, payload),
         onSuccess: ({ data }) => {
           this.tabs[id] = data
         }
@@ -55,7 +55,7 @@ export const useTabByIdStore = defineStore('tabById', {
     async deleteTab(id: string): Promise<void> {
       await useApiInStore<void>({
         store: this,
-        apiCall: () => api.delete(`/tab/${id}`),
+        apiCall: () => api.delete(`/tabs/${id}`),
         onSuccess: () => {
           delete this.tabs[id]
         }

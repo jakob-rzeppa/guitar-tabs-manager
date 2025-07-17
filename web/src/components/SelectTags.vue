@@ -16,7 +16,7 @@ const emit = defineEmits(['select'])
 const loading = ref(false)
 const response = ref<APIResponse<Tag[]> | null>(null)
 const error = ref<string | null>(null)
-const apiCall = () => api.get('/tag')
+const apiCall = () => api.get('/tags')
 
 useApi({loading, error, response, apiCall})
 

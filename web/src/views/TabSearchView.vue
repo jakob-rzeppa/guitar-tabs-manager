@@ -14,7 +14,7 @@ import api from "@/services/api.ts";
 const loading = ref(false)
 const error = ref<string | null>(null)
 const response = ref<APIResponse<Tab[]> | null>(null)
-const apiCall = () => api.get('/tab')
+const apiCall = () => api.get('/tabs')
 
 const displayedTabs = ref<Tab[]>([])
 

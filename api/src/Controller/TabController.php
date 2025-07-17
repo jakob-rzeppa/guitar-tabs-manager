@@ -15,10 +15,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\TabRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route('/tab')]
+#[Route('/tabs')]
 final class TabController extends AbstractController
 {
-    #[Route('', name: 'app_tab_get_all', methods: ['GET'])]
+    #[Route('', name: 'app_tabs_get_all', methods: ['GET'])]
     public function getAll(TabRepository $tabRepository, SerializerInterface $serializer): JsonResponse
     {
         $tabs = $tabRepository->findAll();
@@ -54,7 +54,7 @@ final class TabController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/{id}', name: 'app_tab_get_by_id', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_tabs_get_by_id', methods: ['GET'])]
     public function getById(int $id, TabRepository $tabRepository, SerializerInterface $serializer): JsonResponse
     {
         $tab = $tabRepository->find($id);
@@ -90,7 +90,7 @@ final class TabController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('', name: 'app_tab_create', methods: ['POST'])]
+    #[Route('', name: 'app_tabs_create', methods: ['POST'])]
     public function create(
         Request $request,
         ArtistRepository $artistRepository,
@@ -152,7 +152,7 @@ final class TabController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/{id}', name: 'app_tab_update', methods: ['PUT'])]
+    #[Route('/{id}', name: 'app_tabs_update', methods: ['PUT'])]
     public function update(
         int $id,
         TabRepository $tabRepository,
@@ -222,7 +222,7 @@ final class TabController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/{id}', name: 'app_tab_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'app_tabs_delete', methods: ['DELETE'])]
     public function delete(int $id, TabRepository $tabRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $tab = $tabRepository->find($id);
@@ -241,7 +241,7 @@ final class TabController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/format', name: 'app_tab_format', methods: ['POST'])]
+    #[Route('/format', name: 'app_tabs_format', methods: ['POST'])]
     public function format(Request $request, FormatService $formatService): JsonResponse
     {
         $requestContent = $request->toArray();
@@ -253,7 +253,7 @@ final class TabController extends AbstractController
         return $this->json(['content' => $tabContent]);
     }
 
-    #[Route('/transpose', name: 'app_tab_transpose', methods: ['POST'])]
+    #[Route('/transpose', name: 'app_tabs_transpose', methods: ['POST'])]
     public function transpose(Request $request, TransposeService $transposeService): JsonResponse
     {
         $requestContent = $request->toArray();

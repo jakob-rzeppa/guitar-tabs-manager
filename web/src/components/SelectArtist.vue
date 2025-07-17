@@ -17,7 +17,7 @@ const emit = defineEmits(['select'])
 const loading = ref(false)
 const response = ref<APIResponse<Artist[]> | null>(null)
 const error = ref<string | null>(null)
-const apiCall = () => api.get('/artist')
+const apiCall = () => api.get('/artists')
 
 useApi<Artist[]>({loading, error, response, apiCall})
 

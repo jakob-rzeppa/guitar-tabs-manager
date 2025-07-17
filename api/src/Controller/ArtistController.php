@@ -12,10 +12,10 @@ use App\Repository\ArtistRepository;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route('/artist')]
+#[Route('/artists')]
 final class ArtistController extends AbstractController
 {
-    #[Route('', name: 'app_artist_get_all', methods: ['GET'])]
+    #[Route('', name: 'app_artists_get_all', methods: ['GET'])]
     public function getAll(ArtistRepository $artistRepository, SerializerInterface $serializer): JsonResponse
     {
         $artists = $artistRepository->findAll();
@@ -36,7 +36,7 @@ final class ArtistController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/{id}', name: 'app_artist_get_by_id', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_artists_get_by_id', methods: ['GET'])]
     public function getById(int $id, ArtistRepository $artistRepository, SerializerInterface $serializer): JsonResponse
     {
         $artist = $artistRepository->find($id);
@@ -52,7 +52,7 @@ final class ArtistController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('', name: 'app_artist_create', methods: ['POST'])]
+    #[Route('', name: 'app_artists_create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $requestContent = $request->toArray();
@@ -71,7 +71,7 @@ final class ArtistController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/{id}', name: 'app_artist_update', methods: ['PUT'])]
+    #[Route('/{id}', name: 'app_artists_update', methods: ['PUT'])]
     public function update(int $id, Request $request, ArtistRepository $artistRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $artist = $artistRepository->find($id);
@@ -95,7 +95,7 @@ final class ArtistController extends AbstractController
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/{id}', name: 'app_artist_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'app_artists_delete', methods: ['DELETE'])]
     public function delete(int $id, ArtistRepository $artistRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $artist = $artistRepository->find($id);
