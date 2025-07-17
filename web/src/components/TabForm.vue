@@ -4,44 +4,63 @@ import LoadingPlaceholder from "@/components/LoadingPlaceholder.vue";
 import ErrorDisplay from "@/components/ErrorDisplay.vue";
 import SelectArtist from "@/components/SelectArtist.vue";
 import SelectTags from "@/components/SelectTags.vue";
-import {useRoute, useRouter} from "vue-router";
-import {useTabByIdStore} from "@/stores/tabById.ts";
-import {computed, onMounted, ref, toRaw} from "vue";
+import {onMounted, ref, toRaw} from "vue";
 import type {APIResponse, Tab} from "@/types/types.ts";
 import api, {useApi} from "@/services/api.ts";
+import {useTabByIdStore} from "@/stores/tabById.ts";
 
-const route = useRoute()
-const router = useRouter()
+interface Props {
+  prevTab: Tab | null;
+}
+
+const {prevTab} = defineProps<Props>()
+
+const emit = defineEmits(["done"])
+
 const tabByIdStore = useTabByIdStore()
 
-const tabId = computed(() => route.params.id as string)
-const currentTab = computed(() => tabByIdStore.tabs[tabId.value])
-
 const localTab = ref<Tab | null>(null)
-function saveTab() {
+
+async function saveTab() {
   if (!localTab.value) {
     console.error("Tab not found")
     return
   }
 
-  if (!currentTab.value.content) {
-    console.error("Current tab not found");
+  // If tab is created
+  if (prevTab === null) {
+    let tagIds: number[] | null = localTab.value.tags.map(tag => tag.id).sort((a, b) => a - b)
+
+    const dto = Object.assign({},
+        {title: localTab.value.title},
+        {capo: localTab.value.capo},
+        {content: localTab.value.content},
+        {artist_id: localTab.value.artist.id},
+        {tag_ids: tagIds},
+    )
+
+    console.log("Creating tab", dto)
+
+    emit("done")
+
+    await tabByIdStore.createTab(dto)
+
     return
   }
 
-  const title = currentTab.value.content.title !== localTab.value.title ? localTab.value.title : null
-  const capo = currentTab.value.content.capo !== localTab.value.capo ? localTab.value.capo : null
-  const content = currentTab.value.content.content !== localTab.value.content ? localTab.value.content : null
+  const title = prevTab.title !== localTab.value.title ? localTab.value.title : null
+  const capo = prevTab.capo !== localTab.value.capo ? localTab.value.capo : null
+  const content = prevTab.content !== localTab.value.content ? localTab.value.content : null
 
-  const artistId = currentTab.value.content.artist?.id !== localTab.value.artist.id
+  const artistId = prevTab.artist?.id !== localTab.value.artist.id
       ? localTab.value.artist.id
       : null
 
   let tagIds: number[] | null = localTab.value.tags.map(tag => tag.id).sort((a, b) => a - b)
-  const oldTagIds = currentTab.value.content.tags.map(tag => tag.id).sort((a, b) => a - b)
+  const oldTagIds = prevTab.tags.map(tag => tag.id).sort((a, b) => a - b)
 
   if (tagIds.length === oldTagIds.length && tagIds.every((val, i) => val === oldTagIds[i])) {
-    tagIds = null;
+    tagIds = null
   }
 
   const dto = Object.assign({},
@@ -50,23 +69,23 @@ function saveTab() {
       content && {content},
       artistId && {artist_id: artistId},
       tagIds && {tag_ids: tagIds},
-  );
+  )
 
   if (Object.keys(dto).length === 0) {
     console.log("No tab changes to save.")
-    router.push({name: 'tab', params: {id: tabId.value}})
+    emit("done")
     return
   }
 
-  console.log("Saving tab changes: ", dto)
-  tabByIdStore.updateTab(currentTab.value.content.id.toString(), dto)
+  console.log("Updating tab " + prevTab.id, dto)
 
-  router.push({name: 'tab', params: {id: tabId.value}})
+  emit("done")
+
+  await tabByIdStore.updateTab(prevTab.id.toString(), dto)
 }
 
-onMounted(async () => {
-  await tabByIdStore.fetchTab(tabId.value)
-  localTab.value = structuredClone(toRaw(currentTab.value.content!))
+onMounted(() => {
+  localTab.value = structuredClone(toRaw(prevTab))
 })
 
 // FORMAT
@@ -146,55 +165,59 @@ function transposeTab() {
 }
 
 function discardChanges() {
-  if (!localTab.value || !currentTab.value.content) {
+  if (!localTab.value || !prevTab) {
     console.error("Tab not found when discarding changes.")
-    router.push({name: 'tab', params: {id: tabId.value}})
+    emit('done')
     return
   }
 
   let tagIds: number[] | null = localTab.value.tags.map(tag => tag.id).sort((a, b) => a - b)
-  const oldTagIds = currentTab.value.content.tags.map(tag => tag.id).sort((a, b) => a - b)
+  const oldTagIds = prevTab.tags.map(tag => tag.id).sort((a, b) => a - b)
 
   if (
-      currentTab.value.content.title !== localTab.value.title ||
-      currentTab.value.content.capo !== localTab.value.capo ||
-      currentTab.value.content.content !== localTab.value.content ||
-      currentTab.value.content.artist?.id !== localTab.value.artist.id ||
+      prevTab.title !== localTab.value.title ||
+      prevTab.capo !== localTab.value.capo ||
+      prevTab.content !== localTab.value.content ||
+      prevTab.artist?.id !== localTab.value.artist.id ||
       tagIds.length !== oldTagIds.length || tagIds.every((val, i) => val !== oldTagIds[i])
   ) {
     alert('Are you sure you want to discard all changes?')
   }
 
-  router.push({name: 'tab', params: {id: tabId.value}})
+  emit('done')
 }
 </script>
 
 <template>
-  <LoadingPlaceholder v-if="tabByIdStore.loading" />
-  <ErrorDisplay v-else-if="tabByIdStore.error !== null" :message="tabByIdStore.error" />
-  <ErrorDisplay v-else-if="!currentTab || !currentTab.content" message="No content." />
-  <ErrorDisplay v-else-if="localTab === null" message="Something went wrong while retrieving tabs." />
+  <LoadingPlaceholder v-if="tabByIdStore.loading"/>
+  <ErrorDisplay v-else-if="tabByIdStore.error !== null" :message="tabByIdStore.error"/>
+  <ErrorDisplay v-else-if="localTab === null" message="Something went wrong while retrieving tabs."/>
   <div v-else>
     <div class="flex flex-col gap-4 pt-4">
       <label class="input w-full">
         <span class="label">title</span>
-        <input type="text" :value="localTab.title" @input="event => localTab!.title = (event.target as HTMLInputElement).value" />
+        <input type="text" :value="localTab.title"
+               @input="event => localTab!.title = (event.target as HTMLInputElement).value"/>
       </label>
       <label class="input w-full">
         <span class="label">capo</span>
-        <input type="number" :value="localTab.capo" @input="event => localTab!.capo = parseInt((event.target as HTMLInputElement).value)" />
+        <input
+            type="number"
+            :value="localTab.capo"
+            @input="event => localTab!.capo = parseInt((event.target as HTMLInputElement).value)"
+        />
       </label>
-      <SelectArtist :artist="currentTab.content.artist" @select="artist => localTab!.artist = artist" />
-      <SelectTags :initial-tags="currentTab.content.tags" @select="tags => localTab!.tags = tags" />
+      <SelectArtist :artist="prevTab !== null ? prevTab.artist : null" @select="artist => localTab!.artist = artist"/>
+      <SelectTags :initial-tags="prevTab !== null ? prevTab.tags : []" @select="tags => localTab!.tags = tags"/>
       <div class="flex flex-row gap-4">
         <button class="btn btn-error w-fit" @click="discardChanges">Discard Changes</button>
         <button class="btn btn-success w-fit" @click="saveTab">Save</button>
       </div>
     </div>
     <div class="divider"></div>
-    <LoadingPlaceholder v-if="formatLoading || transposeLoading" />
-    <ErrorDisplay v-else-if="formatError !== null" :message="formatError" />
-    <ErrorDisplay v-else-if="transposeError !== null" :message="transposeError" />
+    <LoadingPlaceholder v-if="formatLoading || transposeLoading"/>
+    <ErrorDisplay v-else-if="formatError !== null" :message="formatError"/>
+    <ErrorDisplay v-else-if="transposeError !== null" :message="transposeError"/>
     <div v-else class="flex flex-col gap-4">
       <button class="btn w-fit" @click="formatTab">Format</button>
       <div class="flex gap-2">
@@ -206,10 +229,15 @@ function discardChanges() {
           <option>up</option>
           <option>down</option>
         </select>
-        <button class="btn w-fit" @click="transposeTab">{{ transposeAndMoveCapo ? 'Change Capo' : 'Transpose'}}</button>
+        <button class="btn w-fit" @click="transposeTab">{{ transposeAndMoveCapo ? 'Change Capo' : 'Transpose' }}
+        </button>
       </div>
       <p class="text-info hidden">Dont forget to save changes.</p>
-      <textarea class="textarea w-full h-screen" :value="localTab.content" @input="event => localTab!.content = (event.target as HTMLInputElement).value"></textarea>
+      <textarea
+          class="textarea w-full h-screen"
+          :value="localTab.content"
+          @input="event => localTab!.content = (event.target as HTMLInputElement).value"
+      ></textarea>
     </div>
   </div>
 </template>
