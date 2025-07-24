@@ -4,20 +4,20 @@ export type APIResponse<T> = {
 }
 
 export type Tab = {
-    id: number,
+    id: string,
     title: string,
-    artist: Artist,
+    artist: Artist | null,
     tags: Tag[]
     capo: number,
     content: string,
 }
 
 export type Tag = {
-    id: number,
+    id: string,
     name: string
 }
 
 export type Artist = {
-    id: number,
+    id: string,
     name: string
 }
