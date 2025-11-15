@@ -64,68 +64,215 @@ const handleCancel = () => {
 
 <template>
     <ContentWrapper>
-        <div class="p-10 max-w-4xl mx-auto">
-            <h1 class="text-4xl mb-6">Transpose Tab</h1>
+        <div class="p-6 md:p-10 max-w-4xl mx-auto">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="bg-secondary rounded-full p-3">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-8 w-8 text-secondary-content"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                        />
+                    </svg>
+                </div>
+                <h1 class="text-5xl font-bold">Transpose Tab</h1>
+            </div>
+
             <LoadingPlaceholder v-if="tabsStore.loading || transposeLoading" />
             <ErrorDisplay
                 v-else-if="tabsStore.error !== null || transposeError !== null"
                 :message="tabsStore.error || transposeError"
             />
-            <div v-else-if="transposedTabContent === null || capo === null">
-                <button @click="handleTranspose('up', false)" class="btn btn-accent">
-                    Transpose Up
-                </button>
-                <button @click="handleTranspose('down', false)" class="btn btn-accent">
-                    Transpose Down
-                </button>
-                <button @click="handleTranspose('up', true)" class="btn btn-accent">
-                    Transpose Up (Change Capo)
-                </button>
-                <button @click="handleTranspose('down', true)" class="btn btn-accent">
-                    Transpose Down (Change Capo)
-                </button>
-                <h2 class="text-2xl mt-6 mb-2">Original Tab Content:</h2>
-                <pre>{{ tabsStore.detailedTabs[tabId]?.content }}</pre>
+            <div v-else-if="transposedTabContent === null || capo === null" class="space-y-6">
+                <div class="alert alert-info shadow-lg">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6 shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                    </svg>
+                    <span>Choose a transpose option to change the key of this tab.</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button
+                        @click="handleTranspose('up', false)"
+                        class="btn btn-accent btn-lg gap-2"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 15l7-7 7 7"
+                            />
+                        </svg>
+                        Transpose Up
+                    </button>
+                    <button
+                        @click="handleTranspose('down', false)"
+                        class="btn btn-accent btn-lg gap-2"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 9l-7 7-7-7"
+                            />
+                        </svg>
+                        Transpose Down
+                    </button>
+                    <button
+                        @click="handleTranspose('up', true)"
+                        class="btn btn-secondary btn-lg gap-2"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 15l7-7 7 7"
+                            />
+                        </svg>
+                        Transpose Up + Adjust Capo
+                    </button>
+                    <button
+                        @click="handleTranspose('down', true)"
+                        class="btn btn-secondary btn-lg gap-2"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 9l-7 7-7-7"
+                            />
+                        </svg>
+                        Transpose Down + Adjust Capo
+                    </button>
+                </div>
+
+                <div class="card bg-base-200 shadow-xl">
+                    <div class="card-body">
+                        <h3 class="card-title text-sm opacity-60">Original Content:</h3>
+                        <pre class="text-sm overflow-x-auto">{{
+                            tabsStore.detailedTabs[tabId]?.content
+                        }}</pre>
+                    </div>
+                </div>
             </div>
-            <div v-else>
+            <div v-else class="space-y-6">
                 <!-- Capo -->
                 <div>
-                    <label for="capo" class="block text-sm font-medium mb-2">Capo</label>
+                    <label class="label" for="capo">
+                        <span class="label-text text-base font-semibold">Capo</span>
+                        <span class="label-text-alt">Fret position (0-12)</span>
+                    </label>
                     <input
                         id="capo"
                         v-model.number="capo"
                         type="number"
                         min="0"
                         max="12"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="input input-bordered input-lg w-full"
                     />
                 </div>
 
                 <div>
-                    <label for="content" class="block text-sm font-medium mb-2">Tab Content</label>
+                    <label class="label" for="content">
+                        <span class="label-text text-base font-semibold"
+                            >Transposed Tab Content</span
+                        >
+                        <span class="label-text-alt">Review and edit if needed</span>
+                    </label>
                     <textarea
                         id="content"
                         v-model="textareaInput"
                         rows="20"
                         required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                        class="textarea textarea-bordered w-full font-mono text-sm h-96"
                         placeholder="Enter tab notation here..."
                     ></textarea>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex gap-4">
-                    <button
-                        @click="handleSave"
-                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
-                        Save
+                    <button @click="handleSave" class="btn btn-primary btn-lg gap-2">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"
+                            />
+                        </svg>
+                        Save Changes
                     </button>
                     <button
                         type="button"
                         @click="handleCancel"
-                        class="px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                        class="btn btn-outline btn-lg gap-2"
                     >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
                         Cancel
                     </button>
                 </div>
