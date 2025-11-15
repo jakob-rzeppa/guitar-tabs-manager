@@ -9,15 +9,16 @@ const model = defineModel<Tag[]>({ required: true });
 
 const tagsStore = useTagsStore();
 
+const inputValue = ref<string>('');
+
 onMounted(() => {
     tagsStore.fetchAllTags();
 });
 
-function addActiveTag(event: Event) {
-    const inputElement = event.currentTarget as HTMLInputElement;
-
+function addActiveTag() {
+    console.log('Adding tag:', inputValue.value);
     const tagToAdd = tagsStore.tags.find(
-        (tag: Tag) => tag.name.toLowerCase() === inputElement.value.toLowerCase(),
+        (tag: Tag) => tag.name.toLowerCase() === inputValue.value.toLowerCase(),
     );
 
     // Since errors are handled by the tagsStore, we can just return early if something is wrong
@@ -31,15 +32,11 @@ function addActiveTag(event: Event) {
 
     model.value.push(tagToAdd);
 
-    inputElement.value = '';
+    inputValue.value = '';
 }
 
 function removeActiveTag(event: Event) {
     const element = event.currentTarget as HTMLInputElement;
-
-    if (!tagsStore.tags || tagsStore.tags.length === 0) {
-        return;
-    }
 
     const indexToRemove = model.value.findIndex((tag: Tag) => tag.id === Number(element.id));
 
@@ -71,7 +68,19 @@ function removeActiveTag(event: Event) {
                     {{ tag.name }}
                 </span>
             </span>
-            <input type="text" list="tags" placeholder="Type here" @keyup.enter="addActiveTag" />
+            <input
+                type="text"
+                list="tags"
+                placeholder="Type here"
+                v-model="inputValue"
+                @submit.stop.prevent="addActiveTag"
+            />
+            <button
+                class="btn btn-circle btn-xs btn-outline btn-primary"
+                @click.prevent="addActiveTag"
+            >
+                +
+            </button>
             <datalist id="tags">
                 <option
                     v-for="tag in tagsStore.tags.filter((el: Tag) => !model.includes(el))"
