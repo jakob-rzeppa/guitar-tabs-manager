@@ -109,13 +109,12 @@ const handleCancel = () => {
                 <!-- Action Buttons -->
                 <div class="flex gap-4">
                     <button
-                        type="submit"
+                        @click="handleSave"
                         class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
                         Save
                     </button>
                     <button
-                        type="button"
                         @click="handleCancel"
                         class="px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                     >
