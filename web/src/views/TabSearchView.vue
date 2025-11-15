@@ -75,7 +75,7 @@ function filterByTags(tags: Tag[]) {
                 <input type="checkbox" />
                 <div class="collapse-title font-semibold">Filter</div>
                 <div class="collapse-content flex flex-col gap-4">
-                    <SelectArtist :artist="null" @select="filterByArtist" />
+                    <SelectArtist v-model="artistIdFilter" />
                     <SelectTags :initial-tags="[]" @select="filterByTags" />
                 </div>
             </div>
