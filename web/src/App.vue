@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';
+import ModalController from './components/modal/ModalController.vue';
 </script>
 
 <template>
@@ -8,4 +9,5 @@ import Navbar from '@/components/Navbar.vue';
         <Navbar />
         <RouterView />
     </div>
+    <ModalController />
 </template>
