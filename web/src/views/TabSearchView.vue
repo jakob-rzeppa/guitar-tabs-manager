@@ -59,24 +59,76 @@ watch(
 
 <template>
     <ContentWrapper>
-        <div class="px-14 pt-8">
-            <h1 class="text-4xl font-bold mx-auto w-fit mb-8">Search for Tabs</h1>
-            <label class="input box-border w-full">
-                <span class="label font-bold">Search</span>
-                <input type="text" placeholder="Type here" v-model="searchValue" />
-            </label>
-            <div tabindex="0" class="collapse collapse-arrow">
-                <input type="checkbox" />
-                <div class="collapse-title font-semibold">Filter</div>
-                <div class="collapse-content flex flex-col gap-4">
-                    <SelectArtist v-model="artistFilter" />
-                    <SelectTags v-model="tagsFilter" />
+        <div class="px-8 md:px-14 pt-8 pb-4">
+            <h1
+                class="text-5xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+            >
+                Search for Tabs
+            </h1>
+
+            <div class="max-w-3xl mx-auto space-y-4">
+                <label
+                    class="input input-bordered input-lg flex items-center gap-2 w-full shadow-md"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 opacity-70"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                    </svg>
+                    <input
+                        type="text"
+                        class="grow"
+                        placeholder="Search by title..."
+                        v-model="searchValue"
+                    />
+                </label>
+
+                <div tabindex="0" class="collapse collapse-arrow bg-base-200 rounded-box shadow-md">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-lg font-semibold flex items-center gap-2">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                            />
+                        </svg>
+                        Advanced Filters
+                    </div>
+                    <div class="collapse-content">
+                        <div class="flex flex-col gap-4 pt-4">
+                            <SelectArtist v-model="artistFilter" />
+                            <SelectTags v-model="tagsFilter" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="divider"></div>
+
+        <div class="divider my-2"></div>
+
         <LoadingPlaceholder v-if="tabsStore.loading" />
         <ErrorDisplay v-else-if="tabsStore.error !== null" :message="tabsStore.error" />
+        <div v-else-if="displayedTabs.length === 0" class="text-center py-16">
+            <div class="text-6xl mb-4 opacity-20">🎸</div>
+            <p class="text-xl opacity-60">No tabs found. Try adjusting your filters.</p>
+        </div>
         <TabsDisplay v-else :tabs="displayedTabs" />
     </ContentWrapper>
 </template>
