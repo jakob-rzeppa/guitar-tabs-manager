@@ -1,8 +1,8 @@
-import axios, {type AxiosResponse} from 'axios';
-import type { APIResponse } from "@/types/types.ts";
-import type {Ref} from "vue";
+import axios, { type AxiosResponse } from 'axios';
+import type { APIResponse } from '@/types/types.ts';
+import type { Ref } from 'vue';
 
-const baseURL = import.meta.env.VITE_API_ENDPOINT
+const baseURL = import.meta.env.VITE_API_ENDPOINT;
 
 const axiosInstance = axios.create({
     baseURL,
@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 
 console.log('Successfully created axios instance with the baseURL:', baseURL);
 
-export default axiosInstance
+export default axiosInstance;
 
 interface UseApiParams<T> {
     loading: Ref<boolean>;
@@ -19,39 +19,48 @@ interface UseApiParams<T> {
     apiCall: () => Promise<AxiosResponse<APIResponse<T>>>;
 }
 
-export async function useApi<T>({loading, error, response, apiCall}: UseApiParams<T>): Promise<void> {
-    loading.value = true
-    error.value = null
+export async function useApi<T>({
+    loading,
+    error,
+    response,
+    apiCall,
+}: UseApiParams<T>): Promise<void> {
+    loading.value = true;
+    error.value = null;
 
     try {
-        response.value = (await apiCall()).data
-        return
+        response.value = (await apiCall()).data;
+        return;
     } catch (err: any) {
-        error.value = err.response?.data?.message || err.message || 'Request failed'
-        throw err
+        error.value = err.response?.data?.message || err.message || 'Request failed';
+        throw err;
     } finally {
-        loading.value = false
+        loading.value = false;
     }
 }
 
 interface UseApiInStoreParams<T> {
-    store: { loading: boolean; error: string | null }
-    apiCall: () => Promise<AxiosResponse<APIResponse<T>>>
-    onSuccess?: (response: AxiosResponse<APIResponse<T>>) => void
+    store: { loading: boolean; error: string | null };
+    apiCall: () => Promise<AxiosResponse<APIResponse<T>>>;
+    onSuccess?: (response: AxiosResponse<APIResponse<T>>) => void;
 }
 
-export async function useApiInStore<T>({ store, apiCall, onSuccess }: UseApiInStoreParams<T>): Promise<APIResponse<T>> {
-    store.loading = true
-    store.error = null
+export async function useApiInStore<T>({
+    store,
+    apiCall,
+    onSuccess,
+}: UseApiInStoreParams<T>): Promise<APIResponse<T>> {
+    store.loading = true;
+    store.error = null;
 
     try {
-        const response = await apiCall()
-        onSuccess?.(response)
-        return response.data
+        const response = await apiCall();
+        onSuccess?.(response);
+        return response.data;
     } catch (err: any) {
-        store.error = err.response?.data?.message || err.message || 'Request failed'
-        throw err
+        store.error = err.response?.data?.message || err.message || 'Request failed';
+        throw err;
     } finally {
-        store.loading = false
+        store.loading = false;
     }
 }

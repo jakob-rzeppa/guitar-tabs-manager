@@ -18,7 +18,7 @@ function calculateLevenshteinDistance(a: string, b: string) {
                 matrix[i][j] = Math.min(
                     matrix[i - 1][j] + 1, // Deletion
                     matrix[i][j - 1] + 1, // Insertion
-                    matrix[i - 1][j - 1] + 1 // Substitution
+                    matrix[i - 1][j - 1] + 1, // Substitution
                 );
             }
         }

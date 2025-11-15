@@ -1,8 +1,5 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <main>
-    HomeView
-  </main>
+    <main>HomeView</main>
 </template>
