@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import type { TabListItem, Tag } from '@/types/types.ts';
+import type { Artist, TabListItem, Tag } from '@/types/types.ts';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ContentWrapper from '@/components/ContentWrapper.vue';
@@ -15,18 +15,21 @@ const tabsStore = useTabsStore();
 tabsStore.fetchAllTabs();
 
 const searchValue = ref<string>('');
-const artistIdFilter = ref<number | null>(null);
+const artistFilter = ref<Artist | null>(null);
 const tagsFilter = ref<Tag[]>([]);
 const displayedTabs = ref<TabListItem[]>([]);
 
 watch(
-    () => [tabsStore.tabsList, searchValue.value, artistIdFilter.value, tagsFilter.value],
+    () => [tabsStore.tabsList, searchValue.value, artistFilter.value, tagsFilter.value],
     () => {
-        if (artistIdFilter.value === null) {
+        if (artistFilter.value === null) {
             displayedTabs.value = [...tabsStore.tabsList];
         } else {
             displayedTabs.value = tabsStore.tabsList.filter((tab) => {
-                return tab.artist !== null && tab.artist.id === artistIdFilter.value;
+                return (
+                    !artistFilter.value ||
+                    (tab.artist !== null && tab.artist.id === artistFilter.value.id)
+                );
             });
         }
 
@@ -66,7 +69,7 @@ watch(
                 <input type="checkbox" />
                 <div class="collapse-title font-semibold">Filter</div>
                 <div class="collapse-content flex flex-col gap-4">
-                    <SelectArtist v-model="artistIdFilter" />
+                    <SelectArtist v-model="artistFilter" />
                     <SelectTags v-model="tagsFilter" />
                 </div>
             </div>

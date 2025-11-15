@@ -3,8 +3,9 @@ import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import { useArtistsStore } from '@/stores/artistsStore';
 import { onMounted } from 'vue';
+import type { Artist } from '@/types/types';
 
-const model = defineModel<number | null>({ required: true });
+const model = defineModel<Artist | null>({ required: true });
 
 const artistsStore = useArtistsStore();
 
@@ -19,7 +20,8 @@ function handleInput(event: Event) {
 
     // If valid artist
     if (artistObject) {
-        model.value = artistObject.id;
+        // Deep copy to avoid mutating store state
+        model.value = JSON.parse(JSON.stringify(artistObject));
         return;
     }
 
