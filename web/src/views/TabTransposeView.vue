@@ -187,7 +187,7 @@ const handleCancel = () => {
                                 d="M5 15l7-7 7 7"
                             />
                         </svg>
-                        Transpose Up + Adjust Capo
+                        Transpose Up + Adjust Capo up
                     </button>
                     <button
                         @click="handleTranspose('down', true)"
@@ -207,12 +207,18 @@ const handleCancel = () => {
                                 d="M19 9l-7 7-7-7"
                             />
                         </svg>
-                        Transpose Down + Adjust Capo
+                        Transpose Down + Adjust Capo down
                     </button>
                 </div>
 
                 <div class="card bg-base-200 shadow-xl">
                     <div class="card-body">
+                        <h3 class="card-title text-sm opacity-60">Original Capo:</h3>
+                        <pre>{{
+                            tabsStore.detailedTabs[tabId]?.capo === 0
+                                ? 'None'
+                                : `Fret ${tabsStore.detailedTabs[tabId]?.capo}`
+                        }}</pre>
                         <h3 class="card-title text-sm opacity-60">Original Content:</h3>
                         <pre class="text-sm overflow-x-auto">{{
                             tabsStore.detailedTabs[tabId]?.content
