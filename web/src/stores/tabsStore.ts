@@ -86,6 +86,10 @@ export const useTabsStore = defineStore('tabs', {
                     }
 
                     this.detailedTabs[data.content.id] = data.content;
+
+                    // Add to tabsList as well
+                    const { id, title, artist, tags } = data.content;
+                    this.tabsList.push({ id, title, artist, tags });
                 },
             });
         },

@@ -36,7 +36,6 @@ const handleSave = async () => {
 };
 
 const handleCancel = () => {
-    tabsStore.fetchAllTabs({ force: true });
     router.push({ name: 'tabSearch' });
 };
 </script>
