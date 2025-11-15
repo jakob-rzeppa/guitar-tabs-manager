@@ -3,7 +3,7 @@ interface Props {
     class?: string;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
     class: 'h-6 w-6',
 });
 </script>
@@ -11,7 +11,7 @@ withDefaults(defineProps<Props>(), {
 <template>
     <svg
         xmlns="http://www.w3.org/2000/svg"
-        :class="class"
+        :class="props.class"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
