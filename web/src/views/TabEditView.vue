@@ -12,10 +12,15 @@ import EditIcon from '@/components/icons/EditIcon.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useTabsStore } from '@/stores/tabsStore';
 import type { Tab } from '@/types/types';
+import { useModalStore } from '@/stores/modalStore';
+import CreateArtistModal from '@/components/CreateArtistModal.vue';
+import PlusIcon from '@/components/icons/PlusIcon.vue';
 
 const route = useRoute();
 const router = useRouter();
+
 const tabsStore = useTabsStore();
+const modalStore = useModalStore();
 
 const tabId = computed(() => route.params.id as string);
 
@@ -91,7 +96,17 @@ const handleCancel = () => {
                 </div>
 
                 <!-- Artist -->
-                <SelectArtist v-model="localTab.artist" />
+                <div class="space-y-2">
+                    <SelectArtist v-model="localTab.artist" />
+
+                    <button
+                        class="btn btn-sm btn-outline btn-secondary w-max"
+                        @click="modalStore.openModal(CreateArtistModal)"
+                    >
+                        <PlusIcon />
+                        Create new Artist
+                    </button>
+                </div>
 
                 <!-- Tags -->
                 <SelectTags v-model="localTab.tags" />

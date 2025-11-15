@@ -36,5 +36,20 @@ export const useArtistsStore = defineStore('artists', {
                 },
             });
         },
+
+        async createArtist(artist: Partial<Artist>): Promise<void> {
+            await useApiInStore<Artist>({
+                store: this,
+                apiCall: () => api.post('/artists', artist),
+                onSuccess: ({ data }) => {
+                    if (!data.content) {
+                        this.error = 'Request content is empty';
+                        return;
+                    }
+
+                    this.artists.push(data.content);
+                },
+            });
+        },
     },
 });
