@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, toRaw, watch } from 'vue';
-import type { APIResponse, Artist, Tab, TabListItem, Tag } from '@/types/types.ts';
+import { ref, watch } from 'vue';
+import type { TabListItem, Tag } from '@/types/types.ts';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ContentWrapper from '@/components/ContentWrapper.vue';
@@ -16,12 +16,11 @@ tabsStore.fetchAllTabs();
 
 const searchValue = ref<string>('');
 const artistIdFilter = ref<number | null>(null);
-const tagIdsFilter = ref<number[]>([]);
-
+const tagsFilter = ref<Tag[]>([]);
 const displayedTabs = ref<TabListItem[]>([]);
 
 watch(
-    () => [tabsStore.tabsList, searchValue.value, artistIdFilter.value, tagIdsFilter.value],
+    () => [tabsStore.tabsList, searchValue.value, artistIdFilter.value, tagsFilter.value],
     () => {
         if (artistIdFilter.value === null) {
             displayedTabs.value = [...tabsStore.tabsList];
@@ -31,14 +30,14 @@ watch(
             });
         }
 
-        if (tagIdsFilter.value.length > 0) {
+        if (tagsFilter.value.length > 0) {
             displayedTabs.value = displayedTabs.value.filter((item) => {
                 if (item.tags.length === 0) {
                     return false;
                 }
 
                 const itemTagIds = item.tags.map((tag) => tag.id);
-                return tagIdsFilter.value.every((filterTagId) => itemTagIds.includes(filterTagId));
+                return tagsFilter.value.every((filterTag) => itemTagIds.includes(filterTag.id));
             });
         }
 
@@ -51,16 +50,8 @@ watch(
             );
         });
     },
-    { immediate: true },
+    { immediate: true, deep: true },
 );
-
-function filterByArtist(artist: Artist | null) {
-    artistIdFilter.value = artist?.id ?? null;
-}
-
-function filterByTags(tags: Tag[]) {
-    tagIdsFilter.value = tags.map((tag) => tag.id);
-}
 </script>
 
 <template>
@@ -76,7 +67,7 @@ function filterByTags(tags: Tag[]) {
                 <div class="collapse-title font-semibold">Filter</div>
                 <div class="collapse-content flex flex-col gap-4">
                     <SelectArtist v-model="artistIdFilter" />
-                    <SelectTags :initial-tags="[]" @select="filterByTags" />
+                    <SelectTags v-model="tagsFilter" />
                 </div>
             </div>
         </div>
