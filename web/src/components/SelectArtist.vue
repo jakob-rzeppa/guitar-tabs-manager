@@ -2,13 +2,15 @@
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import { useArtistsStore } from '@/stores/artistsStore';
+import { onMounted } from 'vue';
 
 const model = defineModel<number | null>({ required: true });
 
 const artistsStore = useArtistsStore();
 
-// Initial API call
-artistsStore.fetchAllArtists();
+onMounted(() => {
+    artistsStore.fetchAllArtists();
+});
 
 function handleInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
