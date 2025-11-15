@@ -2,21 +2,21 @@
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import { useArtistsStore } from '@/stores/artistsStore';
-import { onMounted } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import type { Artist } from '@/types/types';
 
 const model = defineModel<Artist | null>({ required: true });
 
 const artistsStore = useArtistsStore();
 
-onMounted(() => {
-    artistsStore.fetchAllArtists();
+const inputValue = ref<string>(model.value ? model.value.name : '');
+
+onMounted(async () => {
+    await artistsStore.fetchAllArtists();
 });
 
-function handleInput(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-
-    const artistObject = artistsStore.artists.find((e) => e.name === value);
+function handleInput() {
+    const artistObject = artistsStore.artists.find((e) => e.name === inputValue.value);
 
     // If valid artist
     if (artistObject) {
@@ -32,13 +32,15 @@ function handleInput(event: Event) {
 <template>
     <LoadingPlaceholder v-if="artistsStore.loading" />
     <ErrorDisplay v-else-if="artistsStore.error" :message="artistsStore.error" />
-    <ErrorDisplay
-        v-else-if="!artistsStore.artists || artistsStore.artists.length === 0"
-        message="Something went wrong while retrieving artists."
-    />
     <label v-else class="input box-border w-full">
         <span class="label">Artist</span>
-        <input list="artists" type="text" placeholder="Type here" @input="handleInput" />
+        <input
+            list="artists"
+            type="text"
+            placeholder="Type here"
+            v-model="inputValue"
+            @input="handleInput"
+        />
         <datalist id="artists">
             <option v-for="possibleArtist in artistsStore.artists" :value="possibleArtist.name" />
         </datalist>
