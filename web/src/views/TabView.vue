@@ -115,7 +115,7 @@ onMounted(async () => {
                     </svg>
                     Edit
                 </RouterLink>
-                <RouterLink class="btn btn-primary gap-2" :to="`/tab/${tabId}/transpose`">
+                <RouterLink class="btn btn-secondary gap-2" :to="`/tab/${tabId}/transpose`">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-5 w-5"
@@ -132,7 +132,7 @@ onMounted(async () => {
                     </svg>
                     Transpose
                 </RouterLink>
-                <RouterLink class="btn btn-primary gap-2" :to="`/tab/${tabId}/format`">
+                <RouterLink class="btn btn-accent gap-2" :to="`/tab/${tabId}/format`">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-5 w-5"
