@@ -51,8 +51,26 @@ const handleCancel = () => {
 
 <template>
     <ContentWrapper>
-        <div class="p-10 max-w-4xl mx-auto">
-            <h1 class="text-4xl mb-6">Edit Tab</h1>
+        <div class="p-6 md:p-10 max-w-4xl mx-auto">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="bg-primary rounded-full p-3">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-8 w-8 text-primary-content"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
+                    </svg>
+                </div>
+                <h1 class="text-5xl font-bold">Edit Tab</h1>
+            </div>
 
             <LoadingPlaceholder v-if="tabsStore.loading" />
             <ErrorDisplay v-else-if="tabsStore.error !== null" :message="tabsStore.error" />
@@ -64,13 +82,16 @@ const handleCancel = () => {
             <div v-else @keypress.enter="handleSave" class="space-y-6">
                 <!-- Title -->
                 <div>
-                    <label for="title" class="block text-sm font-medium mb-2">Title</label>
+                    <label class="label" for="title">
+                        <span class="label-text text-base font-semibold">Title</span>
+                    </label>
                     <input
                         id="title"
                         v-model="localTab.title"
                         type="text"
                         required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Enter tab title"
+                        class="input input-bordered input-lg w-full"
                     />
                 </div>
 
@@ -82,43 +103,71 @@ const handleCancel = () => {
 
                 <!-- Capo -->
                 <div>
-                    <label for="capo" class="block text-sm font-medium mb-2">Capo</label>
+                    <label class="label" for="capo">
+                        <span class="label-text text-base font-semibold">Capo</span>
+                        <span class="label-text-alt">Fret position (0-12)</span>
+                    </label>
                     <input
                         id="capo"
                         v-model.number="localTab.capo"
                         type="number"
                         min="0"
                         max="12"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="input input-bordered input-lg w-full"
                     />
                 </div>
 
                 <!-- Content (Tab notation) -->
                 <div>
-                    <label for="content" class="block text-sm font-medium mb-2">Tab Content</label>
+                    <label class="label" for="content">
+                        <span class="label-text text-base font-semibold">Tab Content</span>
+                        <span class="label-text-alt">Tab notation goes here</span>
+                    </label>
                     <textarea
                         @keypress.enter.stop=""
                         id="content"
                         v-model="localTab.content"
                         rows="20"
                         required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                        class="textarea textarea-bordered w-full font-mono text-sm h-96"
                         placeholder="Enter tab notation here..."
                     ></textarea>
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex gap-4">
-                    <button
-                        @click="handleSave"
-                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
-                        Save
+                <div class="flex gap-4 pt-4">
+                    <button @click="handleSave" class="btn btn-primary btn-lg gap-2">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"
+                            />
+                        </svg>
+                        Save Changes
                     </button>
-                    <button
-                        @click="handleCancel"
-                        class="px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                    >
+                    <button @click="handleCancel" class="btn btn-outline btn-lg gap-2">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
                         Cancel
                     </button>
                 </div>
