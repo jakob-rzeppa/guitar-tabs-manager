@@ -4,7 +4,7 @@ export type APIResponse<T> = {
 };
 
 export type Tab = {
-    id: string;
+    id: number;
     title: string;
     artist: Artist | null;
     tags: Tag[];
@@ -13,18 +13,18 @@ export type Tab = {
 };
 
 export type TabListItem = {
-    id: string;
+    id: number;
     title: string;
     artist: Artist | null;
     tags: Tag[];
 };
 
 export type Tag = {
-    id: string;
+    id: number;
     name: string;
 };
 
 export type Artist = {
-    id: string;
+    id: number;
     name: string;
 };
