@@ -12,6 +12,13 @@ export type Tab = {
     content: string;
 };
 
+export type TabListItem = {
+    id: string;
+    title: string;
+    artist: Artist | null;
+    tags: Tag[];
+};
+
 export type Tag = {
     id: string;
     name: string;
