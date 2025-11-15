@@ -34,10 +34,14 @@ function addActiveTag() {
     inputValue.value = '';
 }
 
-function removeActiveTag(event: Event) {
-    const element = event.currentTarget as HTMLInputElement;
+function removeActiveTag(id?: number) {
+    let indexToRemove;
 
-    const indexToRemove = model.value.findIndex((tag: Tag) => tag.id === Number(element.id));
+    if (id === undefined) {
+        indexToRemove = model.value.length - 1;
+    } else {
+        indexToRemove = model.value.findIndex((tag: Tag) => tag.id === id);
+    }
 
     if (indexToRemove === -1) {
         return;
@@ -61,8 +65,7 @@ function removeActiveTag(event: Event) {
                 <span
                     v-for="tag in model"
                     class="bg-primary px-3 py-1 rounded-lg group hover:brightness-80 cursor-pointer"
-                    @click="removeActiveTag"
-                    :id="tag.id.toString()"
+                    @click="() => removeActiveTag(tag.id)"
                 >
                     {{ tag.name }}
                 </span>
@@ -73,6 +76,11 @@ function removeActiveTag(event: Event) {
                 placeholder="Type here"
                 v-model="inputValue"
                 @keypress.enter.stop="addActiveTag"
+                @keydown.delete.stop="
+                    () => {
+                        if (inputValue === '') removeActiveTag();
+                    }
+                "
             />
             <button class="btn btn-circle btn-xs btn-outline btn-primary" @click="addActiveTag">
                 +
