@@ -34,7 +34,14 @@ onMounted(async () => {
                 </li>
             </ul>
             <p class="">Capo: {{ currentTab.capo }}</p>
-            <RouterLink class="btn btn-primary" :to="`/tab/${tabId}/edit`">Edit</RouterLink>
+            <nav class="flex flex-row gap-2">
+                <RouterLink class="btn btn-secondary" :to="`/tabSearch`">Back to Search</RouterLink>
+                <RouterLink class="btn btn-primary" :to="`/tab/${tabId}/edit`">Edit</RouterLink>
+                <RouterLink class="btn btn-primary" :to="`/tab/${tabId}/transpose`"
+                    >Transpose</RouterLink
+                >
+                <RouterLink class="btn btn-primary" :to="`/tab/${tabId}/format`">Format</RouterLink>
+            </nav>
             <div class="divider"></div>
             <pre class="text-sm">{{ currentTab.content }}</pre>
         </div>
