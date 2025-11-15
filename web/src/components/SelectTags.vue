@@ -16,7 +16,6 @@ onMounted(() => {
 });
 
 function addActiveTag() {
-    console.log('Adding tag:', inputValue.value);
     const tagToAdd = tagsStore.tags.find(
         (tag: Tag) => tag.name.toLowerCase() === inputValue.value.toLowerCase(),
     );
@@ -73,12 +72,9 @@ function removeActiveTag(event: Event) {
                 list="tags"
                 placeholder="Type here"
                 v-model="inputValue"
-                @submit.stop.prevent="addActiveTag"
+                @keypress.enter.stop="addActiveTag"
             />
-            <button
-                class="btn btn-circle btn-xs btn-outline btn-primary"
-                @click.prevent="addActiveTag"
-            >
+            <button class="btn btn-circle btn-xs btn-outline btn-primary" @click="addActiveTag">
                 +
             </button>
             <datalist id="tags">
