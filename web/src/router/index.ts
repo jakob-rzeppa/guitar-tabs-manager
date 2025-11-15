@@ -35,6 +35,13 @@ const router = createRouter({
         },
 
         {
+            path: '/tab/:id/delete',
+            name: 'tabDelete',
+            // route level code-splitting
+            component: () => import('../views/TabDeleteView.vue'),
+        },
+
+        {
             path: '/tab/:id/format',
             name: 'tabFormat',
             // route level code-splitting

@@ -167,6 +167,12 @@ export const useTabsStore = defineStore('tabs', {
                 apiCall: () => api.delete(`/tabs/${id}`),
                 onSuccess: () => {
                     delete this.detailedTabs[id];
+
+                    // Also remove from tabsList
+                    const index = this.tabsList.findIndex((tab) => tab.id === Number(id));
+                    if (index !== -1) {
+                        this.tabsList.splice(index, 1);
+                    }
                 },
             });
         },
