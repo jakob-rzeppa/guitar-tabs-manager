@@ -79,7 +79,9 @@ function removeActiveTag(event: Event) {
             </button>
             <datalist id="tags">
                 <option
-                    v-for="tag in tagsStore.tags.filter((el: Tag) => !model.includes(el))"
+                    v-for="tag in tagsStore.tags.filter(
+                        (el: Tag) => model.findIndex((m) => m.id === el.id) === -1,
+                    )"
                     :value="tag.name"
                 />
             </datalist>
