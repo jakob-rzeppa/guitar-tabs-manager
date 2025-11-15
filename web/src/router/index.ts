@@ -32,7 +32,14 @@ const router = createRouter({
             path: '/tab/:id/format',
             name: 'tabFormat',
             // route level code-splitting
-            component: () => import('../views/FormatView.vue'),
+            component: () => import('../views/TabFormatView.vue'),
+        },
+
+        {
+            path: '/tab/:id/transpose',
+            name: 'tabTranspose',
+            // route level code-splitting
+            component: () => import('../views/TabTransposeView.vue'),
         },
     ],
 });
