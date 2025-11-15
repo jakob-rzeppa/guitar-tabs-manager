@@ -89,16 +89,51 @@ export const useTabsStore = defineStore('tabs', {
          */
         async updateTab(id: string, fieldsToUpdate: Partial<Omit<Tab, 'id'>>): Promise<void> {
             const currentTab = this.detailedTabs[id];
-            const changedFields = this._getChangedFields(currentTab, fieldsToUpdate);
+
+            const payload: {
+                title?: string;
+                content?: string;
+                capo?: number;
+                artist_id?: number;
+                tag_ids?: number[];
+            } = {};
+
+            // Compare primitive fields
+            if (fieldsToUpdate.title !== undefined && fieldsToUpdate.title !== currentTab?.title) {
+                payload.title = fieldsToUpdate.title;
+            }
+            if (
+                fieldsToUpdate.content !== undefined &&
+                fieldsToUpdate.content !== currentTab?.content
+            ) {
+                payload.content = fieldsToUpdate.content;
+            }
+            if (fieldsToUpdate.capo !== undefined && fieldsToUpdate.capo !== currentTab?.capo) {
+                payload.capo = fieldsToUpdate.capo;
+            }
+
+            // Compare complex fields using JSON serialization
+            if (
+                fieldsToUpdate.artist !== undefined &&
+                JSON.stringify(fieldsToUpdate.artist) !== JSON.stringify(currentTab?.artist)
+            ) {
+                payload.artist_id = fieldsToUpdate.artist?.id;
+            }
+            if (
+                fieldsToUpdate.tags !== undefined &&
+                JSON.stringify(fieldsToUpdate.tags) !== JSON.stringify(currentTab?.tags)
+            ) {
+                payload.tag_ids = fieldsToUpdate.tags?.map((tag) => tag.id);
+            }
 
             // Don't send request if nothing changed
-            if (Object.keys(changedFields).length === 0) {
+            if (Object.keys(payload).length === 0) {
                 return;
             }
 
             await useApiInStore<Tab>({
                 store: this,
-                apiCall: () => api.put(`/tabs/${id}`, changedFields),
+                apiCall: () => api.put(`/tabs/${id}`, payload),
                 onSuccess: ({ data }) => {
                     if (!data.content) {
                         this.error = 'Request content is empty';
@@ -122,47 +157,6 @@ export const useTabsStore = defineStore('tabs', {
                     delete this.detailedTabs[id];
                 },
             });
-        },
-
-        /**
-         * Helper method to extract only the fields that have changed
-         * @private
-         */
-        _getChangedFields(
-            currentTab: Tab | undefined,
-            fieldsToUpdate: Partial<Omit<Tab, 'id'>>,
-        ): Partial<Omit<Tab, 'id'>> {
-            const payload: Partial<Omit<Tab, 'id'>> = {};
-
-            // Compare primitive fields
-            if (fieldsToUpdate.title !== undefined && fieldsToUpdate.title !== currentTab?.title) {
-                payload.title = fieldsToUpdate.title;
-            }
-            if (
-                fieldsToUpdate.content !== undefined &&
-                fieldsToUpdate.content !== currentTab?.content
-            ) {
-                payload.content = fieldsToUpdate.content;
-            }
-            if (fieldsToUpdate.capo !== undefined && fieldsToUpdate.capo !== currentTab?.capo) {
-                payload.capo = fieldsToUpdate.capo;
-            }
-
-            // Compare complex fields using JSON serialization
-            if (
-                fieldsToUpdate.artist !== undefined &&
-                JSON.stringify(fieldsToUpdate.artist) !== JSON.stringify(currentTab?.artist)
-            ) {
-                payload.artist = fieldsToUpdate.artist;
-            }
-            if (
-                fieldsToUpdate.tags !== undefined &&
-                JSON.stringify(fieldsToUpdate.tags) !== JSON.stringify(currentTab?.tags)
-            ) {
-                payload.tags = fieldsToUpdate.tags;
-            }
-
-            return payload;
         },
     },
 });

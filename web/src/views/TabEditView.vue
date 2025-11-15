@@ -7,7 +7,7 @@ import SelectArtist from '@/components/SelectArtist.vue';
 import SelectTags from '@/components/SelectTags.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useTabsStore } from '@/stores/tabsStore';
-import type { Tab, Artist, Tag } from '@/types/types';
+import type { Tab } from '@/types/types';
 
 const route = useRoute();
 const router = useRouter();
@@ -32,22 +32,10 @@ onMounted(() => {
     tabsStore.fetchTab(tabId.value);
 });
 
-const handleArtistSelect = (artist: Artist | null) => {
-    if (localTab.value) {
-        localTab.value.artist = artist;
-    }
-};
-
-const handleTagsSelect = (tags: Tag[]) => {
-    if (localTab.value) {
-        localTab.value.tags = tags;
-    }
-};
-
 const handleSave = async () => {
-    console.log('Saving tab:', localTab.value);
     if (!localTab.value) return;
 
+    // Exclude the id field from the update payload
     const { id, ...fieldsToUpdate } = localTab.value;
     await tabsStore.updateTab(tabId.value, fieldsToUpdate);
 
@@ -59,14 +47,6 @@ const handleSave = async () => {
 const handleCancel = () => {
     router.push({ name: 'tab', params: { id: tabId.value } });
 };
-
-watch(
-    () => localTab.value,
-    (newTab) => {
-        console.log('Local tab updated:', newTab);
-    },
-    { deep: true },
-);
 </script>
 
 <template>
