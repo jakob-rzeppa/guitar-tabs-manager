@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Props {
     title: string;
-    iconColor?: 'primary' | 'secondary' | 'accent';
+    iconColor?: 'primary' | 'secondary' | 'accent' | 'error';
 }
 
 const props = withDefaults(defineProps<Props>(), {
