@@ -31,8 +31,12 @@ export async function useApi<T>({
     try {
         response.value = (await apiCall()).data;
         return;
-    } catch (err: any) {
-        error.value = err.response?.data?.message || err.message || 'Request failed';
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            error.value = err.message || 'Request failed';
+        } else {
+            error.value = 'An unknown error occurred';
+        }
         throw err;
     } finally {
         loading.value = false;
@@ -57,8 +61,12 @@ export async function useApiInStore<T>({
         const response = await apiCall();
         onSuccess?.(response);
         return response.data;
-    } catch (err: any) {
-        store.error = err.response?.data?.message || err.message || 'Request failed';
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            store.error = err.message || 'Request failed';
+        } else {
+            store.error = 'An unknown error occurred';
+        }
         throw err;
     } finally {
         store.loading = false;

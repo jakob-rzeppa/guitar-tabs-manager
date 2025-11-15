@@ -40,7 +40,9 @@ const handleSave = async () => {
     if (!localTab.value) return;
 
     // Exclude the id field from the update payload
-    const { id, ...fieldsToUpdate } = localTab.value;
+    const fieldsToUpdate = Object.assign({}, localTab.value) as Partial<Tab>;
+    delete fieldsToUpdate.id;
+
     await tabsStore.updateTab(tabId.value, fieldsToUpdate);
 
     if (!tabsStore.error) {

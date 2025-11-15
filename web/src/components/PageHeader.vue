@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
     <div class="flex items-center gap-3">
-        <div :class="`bg-${iconColor} rounded-full p-3`">
+        <div :class="`bg-${props.iconColor} rounded-full p-3`">
             <slot name="icon" />
         </div>
         <h1 class="text-5xl font-bold">{{ title }}</h1>

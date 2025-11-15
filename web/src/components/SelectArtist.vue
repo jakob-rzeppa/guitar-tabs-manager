@@ -2,7 +2,7 @@
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import { useArtistsStore } from '@/stores/artistsStore';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { Artist } from '@/types/types';
 
 const model = defineModel<Artist | null>({ required: true });

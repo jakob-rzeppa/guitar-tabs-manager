@@ -44,6 +44,7 @@ onMounted(async () => {
                     <div
                         v-for="tag in currentTab.tags"
                         class="badge badge-secondary badge-lg gap-2"
+                        :key="tag.id"
                     >
                         <TagIcon />
                         {{ tag.name }}
