@@ -52,11 +52,11 @@ const handleCancel = () => {
 <template>
     <ContentWrapper>
         <div class="p-6 md:p-10 max-w-4xl mx-auto">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="bg-accent rounded-full p-3">
+            <div class="mb-8">
+                <button @click="handleCancel" class="btn btn-ghost gap-2 mb-4">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-8 w-8 text-accent-content"
+                        class="h-5 w-5"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -65,11 +65,30 @@ const handleCancel = () => {
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
-                            d="M4 6h16M4 12h16m-7 6h7"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
                         />
                     </svg>
+                    Back
+                </button>
+                <div class="flex items-center gap-3">
+                    <div class="bg-accent rounded-full p-3">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-8 w-8 text-accent-content"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"
+                            />
+                        </svg>
+                    </div>
+                    <h1 class="text-5xl font-bold">Format Tab</h1>
                 </div>
-                <h1 class="text-5xl font-bold">Format Tab</h1>
             </div>
 
             <LoadingPlaceholder v-if="tabsStore.loading || formatLoading" />

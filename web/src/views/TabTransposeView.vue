@@ -65,11 +65,11 @@ const handleCancel = () => {
 <template>
     <ContentWrapper>
         <div class="p-6 md:p-10 max-w-4xl mx-auto">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="bg-secondary rounded-full p-3">
+            <div class="mb-8">
+                <button @click="handleCancel" class="btn btn-ghost gap-2 mb-4">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-8 w-8 text-secondary-content"
+                        class="h-5 w-5"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -78,11 +78,30 @@ const handleCancel = () => {
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
-                            d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
                         />
                     </svg>
+                    Back
+                </button>
+                <div class="flex items-center gap-3">
+                    <div class="bg-secondary rounded-full p-3">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-8 w-8 text-secondary-content"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                            />
+                        </svg>
+                    </div>
+                    <h1 class="text-5xl font-bold">Transpose Tab</h1>
                 </div>
-                <h1 class="text-5xl font-bold">Transpose Tab</h1>
             </div>
 
             <LoadingPlaceholder v-if="tabsStore.loading || transposeLoading" />
