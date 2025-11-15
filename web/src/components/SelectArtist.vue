@@ -32,17 +32,25 @@ function handleInput() {
 <template>
     <LoadingPlaceholder v-if="artistsStore.loading" />
     <ErrorDisplay v-else-if="artistsStore.error" :message="artistsStore.error" />
-    <label v-else class="input box-border w-full">
-        <span class="label">Artist</span>
+    <div v-else>
+        <label class="label">
+            <span class="label-text text-base font-semibold">Artist</span>
+            <span class="label-text-alt">Select from list</span>
+        </label>
         <input
             list="artists"
             type="text"
-            placeholder="Type here"
+            placeholder="Start typing to search artists..."
             v-model="inputValue"
             @input="handleInput"
+            class="input input-bordered w-full"
         />
         <datalist id="artists">
-            <option v-for="possibleArtist in artistsStore.artists" :value="possibleArtist.name" />
+            <option
+                v-for="possibleArtist in artistsStore.artists"
+                :key="possibleArtist.id"
+                :value="possibleArtist.name"
+            />
         </datalist>
-    </label>
+    </div>
 </template>
