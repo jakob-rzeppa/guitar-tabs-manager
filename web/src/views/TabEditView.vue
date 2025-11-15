@@ -97,6 +97,7 @@ const handleCancel = () => {
                 <div>
                     <label for="content" class="block text-sm font-medium mb-2">Tab Content</label>
                     <textarea
+                        @keypress.enter.stop=""
                         id="content"
                         v-model="localTab.content"
                         rows="20"
