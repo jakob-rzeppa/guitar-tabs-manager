@@ -3,6 +3,9 @@ import ContentWrapper from '@/components/ContentWrapper.vue';
 import { useRoute, useRouter } from 'vue-router';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
+import BackButton from '@/components/BackButton.vue';
+import PageHeader from '@/components/PageHeader.vue';
+import SaveCancelButtons from '@/components/SaveCancelButtons.vue';
 import { computed, onMounted } from 'vue';
 import { useTabsStore } from '@/stores/tabsStore';
 import { useTabFormatter } from '@/composables/useTabFormatter';
@@ -53,25 +56,9 @@ const handleCancel = () => {
     <ContentWrapper>
         <div class="p-6 md:p-10 max-w-4xl mx-auto">
             <div class="mb-8">
-                <button @click="handleCancel" class="btn btn-ghost gap-2 mb-4">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                        />
-                    </svg>
-                    Back
-                </button>
-                <div class="flex items-center gap-3">
-                    <div class="bg-accent rounded-full p-3">
+                <BackButton :on-click="handleCancel" class="mb-4" />
+                <PageHeader title="Format Tab" icon-color="accent">
+                    <template #icon>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             class="h-8 w-8 text-accent-content"
@@ -86,9 +73,8 @@ const handleCancel = () => {
                                 d="M4 6h16M4 12h16m-7 6h7"
                             />
                         </svg>
-                    </div>
-                    <h1 class="text-5xl font-bold">Format Tab</h1>
-                </div>
+                    </template>
+                </PageHeader>
             </div>
 
             <LoadingPlaceholder v-if="tabsStore.loading || formatLoading" />
@@ -162,46 +148,7 @@ const handleCancel = () => {
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex gap-4">
-                    <button @click="handleSave" class="btn btn-primary btn-lg gap-2">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M5 13l4 4L19 7"
-                            />
-                        </svg>
-                        Save Changes
-                    </button>
-                    <button
-                        type="button"
-                        @click="handleCancel"
-                        class="btn btn-outline btn-lg gap-2"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
-                        Cancel
-                    </button>
-                </div>
+                <SaveCancelButtons :on-save="handleSave" :on-cancel="handleCancel" />
             </div>
         </div>
     </ContentWrapper>
