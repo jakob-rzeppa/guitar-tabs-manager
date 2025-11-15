@@ -7,6 +7,7 @@ import SelectTags from '@/components/SelectTags.vue';
 import BackButton from '@/components/BackButton.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import SaveCancelButtons from '@/components/SaveCancelButtons.vue';
+import PlusIcon from '@/components/icons/PlusIcon.vue';
 import { ref } from 'vue';
 import { useTabsStore } from '@/stores/tabsStore';
 import type { Tab } from '@/types/types';
@@ -47,20 +48,7 @@ const handleCancel = () => {
                 <BackButton :on-click="handleCancel" class="mb-4" />
                 <PageHeader title="Create Tab" icon-color="primary">
                     <template #icon>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-8 w-8 text-primary-content"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 4v16m8-8H4"
-                            />
-                        </svg>
+                        <PlusIcon class="h-8 w-8 text-primary-content" />
                     </template>
                 </PageHeader>
             </div>

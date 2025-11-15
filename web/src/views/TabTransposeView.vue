@@ -6,6 +6,10 @@ import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import BackButton from '@/components/BackButton.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import SaveCancelButtons from '@/components/SaveCancelButtons.vue';
+import MusicIcon from '@/components/icons/MusicIcon.vue';
+import InfoIcon from '@/components/icons/InfoIcon.vue';
+import ChevronUpIcon from '@/components/icons/ChevronUpIcon.vue';
+import ChevronDownIcon from '@/components/icons/ChevronDownIcon.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useTabsStore } from '@/stores/tabsStore';
 import { useTabTransposer } from '@/composables/useTabTransposer';
@@ -72,20 +76,7 @@ const handleCancel = () => {
                 <BackButton :on-click="handleCancel" class="mb-4" />
                 <PageHeader title="Transpose Tab" icon-color="secondary">
                     <template #icon>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-8 w-8 text-secondary-content"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-                            />
-                        </svg>
+                        <MusicIcon class="h-8 w-8 text-secondary-content" />
                     </template>
                 </PageHeader>
             </div>
@@ -97,20 +88,7 @@ const handleCancel = () => {
             />
             <div v-else-if="transposedTabContent === null || capo === null" class="space-y-6">
                 <div class="alert alert-info shadow-lg">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-6 w-6 shrink-0"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg>
+                    <InfoIcon />
                     <span>Choose a transpose option to change the key of this tab.</span>
                 </div>
 
@@ -119,80 +97,28 @@ const handleCancel = () => {
                         @click="handleTranspose('up', false)"
                         class="btn btn-accent btn-lg gap-2"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M5 15l7-7 7 7"
-                            />
-                        </svg>
+                        <ChevronUpIcon />
                         Transpose Up
                     </button>
                     <button
                         @click="handleTranspose('down', false)"
                         class="btn btn-accent btn-lg gap-2"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M19 9l-7 7-7-7"
-                            />
-                        </svg>
+                        <ChevronDownIcon />
                         Transpose Down
                     </button>
                     <button
                         @click="handleTranspose('up', true)"
                         class="btn btn-secondary btn-lg gap-2"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M5 15l7-7 7 7"
-                            />
-                        </svg>
+                        <ChevronUpIcon />
                         Transpose Up + Adjust Capo up
                     </button>
                     <button
                         @click="handleTranspose('down', true)"
                         class="btn btn-secondary btn-lg gap-2"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M19 9l-7 7-7-7"
-                            />
-                        </svg>
+                        <ChevronDownIcon />
                         Transpose Down + Adjust Capo down
                     </button>
                 </div>
