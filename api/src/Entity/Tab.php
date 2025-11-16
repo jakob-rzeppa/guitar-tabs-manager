@@ -16,14 +16,18 @@ class Tab
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private ?string $title = "";
 
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $capo = null;
 
+    // The source URL points to the original source of the tab
+    #[ORM\Column(type: Types::STRING)]
+    private ?string $sourceURL = "";
+
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $content = null;
+    private ?string $content = "";
 
     /**
      * @var Collection<int, Tag>
@@ -64,6 +68,18 @@ class Tab
     public function setCapo(int $capo): static
     {
         $this->capo = $capo;
+
+        return $this;
+    }
+
+    public function getSourceURL(): ?string
+    {
+        return $this->sourceURL;
+    }
+
+    public function setSourceURL(string $sourceURL): static
+    {
+        $this->sourceURL = $sourceURL;
 
         return $this;
     }
