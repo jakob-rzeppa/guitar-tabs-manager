@@ -101,6 +101,21 @@ onMounted(async () => {
                     }}</pre>
                 </div>
             </div>
+
+            <!-- source url -->
+            <div class="mt-4 text-sm text-base-content/70">
+                <strong>Source URL: </strong>
+                <a
+                    v-if="currentTab.sourceURL"
+                    :href="currentTab.sourceURL"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="link link-hover"
+                >
+                    {{ currentTab.sourceURL }}
+                </a>
+                <span v-else>N/A</span>
+            </div>
         </div>
     </ContentWrapper>
 </template>
