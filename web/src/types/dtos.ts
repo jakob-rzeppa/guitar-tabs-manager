@@ -94,7 +94,7 @@ export interface TabDto {
     artist: ArtistDto | null;
     tags: TagDto[];
     capo: number;
-    source_url: string | null;
+    source_url: string;
     content: string;
 }
 
@@ -105,7 +105,7 @@ export interface CreateTabRequest {
     title: string;
     content: string;
     capo: number;
-    source_url?: string;
+    source_url: string;
     artist_id?: number;
     tag_ids?: number[];
 }
