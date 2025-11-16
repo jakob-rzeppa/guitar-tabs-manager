@@ -2,6 +2,7 @@ import api, { useApiInStore } from '@/services/api';
 import type { Artist } from '@/types/types';
 import { defineStore } from 'pinia';
 import { useTabsStore } from './tabsStore';
+import type { ArtistDto } from '@/types/dtos';
 
 const tabsStore = useTabsStore();
 
@@ -26,7 +27,7 @@ export const useArtistsStore = defineStore('artists', {
             // Skip if already loaded unless force is true
             if (!options.force && this.artists.length > 0) return;
 
-            await useApiInStore<Artist[]>({
+            await useApiInStore<ArtistDto[]>({
                 store: this,
                 apiCall: () => api.get('/artists'),
                 onSuccess: ({ data }) => {
@@ -35,7 +36,10 @@ export const useArtistsStore = defineStore('artists', {
                         return;
                     }
 
-                    this.artists = data.content;
+                    this.artists = data.content.map((artistDto) => ({
+                        id: artistDto.id,
+                        name: artistDto.name,
+                    }));
                 },
             });
         },
@@ -50,7 +54,10 @@ export const useArtistsStore = defineStore('artists', {
                         return;
                     }
 
-                    this.artists.push(data.content);
+                    this.artists.push({
+                        id: data.content.id,
+                        name: data.content.name,
+                    });
                 },
             });
         },
@@ -58,7 +65,7 @@ export const useArtistsStore = defineStore('artists', {
         async updateArtist(artistId: number, artist: Partial<Omit<Artist, 'id'>>): Promise<void> {
             const payload = { name: artist.name };
 
-            await useApiInStore<Artist>({
+            await useApiInStore<ArtistDto>({
                 store: this,
                 apiCall: () => api.put(`/artists/${artistId}`, payload),
                 onSuccess: ({ data }) => {
