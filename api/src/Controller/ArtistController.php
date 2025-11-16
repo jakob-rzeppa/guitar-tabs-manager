@@ -95,7 +95,10 @@ final class ArtistController extends AbstractController
             'name' => $artist->getName()
         ];
 
-        $jsonResponse = $serializer->serialize($responseData, 'json');
+        $jsonResponse = $serializer->serialize([
+            'content' => $responseData,
+            'message' => 'Artist updated successfully'
+        ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
     }
