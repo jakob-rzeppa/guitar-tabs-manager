@@ -11,6 +11,8 @@ import { computed, onMounted, ref } from 'vue';
 import type { Artist, TabListItem } from '@/types/types';
 import { useRouter } from 'vue-router';
 import PersonIcon from '@/components/icons/PersonIcon.vue';
+import EditIcon from '@/components/icons/EditIcon.vue';
+import DeleteIcon from '@/components/icons/DeleteIcon.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -70,6 +72,18 @@ const handleBack = () => {
                             <div class="stat-value text-primary">{{ artistTabs.length }}</div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <RouterLink class="btn btn-primary gap-2" :to="`/artist/${artistId}/edit`">
+                        <EditIcon />
+                        Edit
+                    </RouterLink>
+                    <RouterLink class="btn btn-error gap-2" :to="`/artist/${artistId}/delete`">
+                        <DeleteIcon />
+                        Delete
+                    </RouterLink>
                 </div>
 
                 <div class="divider"></div>

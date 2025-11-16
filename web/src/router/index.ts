@@ -66,6 +66,18 @@ const router = createRouter({
             // route level code-splitting
             component: () => import('../views/ArtistView.vue'),
         },
+        {
+            path: '/artist/:id/edit',
+            name: 'artistEdit',
+            // route level code-splitting
+            component: () => import('../views/ArtistEditView.vue'),
+        },
+        {
+            path: '/artist/:id/delete',
+            name: 'artistDelete',
+            // route level code-splitting
+            component: () => import('../views/ArtistDeleteView.vue'),
+        },
     ],
 });
 
