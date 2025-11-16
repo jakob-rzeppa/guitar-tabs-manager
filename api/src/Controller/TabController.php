@@ -60,7 +60,7 @@ final class TabController extends AbstractController
                 'tags' => $tags,
                 'artist' => $artist,
                 'capo' => $tab->getCapo(),
-                'sourceURL' => $tab->getSourceURL(),
+                'source_url' => $tab->getSourceURL(),
                 'content' => $tab->getContent()
             ]
         ], 'json');
@@ -82,7 +82,7 @@ final class TabController extends AbstractController
         $tab->setTitle($requestContent['title']);
         $tab->setContent($requestContent['content']);
         $tab->setCapo($requestContent['capo']);
-        $tab->setSourceURL($requestContent['sourceURL']);
+        $tab->setSourceURL($requestContent['source_url']);
 
         $artistId = $requestContent['artist_id'] ?? null;
         if ($artistId !== null) {
@@ -124,7 +124,7 @@ final class TabController extends AbstractController
                 'tags' => $tags,
                 'artist' => $artist,
                 'capo' => $tab->getCapo(),
-                'sourceURL' => $tab->getSourceURL(),
+                'source_url' => $tab->getSourceURL(),
                 'content' => $tab->getContent()
             ]
         ], 'json');
@@ -153,7 +153,7 @@ final class TabController extends AbstractController
         $tab->setTitle($requestContent['title'] ?? $tab->getTitle());
         $tab->setContent($requestContent['content'] ?? $tab->getContent());
         $tab->setCapo($requestContent['capo'] ?? $tab->getCapo());
-        $tab->setSourceURL($requestContent['sourceURL'] ?? $tab->getSourceURL());
+        $tab->setSourceURL($requestContent['source_url'] ?? $tab->getSourceURL());
 
         $artistId = $requestContent['artist_id'] ?? null;
         if ($artistId !== null) {
@@ -195,7 +195,7 @@ final class TabController extends AbstractController
                 'tags' => $tags,
                 'artist' => $artist,
                 'capo' => $tab->getCapo(),
-                'sourceURL' => $tab->getSourceURL(),
+                'source_url' => $tab->getSourceURL(),
                 'content' => $tab->getContent()
             ]
         ], 'json');
