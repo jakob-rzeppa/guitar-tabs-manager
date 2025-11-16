@@ -24,6 +24,7 @@ const newTab = ref<Omit<Tab, 'id'>>({
     artist: null,
     tags: [],
     capo: 0,
+    sourceURL: '',
     content: '',
 });
 
@@ -102,6 +103,21 @@ const handleCancel = () => {
                         type="number"
                         min="0"
                         max="12"
+                        class="input input-bordered input-lg w-full"
+                    />
+                </div>
+
+                <!-- Source URL -->
+                <div>
+                    <label class="label" for="sourceURL">
+                        <span class="label-text text-base font-semibold">Source URL</span>
+                    </label>
+                    <input
+                        id="sourceURL"
+                        v-model="newTab.sourceURL"
+                        type="text"
+                        required
+                        placeholder="Enter source URL"
                         class="input input-bordered input-lg w-full"
                     />
                 </div>

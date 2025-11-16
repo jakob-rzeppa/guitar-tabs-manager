@@ -127,6 +127,21 @@ const handleCancel = () => {
                     />
                 </div>
 
+                <!-- Source URL -->
+                <div>
+                    <label class="label" for="sourceURL">
+                        <span class="label-text text-base font-semibold">Source URL</span>
+                    </label>
+                    <input
+                        id="sourceURL"
+                        v-model="localTab.sourceURL"
+                        type="text"
+                        required
+                        placeholder="Enter source URL"
+                        class="input input-bordered input-lg w-full"
+                    />
+                </div>
+
                 <!-- Content (Tab notation) -->
                 <div>
                     <label class="label" for="content">

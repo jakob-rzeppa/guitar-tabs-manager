@@ -9,6 +9,7 @@ export type Tab = {
     artist: Artist | null;
     tags: Tag[];
     capo: number;
+    sourceURL: string;
     content: string;
 };
 
