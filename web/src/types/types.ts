@@ -1,8 +1,3 @@
-export type APIResponse<T> = {
-    content?: T;
-    message?: string;
-};
-
 export type Tab = {
     id: number;
     title: string;
