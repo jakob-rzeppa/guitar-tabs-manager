@@ -81,17 +81,21 @@ final class ArtistController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $requestContent = $request->toArray();
+        $data = json_decode($request->getContent(), true);
 
-        $artist->setName($requestContent['name'] ?? $artist->getName());
+        if (isset($data['name'])) {
+            $artist->setName($data['name']);
+        }
 
-        $entityManager->persist($artist);
         $entityManager->flush();
 
-        $jsonResponse = $serializer->serialize([
-            'content' => $artist,
-            'message' => 'Artist created successfully'
-        ], 'json');
+        // Manually construct response to avoid circular reference
+        $responseData = [
+            'id' => $artist->getId(),
+            'name' => $artist->getName()
+        ];
+
+        $jsonResponse = $serializer->serialize($responseData, 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
     }
