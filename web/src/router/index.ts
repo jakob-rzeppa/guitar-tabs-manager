@@ -54,6 +54,12 @@ const router = createRouter({
             // route level code-splitting
             component: () => import('../views/TabTransposeView.vue'),
         },
+        {
+            path: '/artistSearch',
+            name: 'artistSearch',
+            // route level code-splitting
+            component: () => import('../views/ArtistSearchView.vue'),
+        },
     ],
 });
 
