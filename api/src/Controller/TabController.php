@@ -13,42 +13,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\TabRepository;
+use App\Service\TabHandler;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/tabs')]
 final class TabController extends AbstractController
 {
     #[Route('', name: 'app_tabs_get_all', methods: ['GET'])]
-    public function getAll(TabRepository $tabRepository, SerializerInterface $serializer): JsonResponse
+    public function getAll(TabHandler $tabHandler, SerializerInterface $serializer): JsonResponse
     {
-        $tabs = $tabRepository->findAll();
-
-        $reducedTabs = [];
-
-        foreach ($tabs as $tab) {
-            $artist = $tab->getArtist() !== null ? [
-                'id' => $tab->getArtist()->getId(),
-                'name' => $tab->getArtist()->getName(),
-            ] : null;
-
-            $tags = [];
-            foreach ($tab->getTags() as $tag) {
-                $tags[] = [
-                    'id' => $tag->getId(),
-                    'name' => $tag->getName()
-                ];
-            }
-
-            $reducedTabs[] = [
-                'id' => $tab->getId(),
-                'title' => $tab->getTitle(),
-                'artist' => $artist,
-                'tags' => $tags
-            ];
-        }
+        $tabs = $tabHandler->getWithLessDetailsAllTabs();
 
         $jsonResponse = $serializer->serialize([
-            'content' => $reducedTabs,
+            'content' => $tabs,
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
@@ -96,8 +73,8 @@ final class TabController extends AbstractController
         ArtistRepository $artistRepository,
         TagRepository $tagRepository,
         EntityManagerInterface $entityManager,
-        SerializerInterface $serializer): JsonResponse
-    {
+        SerializerInterface $serializer
+    ): JsonResponse {
         $requestContent = $request->toArray();
 
         $tab = new Tab();
@@ -161,8 +138,7 @@ final class TabController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $tab = $tabRepository->find($id);
 
         if (null === $tab) {
