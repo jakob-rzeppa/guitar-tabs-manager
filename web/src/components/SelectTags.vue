@@ -54,10 +54,6 @@ function removeActiveTag(id?: number) {
 <template>
     <LoadingPlaceholder v-if="tagsStore.loading" />
     <ErrorDisplay v-else-if="tagsStore.error" :message="tagsStore.error" />
-    <ErrorDisplay
-        v-else-if="!tagsStore.tags || tagsStore.tags.length === 0"
-        message="Something went wrong while retrieving tags."
-    />
     <div v-else>
         <label class="label">
             <span class="label-text text-base font-semibold">Tags</span>
