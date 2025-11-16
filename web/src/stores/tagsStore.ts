@@ -1,4 +1,5 @@
 import api, { useApiInStore } from '@/services/api';
+import type { TagDto } from '@/types/dtos';
 import type { Tag } from '@/types/types';
 import { defineStore } from 'pinia';
 
@@ -23,7 +24,7 @@ export const useTagsStore = defineStore('tags', {
             // Skip if already loaded unless force is true
             if (!options.force && this.tags.length > 0) return;
 
-            await useApiInStore<Tag[]>({
+            await useApiInStore<TagDto[]>({
                 store: this,
                 apiCall: () => api.get('/tags'),
                 onSuccess: ({ data }) => {
@@ -32,7 +33,10 @@ export const useTagsStore = defineStore('tags', {
                         return;
                     }
 
-                    this.tags = data.content;
+                    this.tags = data.content.map((tagDto) => ({
+                        id: tagDto.id,
+                        name: tagDto.name,
+                    }));
                 },
             });
         },
