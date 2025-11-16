@@ -72,6 +72,7 @@ export const useTabsStore = defineStore('tabs', {
                 title: tab.title,
                 content: tab.content,
                 capo: tab.capo,
+                source_url: tab.sourceURL,
                 artist_id: tab.artist?.id,
                 tag_ids: tab.tags?.map((tag) => tag.id),
             };
@@ -106,6 +107,7 @@ export const useTabsStore = defineStore('tabs', {
                 title?: string;
                 content?: string;
                 capo?: number;
+                source_url?: string;
                 artist_id?: number;
                 tag_ids?: number[];
             } = {};
@@ -122,6 +124,12 @@ export const useTabsStore = defineStore('tabs', {
             }
             if (fieldsToUpdate.capo !== undefined && fieldsToUpdate.capo !== currentTab?.capo) {
                 payload.capo = fieldsToUpdate.capo;
+            }
+            if (
+                fieldsToUpdate.sourceURL !== undefined &&
+                fieldsToUpdate.sourceURL !== currentTab?.sourceURL
+            ) {
+                payload.source_url = fieldsToUpdate.sourceURL;
             }
 
             // Compare complex fields using JSON serialization
