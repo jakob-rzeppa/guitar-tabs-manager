@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse } from 'axios';
-import type { APIResponse } from '@/types/types.ts';
+import type { ApiResponse } from '@/types/dtos.ts';
 import type { Ref } from 'vue';
 
 const baseURL = import.meta.env.VITE_API_ENDPOINT;
@@ -15,8 +15,8 @@ export default axiosInstance;
 interface UseApiParams<T> {
     loading: Ref<boolean>;
     error: Ref<string | null>;
-    response: Ref<APIResponse<T> | null>;
-    apiCall: () => Promise<AxiosResponse<APIResponse<T>>>;
+    response: Ref<ApiResponse<T> | null>;
+    apiCall: () => Promise<AxiosResponse<ApiResponse<T>>>;
 }
 
 export async function useApi<T>({
@@ -45,15 +45,15 @@ export async function useApi<T>({
 
 interface UseApiInStoreParams<T> {
     store: { loading: boolean; error: string | null };
-    apiCall: () => Promise<AxiosResponse<APIResponse<T>>>;
-    onSuccess?: (response: AxiosResponse<APIResponse<T>>) => void;
+    apiCall: () => Promise<AxiosResponse<ApiResponse<T>>>;
+    onSuccess?: (response: AxiosResponse<ApiResponse<T>>) => void;
 }
 
 export async function useApiInStore<T>({
     store,
     apiCall,
     onSuccess,
-}: UseApiInStoreParams<T>): Promise<APIResponse<T>> {
+}: UseApiInStoreParams<T>): Promise<ApiResponse<T>> {
     store.loading = true;
     store.error = null;
 
