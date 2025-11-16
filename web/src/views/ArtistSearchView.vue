@@ -77,18 +77,19 @@ watch(
         <div v-else class="max-w-4xl mx-auto px-8 pb-8">
             <ul class="space-y-3">
                 <li v-for="artist in displayedArtists" :key="artist.id">
-                    <div
-                        class="card bg-base-200 shadow-md hover:shadow-lg hover:bg-base-300 transition-all duration-200 cursor-pointer border-l-4 border-transparent hover:border-primary"
+                    <RouterLink
+                        :to="{ name: 'artist', params: { id: artist.id } }"
+                        class="card bg-base-200 shadow-md hover:shadow-lg hover:bg-base-300 transition-all duration-200 cursor-pointer border-l-4 border-transparent hover:border-primary block"
                     >
                         <div class="card-body py-4 px-6 flex flex-row items-center gap-4">
-                            <div class="bg-primary rounded-full p-2">
-                                <PersonIcon class="h-5 w-5 text-primary-content" />
+                            <div class="bg-primary rounded-full p-3">
+                                <PersonIcon class="h-6 w-6 text-primary-content" />
                             </div>
                             <h2 class="text-xl font-semibold">
                                 {{ artist.name }}
                             </h2>
                         </div>
-                    </div>
+                    </RouterLink>
                 </li>
             </ul>
         </div>

@@ -60,6 +60,12 @@ const router = createRouter({
             // route level code-splitting
             component: () => import('../views/ArtistSearchView.vue'),
         },
+        {
+            path: '/artist/:id',
+            name: 'artist',
+            // route level code-splitting
+            component: () => import('../views/ArtistView.vue'),
+        },
     ],
 });
 
