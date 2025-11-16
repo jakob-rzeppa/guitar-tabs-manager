@@ -1,39 +1,37 @@
 # Guitar Tabs Manager - API Documentation
 
-This document describes all available API endpoints for the Guitar Tabs Manager application.
+Base URL: `http://localhost:8000`
 
-## Base URL
+All responses follow the format: `{ "content": <data>, "message": "<optional message>" }`
 
-All endpoints are prefixed with your API base URL (e.g., `http://localhost:8000`)
+## Status Codes
 
-## Response Format
-
-All responses follow this format:
-
-```json
-{
-  "content": <data>,
-  "message": "<optional message>"
-}
-```
+| Code | Description  |
+| ---- | ------------ |
+| 200  | Success      |
+| 404  | Not Found    |
+| 400  | Bad Request  |
+| 500  | Server Error |
 
 ---
 
 ## Tabs
 
-### Get All Tabs
+| Endpoint          | Method | Description                     |
+| ----------------- | ------ | ------------------------------- |
+| `/tabs`           | GET    | List all tabs (without content) |
+| `/tabs/{id}`      | GET    | Get tab with full content       |
+| `/tabs`           | POST   | Create tab                      |
+| `/tabs/{id}`      | PUT    | Update tab                      |
+| `/tabs/{id}`      | DELETE | Delete tab                      |
+| `/tabs/format`    | POST   | Format tab content              |
+| `/tabs/transpose` | POST   | Transpose tab content           |
 
-Retrieve a list of all guitar tabs (reduced format without full content).
+### GET /tabs
 
--   **URL:** `/tabs`
--   **Method:** `GET`
--   **URL Parameters:** None
--   **Request Body:** None
+Returns list of tabs without full content.
 
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
+**Response:**
 
 ```json
 {
@@ -41,633 +39,223 @@ Retrieve a list of all guitar tabs (reduced format without full content).
         {
             "id": 1,
             "title": "Wonderwall",
-            "artist": {
-                "id": 1,
-                "name": "Oasis"
-            },
-            "tags": [
-                {
-                    "id": 1,
-                    "name": "rock"
-                }
-            ]
+            "artist": { "id": 1, "name": "Oasis" },
+            "tags": [{ "id": 1, "name": "rock" }]
         }
     ]
 }
 ```
 
----
+### GET /tabs/{id}
 
-### Get Tab by ID
+Returns full tab including content.
 
-Retrieve a specific tab with full content.
-
--   **URL:** `/tabs/{id}`
--   **Method:** `GET`
--   **URL Parameters:**
-    -   `id` (integer, required) - Tab ID
--   **Request Body:** None
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
+**Response:**
 
 ```json
 {
     "content": {
         "id": 1,
         "title": "Wonderwall",
-        "artist": {
-            "id": 1,
-            "name": "Oasis"
-        },
-        "tags": [
-            {
-                "id": 1,
-                "name": "rock"
-            }
-        ],
+        "artist": { "id": 1, "name": "Oasis" },
+        "tags": [{ "id": 1, "name": "rock" }],
         "capo": 2,
-        "content": "E    A    D...\n[tab notation here]"
+        "source_url": "https://...",
+        "content": "E    A    D...\n[tab notation]"
     }
 }
 ```
 
-**Error Response:**
+### POST /tabs
 
--   **Code:** 404 NOT FOUND
--   **Content:** `{"error": "Not Found"}`
+Create a new tab.
 
----
-
-### Create Tab
-
-Create a new guitar tab.
-
--   **URL:** `/tabs`
--   **Method:** `POST`
--   **URL Parameters:** None
--   **Request Body:**
+**Request:**
 
 ```json
 {
-    "title": "Wonderwall",
-    "content": "E    A    D...\n[tab notation here]",
-    "capo": 2,
-    "artist_id": 1,
-    "tag_ids": [1, 2]
+    "title": "Wonderwall", // required
+    "content": "E A D...", // required
+    "capo": 2, // required
+    "source_url": "https://...", // optional
+    "artist_id": 1, // optional
+    "tag_ids": [1, 2] // optional
 }
 ```
 
-**Required Fields:**
+**Response:** Same as GET /tabs/{id}
 
--   `title` (string)
--   `content` (string)
--   `capo` (integer)
+### PUT /tabs/{id}
 
-**Optional Fields:**
+Update tab. All fields optional.
 
--   `artist_id` (integer) - ID of existing artist
--   `tag_ids` (array of integers) - IDs of existing tags
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:** Same as "Get Tab by ID" response
-
----
-
-### Update Tab
-
-Update an existing tab.
-
--   **URL:** `/tabs/{id}`
--   **Method:** `PUT`
--   **URL Parameters:**
-    -   `id` (integer, required) - Tab ID
--   **Request Body:**
+**Request:**
 
 ```json
 {
     "title": "Wonderwall (Updated)",
-    "content": "E    A    D...\n[updated tab notation]",
+    "content": "E A D...",
     "capo": 3,
+    "source_url": "https://...",
     "artist_id": 2,
     "tag_ids": [1, 3]
 }
 ```
 
-**Note:** All fields are optional. Only provided fields will be updated.
+**Response:** Same as GET /tabs/{id}
 
-**Success Response:**
+### DELETE /tabs/{id}
 
--   **Code:** 200 OK
--   **Content:** Same as "Get Tab by ID" response
+**Response:** `{ "message": "Tab deleted successfully" }`
 
-**Error Response:**
+### POST /tabs/format
 
--   **Code:** 404 NOT FOUND
+Format tab content.
 
----
+**Request:** `{ "content": "unformatted tab" }`  
+**Response:** `{ "content": "formatted tab" }`
 
-### Delete Tab
+### POST /tabs/transpose
 
-Delete a tab.
+Transpose tab content. `dir` is positive for up, negative for down.
 
--   **URL:** `/tabs/{id}`
--   **Method:** `DELETE`
--   **URL Parameters:**
-    -   `id` (integer, required) - Tab ID
--   **Request Body:** None
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
-
-```json
-{
-    "message": "Tab deleted successfully"
-}
-```
-
-**Error Response:**
-
--   **Code:** 404 NOT FOUND
-
----
-
-### Format Tab
-
-Format tab content (utility endpoint).
-
--   **URL:** `/tabs/format`
--   **Method:** `POST`
--   **URL Parameters:** None
--   **Request Body:**
-
-```json
-{
-    "content": "unformatted tab content"
-}
-```
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
-
-```json
-{
-    "content": "formatted tab content"
-}
-```
-
----
-
-### Transpose Tab
-
-Transpose tab content up or down (utility endpoint).
-
--   **URL:** `/tabs/transpose`
--   **Method:** `POST`
--   **URL Parameters:** None
--   **Request Body:**
-
-```json
-{
-    "content": "tab content with chords",
-    "dir": 1
-}
-```
-
-**Fields:**
-
--   `content` (string, required) - Tab content with chords
--   `dir` (integer, required) - Direction: positive for up, negative for down
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
-
-```json
-{
-    "content": "transposed tab content"
-}
-```
+**Request:** `{ "content": "tab with chords", "dir": 1 }`  
+**Response:** `{ "content": "transposed tab" }`
 
 ---
 
 ## Artists
 
-### Get All Artists
+| Endpoint        | Method | Description      |
+| --------------- | ------ | ---------------- |
+| `/artists`      | GET    | List all artists |
+| `/artists/{id}` | GET    | Get artist by ID |
+| `/artists`      | POST   | Create artist    |
+| `/artists/{id}` | PUT    | Update artist    |
+| `/artists/{id}` | DELETE | Delete artist    |
 
-Retrieve a list of all artists.
+### GET /artists
 
--   **URL:** `/artists`
--   **Method:** `GET`
--   **URL Parameters:** None
--   **Request Body:** None
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
+**Response:**
 
 ```json
 {
     "content": [
-        {
-            "id": 1,
-            "name": "Oasis"
-        },
-        {
-            "id": 2,
-            "name": "The Beatles"
-        }
+        { "id": 1, "name": "Oasis" },
+        { "id": 2, "name": "The Beatles" }
     ]
 }
 ```
 
----
+### GET /artists/{id}
 
-### Get Artist by ID
-
-Retrieve a specific artist.
-
--   **URL:** `/artists/{id}`
--   **Method:** `GET`
--   **URL Parameters:**
-    -   `id` (integer, required) - Artist ID
--   **Request Body:** None
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
+**Response:**
 
 ```json
 {
-    "content": {
-        "id": 1,
-        "name": "Oasis"
-    }
+    "content": { "id": 1, "name": "Oasis" }
 }
 ```
 
-**Error Response:**
+### POST /artists
 
--   **Code:** 404 NOT FOUND
+**Request:** `{ "name": "Oasis" }`  
+**Response:** `{ "content": { "id": 1, "name": "Oasis" }, "message": "Artist created successfully" }`
 
----
+### PUT /artists/{id}
 
-### Create Artist
+**Request:** `{ "name": "Oasis (Updated)" }`  
+**Response:** `{ "content": { "id": 1, "name": "Oasis (Updated)" }, "message": "Artist updated successfully" }`
 
-Create a new artist.
+### DELETE /artists/{id}
 
--   **URL:** `/artists`
--   **Method:** `POST`
--   **URL Parameters:** None
--   **Request Body:**
-
-```json
-{
-    "name": "Oasis"
-}
-```
-
-**Required Fields:**
-
--   `name` (string)
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
-
-```json
-{
-    "content": {
-        "id": 1,
-        "name": "Oasis"
-    },
-    "message": "Artist created successfully"
-}
-```
-
----
-
-### Update Artist
-
-Update an existing artist.
-
--   **URL:** `/artists/{id}`
--   **Method:** `PUT`
--   **URL Parameters:**
-    -   `id` (integer, required) - Artist ID
--   **Request Body:**
-
-```json
-{
-    "name": "Oasis (Updated)"
-}
-```
-
-**Optional Fields:**
-
--   `name` (string)
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
-
-```json
-{
-    "content": {
-        "id": 1,
-        "name": "Oasis (Updated)"
-    },
-    "message": "Artist created successfully"
-}
-```
-
-**Error Response:**
-
--   **Code:** 404 NOT FOUND
-
----
-
-### Delete Artist
-
-Delete an artist.
-
--   **URL:** `/artists/{id}`
--   **Method:** `DELETE`
--   **URL Parameters:**
-    -   `id` (integer, required) - Artist ID
--   **Request Body:** None
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
-
-```json
-{
-    "message": "Artist deleted successfully"
-}
-```
-
-**Error Response:**
-
--   **Code:** 404 NOT FOUND
+**Response:** `{ "message": "Artist deleted successfully" }`
 
 ---
 
 ## Tags
 
-### Get All Tags
+| Endpoint     | Method | Description   |
+| ------------ | ------ | ------------- |
+| `/tags`      | GET    | List all tags |
+| `/tags/{id}` | GET    | Get tag by ID |
+| `/tags`      | POST   | Create tag    |
+| `/tags/{id}` | PUT    | Update tag    |
+| `/tags/{id}` | DELETE | Delete tag    |
 
-Retrieve a list of all tags.
+### GET /tags
 
--   **URL:** `/tags`
--   **Method:** `GET`
--   **URL Parameters:** None
--   **Request Body:** None
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
+**Response:**
 
 ```json
 {
     "content": [
-        {
-            "id": 1,
-            "name": "rock"
-        },
-        {
-            "id": 2,
-            "name": "acoustic"
-        }
+        { "id": 1, "name": "rock" },
+        { "id": 2, "name": "acoustic" }
     ]
 }
 ```
 
----
+### GET /tags/{id}
 
-### Get Tag by ID
-
-Retrieve a specific tag.
-
--   **URL:** `/tags/{id}`
--   **Method:** `GET`
--   **URL Parameters:**
-    -   `id` (integer, required) - Tag ID
--   **Request Body:** None
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
+**Response:**
 
 ```json
 {
-    "content": {
-        "id": 1,
-        "name": "rock"
-    }
+    "content": { "id": 1, "name": "rock" }
 }
 ```
 
-**Error Response:**
+### POST /tags
 
--   **Code:** 404 NOT FOUND
+**Request:** `{ "name": "rock" }`  
+**Response:** `{ "content": { "id": 1, "name": "rock" }, "message": "Tag created successfully" }`
+
+### PUT /tags/{id}
+
+**Request:** `{ "name": "rock-updated" }`  
+**Response:** `{ "content": { "id": 1, "name": "rock-updated" }, "message": "Tag updated successfully" }`
+
+### DELETE /tags/{id}
+
+**Response:** `{ "message": "Tag deleted successfully" }`
 
 ---
 
-### Create Tag
+## Examples
 
-Create a new tag.
-
--   **URL:** `/tags`
--   **Method:** `POST`
--   **URL Parameters:** None
--   **Request Body:**
-
-```json
-{
-    "name": "rock"
-}
-```
-
-**Required Fields:**
-
--   `name` (string)
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
-
-```json
-{
-    "content": {
-        "id": 1,
-        "name": "rock"
-    },
-    "message": "Tag created successfully"
-}
-```
-
----
-
-### Update Tag
-
-Update an existing tag.
-
--   **URL:** `/tags/{id}`
--   **Method:** `PUT`
--   **URL Parameters:**
-    -   `id` (integer, required) - Tag ID
--   **Request Body:**
-
-```json
-{
-    "name": "rock-updated"
-}
-```
-
-**Optional Fields:**
-
--   `name` (string)
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
-
-```json
-{
-    "content": {
-        "id": 1,
-        "name": "rock-updated"
-    },
-    "message": "Tag created successfully"
-}
-```
-
-**Error Response:**
-
--   **Code:** 404 NOT FOUND
-
----
-
-### Delete Tag
-
-Delete a tag.
-
--   **URL:** `/tags/{id}`
--   **Method:** `DELETE`
--   **URL Parameters:**
-    -   `id` (integer, required) - Tag ID
--   **Request Body:** None
-
-**Success Response:**
-
--   **Code:** 200 OK
--   **Content:**
-
-```json
-{
-    "message": "Tag deleted successfully"
-}
-```
-
-**Error Response:**
-
--   **Code:** 404 NOT FOUND
-
----
-
-## Error Codes
-
-| Code | Description                        |
-| ---- | ---------------------------------- |
-| 200  | OK - Request succeeded             |
-| 404  | Not Found - Resource doesn't exist |
-| 400  | Bad Request - Invalid request data |
-| 500  | Internal Server Error              |
-
----
-
-## Example Usage
-
-### cURL Examples
-
-**Get all tabs:**
+### cURL
 
 ```bash
-curl -X GET http://localhost:8000/tabs
-```
+# Get all tabs
+curl http://localhost:8000/tabs
 
-**Create a new tab:**
-
-```bash
+# Create tab
 curl -X POST http://localhost:8000/tabs \
   -H "Content-Type: application/json" \
-  -d '{
-    "title": "Wonderwall",
-    "content": "E A D...",
-    "capo": 2,
-    "artist_id": 1,
-    "tag_ids": [1, 2]
-  }'
-```
+  -d '{"title":"Wonderwall","content":"E A D...","capo":2,"artist_id":1,"tag_ids":[1,2]}'
 
-**Update a tab:**
-
-```bash
+# Update tab
 curl -X PUT http://localhost:8000/tabs/1 \
   -H "Content-Type: application/json" \
-  -d '{
-    "title": "Wonderwall (Updated)",
-    "capo": 3
-  }'
-```
+  -d '{"title":"Wonderwall (Updated)","capo":3}'
 
-**Delete a tab:**
-
-```bash
+# Delete tab
 curl -X DELETE http://localhost:8000/tabs/1
 ```
 
-### JavaScript/Fetch Examples
-
-**Get all artists:**
+### JavaScript
 
 ```javascript
-fetch("http://localhost:8000/artists")
-    .then((response) => response.json())
-    .then((data) => console.log(data.content));
-```
+// Get all artists
+const artists = await fetch("http://localhost:8000/artists")
+    .then((res) => res.json())
+    .then((data) => data.content);
 
-**Create a new artist:**
-
-```javascript
-fetch("http://localhost:8000/artists", {
+// Create artist
+const newArtist = await fetch("http://localhost:8000/artists", {
     method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-        name: "Oasis",
-    }),
-})
-    .then((response) => response.json())
-    .then((data) => console.log(data));
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "Oasis" }),
+}).then((res) => res.json());
 ```
