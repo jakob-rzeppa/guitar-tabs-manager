@@ -3,11 +3,13 @@
 namespace App\Service;
 
 use App\Repository\TabRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TabHandler
 {
     public function __construct(
-        private TabRepository $tabRepository
+        private TabRepository $tabRepository,
+        private EntityManagerInterface $entityManager
     ) {}
 
     public function getWithLessDetailsAllTabs()
@@ -47,7 +49,8 @@ class TabHandler
 
         foreach ($tabs as $tab) {
             $tab->setArtist(null);
-            $this->tabRepository->save($tab, true);
         }
+
+        $this->entityManager->flush();
     }
 }
