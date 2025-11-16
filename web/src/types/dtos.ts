@@ -158,4 +158,4 @@ export interface TransposeTabDto {
 /**
  * No content response when deleting a resource
  */
-export type DeleteDto = null;
+export type DeleteDto = void;
