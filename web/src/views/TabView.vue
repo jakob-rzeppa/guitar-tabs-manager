@@ -36,7 +36,13 @@ onMounted(async () => {
                     {{ currentTab.title }}
                 </h1>
                 <p v-if="currentTab.artist !== null" class="text-xl text-base-content/70 mb-4">
-                    <span class="text-primary font-semibold">by</span> {{ currentTab.artist.name }}
+                    <span class="text-primary font-semibold">by </span>
+                    <RouterLink
+                        :to="{ name: 'artist', params: { id: currentTab.artist.id } }"
+                        class="link link-hover font-semibold"
+                    >
+                        {{ currentTab.artist.name }}
+                    </RouterLink>
                 </p>
 
                 <!-- Tags -->
