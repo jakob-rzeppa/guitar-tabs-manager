@@ -3,6 +3,7 @@ import ArrowLeftIcon from './icons/ArrowLeftIcon.vue';
 
 interface Props {
     onClick: () => void;
+    displayText?: string;
 }
 
 defineProps<Props>();
@@ -11,6 +12,6 @@ defineProps<Props>();
 <template>
     <button @click="onClick" class="btn btn-ghost gap-2">
         <ArrowLeftIcon />
-        Back
+        {{ displayText ?? 'Back' }}
     </button>
 </template>

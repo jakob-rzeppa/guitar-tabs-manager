@@ -43,7 +43,7 @@ const handleBack = () => {
 <template>
     <ContentWrapper>
         <div class="p-6 md:p-10">
-            <BackButton :on-click="handleBack" class="mb-6" />
+            <BackButton :on-click="handleBack" class="mb-6" display-text="Artist Search" />
 
             <LoadingPlaceholder v-if="artistsStore.loading || tabsStore.loading" />
             <ErrorDisplay
