@@ -40,4 +40,14 @@ class TabHandler
 
         return $reducedTabs;
     }
+
+    public function deleteArtistFromAllTabs(int $artistId): void
+    {
+        $tabs = $this->tabRepository->findBy(['artist' => $artistId]);
+
+        foreach ($tabs as $tab) {
+            $tab->setArtist(null);
+            $this->tabRepository->save($tab, true);
+        }
+    }
 }
