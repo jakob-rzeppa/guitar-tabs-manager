@@ -153,6 +153,12 @@ export const useTabsStore = defineStore('tabs', {
                     }
 
                     this.detailedTabs[id] = data.content;
+
+                    // Also update tabsList entry
+                    const index = this.tabsList.findIndex((tab) => tab.id === Number(id));
+                    if (index !== -1) {
+                        this.tabsList[index] = data.content;
+                    }
                 },
             });
         },
