@@ -4,8 +4,6 @@ import { defineStore } from 'pinia';
 import { useTabsStore } from './tabsStore';
 import type { ArtistDto } from '@/types/dtos';
 
-const tabsStore = useTabsStore();
-
 interface State {
     artists: Artist[];
     loading: boolean;
@@ -80,6 +78,7 @@ export const useArtistsStore = defineStore('artists', {
                     }
 
                     // Update artist name in tabs list
+                    const tabsStore = useTabsStore();
                     tabsStore.tabsList.forEach((tab) => {
                         if (tab.artist && tab.artist.id === artistId) {
                             tab.artist = this.artists[index];
@@ -104,6 +103,7 @@ export const useArtistsStore = defineStore('artists', {
                     this.artists = this.artists.filter((a) => a.id !== artistId);
 
                     // Clear artist reference in tabs list
+                    const tabsStore = useTabsStore();
                     tabsStore.tabsList.forEach((tab) => {
                         if (tab.artist && tab.artist.id === artistId) {
                             tab.artist = null;
