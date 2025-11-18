@@ -3,15 +3,12 @@ import { ref, watch } from 'vue';
 import type { Artist, TabListItem, Tag } from '@/types/types.ts';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
-import ContentWrapper from '@/components/ContentWrapper.vue';
 import TabsDisplay from '@/components/TabsDisplay.vue';
 import calculateSimilarity from '@/services/calculateSimilarity.ts';
 import SelectArtist from '@/components/SelectArtist.vue';
 import SelectTags from '@/components/SelectTags.vue';
 import { useTabsStore } from '@/stores/tabsStore';
-import SearchIcon from '@/components/icons/SearchIcon.vue';
-import PlusIcon from '@/components/icons/PlusIcon.vue';
-import FilterIcon from '@/components/icons/FilterIcon.vue';
+import BaseSearchView from '@/views/BaseSearchView.vue';
 
 const tabsStore = useTabsStore();
 
@@ -61,58 +58,22 @@ watch(
 </script>
 
 <template>
-    <ContentWrapper>
-        <div class="px-8 md:px-14 pt-8 pb-4">
-            <h1
-                class="text-5xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
-            >
-                Search for Tabs
-            </h1>
-
-            <div class="max-w-3xl mx-auto space-y-4">
-                <div class="flex gap-3 items-stretch">
-                    <label
-                        class="input input-bordered input-lg flex items-center gap-2 flex-1 shadow-md"
-                    >
-                        <SearchIcon class="opacity-70 w-5 h-5" />
-                        <input
-                            type="text"
-                            class="grow"
-                            placeholder="Search by title..."
-                            v-model="searchValue"
-                        />
-                    </label>
-
-                    <RouterLink to="/tab/create" class="btn btn-primary btn-lg gap-2">
-                        <PlusIcon class="h-6 w-6" />
-                        Create
-                    </RouterLink>
-                </div>
-
-                <div tabindex="0" class="collapse collapse-arrow bg-base-200 rounded-box shadow-md">
-                    <input type="checkbox" />
-                    <div class="collapse-title text-lg font-semibold flex items-center gap-2">
-                        <FilterIcon />
-                        Advanced Filters
-                    </div>
-                    <div class="collapse-content">
-                        <div class="flex flex-col gap-4 pt-4">
-                            <SelectArtist v-model="artistFilter" />
-                            <SelectTags v-model="tagsFilter" />
-                        </div>
-                    </div>
-                </div>
+    <BaseSearchView :create-route="{ name: 'tabCreate' }">
+        <template #title>Search for Tabs</template>
+        <template #search-input>
+            <input placeholder="Search by title..." v-model="searchValue" />
+        </template>
+        <template #filters>
+            <SelectArtist v-model="artistFilter" />
+            <SelectTags v-model="tagsFilter" />
+        </template>
+        <template #content>
+            <LoadingPlaceholder v-if="tabsStore.loading" />
+            <ErrorDisplay v-else-if="tabsStore.error !== null" :message="tabsStore.error" />
+            <div v-else-if="displayedTabs.length === 0" class="text-center py-16">
+                <p class="text-xl opacity-60">No tabs found. Try adjusting your filters.</p>
             </div>
-        </div>
-
-        <div class="divider my-2"></div>
-
-        <LoadingPlaceholder v-if="tabsStore.loading" />
-        <ErrorDisplay v-else-if="tabsStore.error !== null" :message="tabsStore.error" />
-        <div v-else-if="displayedTabs.length === 0" class="text-center py-16">
-            <div class="text-6xl mb-4 opacity-20">🎸</div>
-            <p class="text-xl opacity-60">No tabs found. Try adjusting your filters.</p>
-        </div>
-        <TabsDisplay v-else :tabs="displayedTabs" />
-    </ContentWrapper>
+            <TabsDisplay v-else :tabs="displayedTabs" />
+        </template>
+    </BaseSearchView>
 </template>
