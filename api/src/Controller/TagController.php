@@ -62,8 +62,14 @@ final class TagController extends AbstractController
         $entityManager->persist($tag);
         $entityManager->flush();
 
+        // Manually construct response to avoid circular reference
+        $responseData = [
+            'id' => $tag->getId(),
+            'name' => $tag->getName()
+        ];
+
         $jsonResponse = $serializer->serialize([
-            'content' => $tag,
+            'content' => $responseData,
             'message' => 'Tag created successfully'
         ], 'json');
 
@@ -86,9 +92,15 @@ final class TagController extends AbstractController
         $entityManager->persist($tag);
         $entityManager->flush();
 
+        // Manually construct response to avoid circular reference
+        $responseData = [
+            'id' => $tag->getId(),
+            'name' => $tag->getName()
+        ];
+
         $jsonResponse = $serializer->serialize([
-            'content' => $tag,
-            'message' => 'Tag created successfully'
+            'content' => $responseData,
+            'message' => 'Tag updated successfully'
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
