@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import ContentWrapper from '@/components/ContentWrapper.vue';
 import { useRoute, useRouter } from 'vue-router';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import SelectArtist from '@/components/SelectArtist.vue';
 import SelectTags from '@/components/SelectTags.vue';
-import BackLink from '@/components/BackLink.vue';
-import PageHeader from '@/components/PageHeader.vue';
-import SaveCancelButtons from '@/components/SaveCancelButtons.vue';
-import EditIcon from '@/components/icons/EditIcon.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useTabsStore } from '@/stores/tabsStore';
 import type { Tab } from '@/types/types';
 import { useModalStore } from '@/stores/modalStore';
 import CreateArtistModal from '@/components/CreateArtistModal.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
+import BaseEditView from '../BaseEditView.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -54,32 +50,18 @@ const handleSave = async () => {
         router.push({ name: 'tab', params: { id: tabId.value } });
     }
 };
-
-const handleCancel = () => {
-    router.push({ name: 'tab', params: { id: tabId.value } });
-};
 </script>
 
 <template>
-    <ContentWrapper>
-        <div class="p-6 md:p-10 max-w-4xl mx-auto">
-            <div class="mb-8">
-                <BackLink :to="{ name: 'tab', params: { id: tabId } }" class="mb-4" />
-                <PageHeader title="Edit Tab" icon-color="primary">
-                    <template #icon>
-                        <EditIcon class="h-8 w-8 text-primary-content" />
-                    </template>
-                </PageHeader>
-            </div>
-
-            <LoadingPlaceholder v-if="tabsStore.loading" />
-            <ErrorDisplay v-else-if="tabsStore.error !== null" :message="tabsStore.error" />
-            <ErrorDisplay
-                v-else-if="localTab === null"
-                message="Something went wrong while loading the tab."
-            />
-
-            <div v-else @keypress.enter="handleSave" class="space-y-6">
+    <LoadingPlaceholder v-if="tabsStore.loading" />
+    <ErrorDisplay v-else-if="tabsStore.error !== null" :message="tabsStore.error" />
+    <ErrorDisplay
+        v-else-if="localTab === null"
+        message="Something went wrong while loading the tab."
+    />
+    <BaseEditView v-else :back-to="{ name: 'tab', params: { id: tabId } }" element-type="Tab">
+        <template #content>
+            <div @keypress.enter="handleSave" class="space-y-6">
                 <!-- Title -->
                 <div>
                     <label class="label" for="title">
@@ -158,10 +140,7 @@ const handleCancel = () => {
                         placeholder="Enter tab notation here..."
                     ></textarea>
                 </div>
-
-                <!-- Action Buttons -->
-                <SaveCancelButtons :on-save="handleSave" :on-cancel="handleCancel" class="pt-4" />
             </div>
-        </div>
-    </ContentWrapper>
+        </template>
+    </BaseEditView>
 </template>

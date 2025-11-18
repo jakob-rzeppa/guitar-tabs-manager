@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import ContentWrapper from '@/components/ContentWrapper.vue';
 import { useRoute, useRouter } from 'vue-router';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
-import BackLink from '@/components/BackLink.vue';
-import PageHeader from '@/components/PageHeader.vue';
-import SaveCancelButtons from '@/components/SaveCancelButtons.vue';
-import EditIcon from '@/components/icons/EditIcon.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useArtistsStore } from '@/stores/artistsStore';
 import type { Artist } from '@/types/types';
+import BaseEditView from '../BaseEditView.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -45,50 +41,36 @@ const handleSave = async () => {
         router.push({ name: 'artist', params: { id: artistId.value } });
     }
 };
-
-const handleCancel = () => {
-    router.push({ name: 'artist', params: { id: artistId.value } });
-};
 </script>
 
 <template>
-    <ContentWrapper>
-        <div class="p-6 md:p-10 max-w-4xl mx-auto">
-            <div class="mb-8">
-                <BackLink :to="{ name: 'artist', params: { id: artistId } }" class="mb-4" />
-                <PageHeader title="Edit Artist" icon-color="primary">
-                    <template #icon>
-                        <EditIcon class="h-8 w-8 text-primary-content" />
-                    </template>
-                </PageHeader>
+    <LoadingPlaceholder v-if="artistsStore.loading" />
+    <ErrorDisplay v-else-if="artistsStore.error !== null" :message="artistsStore.error" />
+    <ErrorDisplay
+        v-else-if="localArtist === null"
+        message="Something went wrong while loading the artist."
+    />
+    <BaseEditView
+        v-else
+        :back-to="{ name: 'artist', params: { id: artistId } }"
+        element-type="Artist"
+        @save="handleSave"
+    >
+        <template #content>
+            <!-- Name -->
+            <div>
+                <label class="label" for="name">
+                    <span class="label-text text-base font-semibold">Artist Name</span>
+                </label>
+                <input
+                    id="name"
+                    v-model="localArtist.name"
+                    type="text"
+                    required
+                    class="input input-bordered w-full input-lg"
+                    placeholder="Enter artist name..."
+                />
             </div>
-
-            <LoadingPlaceholder v-if="artistsStore.loading" />
-            <ErrorDisplay v-else-if="artistsStore.error !== null" :message="artistsStore.error" />
-            <ErrorDisplay
-                v-else-if="localArtist === null"
-                message="Something went wrong while loading the artist."
-            />
-
-            <div v-else @keypress.enter="handleSave" class="space-y-6">
-                <!-- Name -->
-                <div>
-                    <label class="label" for="name">
-                        <span class="label-text text-base font-semibold">Artist Name</span>
-                    </label>
-                    <input
-                        id="name"
-                        v-model="localArtist.name"
-                        type="text"
-                        required
-                        class="input input-bordered w-full input-lg"
-                        placeholder="Enter artist name..."
-                    />
-                </div>
-
-                <!-- Action Buttons -->
-                <SaveCancelButtons :on-save="handleSave" :on-cancel="handleCancel" />
-            </div>
-        </div>
-    </ContentWrapper>
+        </template>
+    </BaseEditView>
 </template>
