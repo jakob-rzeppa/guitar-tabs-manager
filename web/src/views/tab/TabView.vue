@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
-import ContentWrapper from '@/components/ContentWrapper.vue';
 import { useTabsStore } from '@/stores/tabsStore';
 import { computed, onMounted } from 'vue';
 import TagIcon from '@/components/icons/TagIcon.vue';
 import InfoIcon from '@/components/icons/InfoIcon.vue';
-import ArrowLeftIcon from '@/components/icons/ArrowLeftIcon.vue';
 import EditIcon from '@/components/icons/EditIcon.vue';
 import MusicIcon from '@/components/icons/MusicIcon.vue';
 import FormatIcon from '@/components/icons/FormatIcon.vue';
 import DeleteIcon from '@/components/icons/DeleteIcon.vue';
+import BaseView from '../BaseView.vue';
+import BackButton from '@/components/BackButton.vue';
+import TabIcon from '@/components/icons/TabIcon.vue';
 
 const route = useRoute();
+const router = useRouter();
 const tabsStore = useTabsStore();
 
 const tabId = computed(() => route.params.id as string);
@@ -25,75 +27,79 @@ onMounted(async () => {
 </script>
 
 <template>
-    <ContentWrapper>
-        <LoadingPlaceholder v-if="tabsStore.loading" />
-        <ErrorDisplay v-else-if="tabsStore.error" :message="tabsStore.error" />
-        <ErrorDisplay v-else-if="!currentTab || !currentTab" message="No content." />
-        <div v-else class="p-6 md:p-10">
-            <!-- Header Section -->
-            <div class="mb-8">
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">
-                    {{ currentTab.title }}
-                </h1>
-                <p v-if="currentTab.artist !== null" class="text-xl text-base-content/70 mb-4">
-                    <span class="text-primary font-semibold">by </span>
-                    <RouterLink
-                        :to="{ name: 'artist', params: { id: currentTab.artist.id } }"
-                        class="link link-hover font-semibold"
-                    >
-                        {{ currentTab.artist.name }}
-                    </RouterLink>
-                </p>
-
-                <!-- Tags -->
-                <div class="flex flex-row flex-wrap gap-2 mb-4">
-                    <RouterLink
-                        v-for="tag in currentTab.tags"
-                        class="badge badge-secondary badge-lg gap-2"
-                        :key="tag.id"
-                        :to="{ name: 'tag', params: { id: tag.id } }"
-                    >
-                        <TagIcon />
-                        {{ tag.name }}
-                    </RouterLink>
+    <LoadingPlaceholder v-if="tabsStore.loading" />
+    <ErrorDisplay v-else-if="tabsStore.error" :message="tabsStore.error" />
+    <ErrorDisplay v-else-if="!currentTab || !currentTab" message="No content." />
+    <BaseView v-else>
+        <template #above-header>
+            <BackButton
+                :on-click="() => router.push({ name: 'tabSearch' })"
+                display-text="Tab Search"
+            />
+        </template>
+        <template #header>
+            <div class="flex flex-row items-center gap-6">
+                <div class="bg-primary rounded-full p-4 shadow-lg">
+                    <TabIcon class="h-8 w-8 text-primary-content" />
                 </div>
-
-                <!-- Capo Info -->
-                <div class="alert alert-info shadow-md w-fit">
-                    <InfoIcon />
-                    <span
-                        ><strong>Capo:</strong>
-                        {{ currentTab.capo === 0 ? 'None' : `Fret ${currentTab.capo}` }}</span
-                    >
+                <div class="flex-1">
+                    <h1 class="text-4xl md:text-6xl font-bold text-base-content">
+                        {{ currentTab.title }}
+                    </h1>
+                    <div v-if="currentTab.artist !== null" class="text-lg md:text-xl">
+                        <span class="text-base-content/70">by </span>
+                        <RouterLink
+                            :to="{ name: 'artist', params: { id: currentTab.artist.id } }"
+                            class="link link-hover link-primary font-semibold text-primary hover:text-primary-focus transition-colors"
+                        >
+                            {{ currentTab.artist.name }}
+                        </RouterLink>
+                    </div>
                 </div>
             </div>
-
-            <!-- Action Buttons -->
-            <div class="flex flex-wrap gap-3 mb-6">
-                <RouterLink class="btn btn-outline btn-secondary gap-2" :to="`/tabSearch`">
-                    <ArrowLeftIcon />
-                    Back to Search
-                </RouterLink>
-                <RouterLink class="btn btn-primary gap-2" :to="`/tab/${tabId}/edit`">
-                    <EditIcon />
-                    Edit
-                </RouterLink>
-                <RouterLink class="btn btn-secondary gap-2" :to="`/tab/${tabId}/transpose`">
-                    <MusicIcon />
-                    Transpose
-                </RouterLink>
-                <RouterLink class="btn btn-accent gap-2" :to="`/tab/${tabId}/format`">
-                    <FormatIcon />
-                    Format
-                </RouterLink>
-                <RouterLink class="btn btn-error gap-2" :to="`/tab/${tabId}/delete`">
-                    <DeleteIcon />
-                    Delete
+        </template>
+        <template #subheader>
+            <!-- Tags -->
+            <div class="flex flex-row flex-wrap gap-2">
+                <RouterLink
+                    v-for="tag in currentTab.tags"
+                    class="badge badge-secondary badge-lg gap-2"
+                    :key="tag.id"
+                    :to="{ name: 'tag', params: { id: tag.id } }"
+                >
+                    <TagIcon />
+                    {{ tag.name }}
                 </RouterLink>
             </div>
 
-            <div class="divider"></div>
-
+            <!-- Capo Info -->
+            <div class="alert alert-info shadow-md w-fit">
+                <InfoIcon />
+                <span
+                    ><strong>Capo:</strong>
+                    {{ currentTab.capo === 0 ? 'None' : `Fret ${currentTab.capo}` }}</span
+                >
+            </div>
+        </template>
+        <template #actions>
+            <RouterLink class="btn btn-primary gap-2" :to="`/tab/${tabId}/edit`">
+                <EditIcon />
+                Edit
+            </RouterLink>
+            <RouterLink class="btn btn-secondary gap-2" :to="`/tab/${tabId}/transpose`">
+                <MusicIcon />
+                Transpose
+            </RouterLink>
+            <RouterLink class="btn btn-accent gap-2" :to="`/tab/${tabId}/format`">
+                <FormatIcon />
+                Format
+            </RouterLink>
+            <RouterLink class="btn btn-error gap-2" :to="`/tab/${tabId}/delete`">
+                <DeleteIcon />
+                Delete
+            </RouterLink>
+        </template>
+        <template #content>
             <!-- Tab Content -->
             <div class="card bg-base-200 shadow-xl">
                 <div class="card-body">
@@ -117,6 +123,6 @@ onMounted(async () => {
                 </a>
                 <span v-else>N/A</span>
             </div>
-        </div>
-    </ContentWrapper>
+        </template>
+    </BaseView>
 </template>

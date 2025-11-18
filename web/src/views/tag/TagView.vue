@@ -2,7 +2,6 @@
 import { useRoute } from 'vue-router';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
-import ContentWrapper from '@/components/ContentWrapper.vue';
 import TabsDisplay from '@/components/TabsDisplay.vue';
 import BackButton from '@/components/BackButton.vue';
 import { useTagsStore } from '@/stores/tagsStore';
@@ -12,6 +11,8 @@ import type { Tag, TabListItem } from '@/types/types';
 import { useRouter } from 'vue-router';
 import EditIcon from '@/components/icons/EditIcon.vue';
 import DeleteIcon from '@/components/icons/DeleteIcon.vue';
+import BaseView from '../BaseView.vue';
+import TagIcon from '@/components/icons/TagIcon.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -41,59 +42,52 @@ const handleBack = () => {
 </script>
 
 <template>
-    <ContentWrapper>
-        <div class="p-6 md:p-10">
-            <BackButton :on-click="handleBack" class="mb-6" display-text="Home" />
-
-            <LoadingPlaceholder v-if="tagsStore.loading || tabsStore.loading" />
-            <ErrorDisplay
-                v-else-if="tagsStore.error || tabsStore.error"
-                :message="tagsStore.error || tabsStore.error || ''"
-            />
-            <ErrorDisplay v-else-if="!currentTag" message="Tag not found." />
-
-            <div v-else>
-                <!-- Header Section -->
-                <div class="mb-8">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="badge badge-primary badge-lg text-xl px-6 py-4">
-                            {{ currentTag.name }}
-                        </div>
-                    </div>
-
-                    <div class="stats shadow bg-base-200">
-                        <div class="stat">
-                            <div class="stat-title">Total Tabs</div>
-                            <div class="stat-value text-primary">{{ tagTabs.length }}</div>
-                        </div>
-                    </div>
+    <LoadingPlaceholder v-if="tagsStore.loading || tabsStore.loading" />
+    <ErrorDisplay
+        v-else-if="tagsStore.error || tabsStore.error"
+        :message="tagsStore.error || tabsStore.error || ''"
+    />
+    <ErrorDisplay v-else-if="!currentTag" message="Tag not found." />
+    <BaseView v-else>
+        <template #above-header>
+            <BackButton :on-click="handleBack" display-text="Tag Search" />
+        </template>
+        <template #header>
+            <div class="flex items-center gap-4">
+                <div class="bg-primary rounded-full p-4">
+                    <TagIcon class="h-8 w-8 text-primary-content" />
                 </div>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-wrap gap-3 mb-6">
-                    <RouterLink class="btn btn-primary gap-2" :to="`/tag/${tagId}/edit`">
-                        <EditIcon />
-                        Edit
-                    </RouterLink>
-                    <RouterLink class="btn btn-error gap-2" :to="`/tag/${tagId}/delete`">
-                        <DeleteIcon />
-                        Delete
-                    </RouterLink>
-                </div>
-
-                <div class="divider"></div>
-
-                <!-- Tabs Section -->
-                <div v-if="tagTabs.length === 0" class="text-center py-16">
-                    <p class="text-xl opacity-60">No tabs found with this tag.</p>
-                </div>
-                <div v-else>
-                    <h2 class="text-2xl font-bold mb-4">
-                        Tabs tagged with "{{ currentTag.name }}"
-                    </h2>
-                    <TabsDisplay :tabs="tagTabs" />
+                <h1 class="text-4xl md:text-5xl font-bold">
+                    {{ currentTag.name }}
+                </h1>
+            </div>
+        </template>
+        <template #subheader>
+            <div class="stats shadow bg-base-200">
+                <div class="stat">
+                    <div class="stat-title">Total Tabs</div>
+                    <div class="stat-value text-primary">{{ tagTabs.length }}</div>
                 </div>
             </div>
-        </div>
-    </ContentWrapper>
+        </template>
+        <template #actions>
+            <RouterLink class="btn btn-primary gap-2" :to="`/tag/${tagId}/edit`">
+                <EditIcon />
+                Edit
+            </RouterLink>
+            <RouterLink class="btn btn-error gap-2" :to="`/tag/${tagId}/delete`">
+                <DeleteIcon />
+                Delete
+            </RouterLink>
+        </template>
+        <template #content>
+            <div v-if="tagTabs.length === 0" class="text-center">
+                <p class="text-xl opacity-60">No tabs found with this tag.</p>
+            </div>
+            <div v-else>
+                <h2 class="text-2xl font-bold">Tabs tagged with "{{ currentTag.name }}"</h2>
+                <TabsDisplay :tabs="tagTabs" />
+            </div>
+        </template>
+    </BaseView>
 </template>
