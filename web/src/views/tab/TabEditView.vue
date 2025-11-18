@@ -5,7 +5,7 @@ import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import SelectArtist from '@/components/SelectArtist.vue';
 import SelectTags from '@/components/SelectTags.vue';
-import BackButton from '@/components/BackButton.vue';
+import BackLink from '@/components/BackLink.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import SaveCancelButtons from '@/components/SaveCancelButtons.vue';
 import EditIcon from '@/components/icons/EditIcon.vue';
@@ -64,7 +64,7 @@ const handleCancel = () => {
     <ContentWrapper>
         <div class="p-6 md:p-10 max-w-4xl mx-auto">
             <div class="mb-8">
-                <BackButton :on-click="handleCancel" class="mb-4" />
+                <BackLink :to="{ name: 'tab', params: { id: tabId } }" class="mb-4" />
                 <PageHeader title="Edit Tab" icon-color="primary">
                     <template #icon>
                         <EditIcon class="h-8 w-8 text-primary-content" />

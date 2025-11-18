@@ -3,7 +3,7 @@ import ContentWrapper from '@/components/ContentWrapper.vue';
 import { useRoute, useRouter } from 'vue-router';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
-import BackButton from '@/components/BackButton.vue';
+import BackLink from '@/components/BackLink.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import SaveCancelButtons from '@/components/SaveCancelButtons.vue';
 import MusicIcon from '@/components/icons/MusicIcon.vue';
@@ -73,7 +73,7 @@ const handleCancel = () => {
     <ContentWrapper>
         <div class="p-6 md:p-10 max-w-4xl mx-auto">
             <div class="mb-8">
-                <BackButton :on-click="handleCancel" class="mb-4" />
+                <BackLink :to="{ name: 'tab', params: { id: tabId } }" class="mb-4" />
                 <PageHeader title="Transpose Tab" icon-color="secondary">
                     <template #icon>
                         <MusicIcon class="h-8 w-8 text-secondary-content" />

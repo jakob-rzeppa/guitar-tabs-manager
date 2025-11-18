@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import { useTabsStore } from '@/stores/tabsStore';
@@ -11,11 +11,10 @@ import MusicIcon from '@/components/icons/MusicIcon.vue';
 import FormatIcon from '@/components/icons/FormatIcon.vue';
 import DeleteIcon from '@/components/icons/DeleteIcon.vue';
 import BaseView from '../BaseView.vue';
-import BackButton from '@/components/BackButton.vue';
+import BackLink from '@/components/BackLink.vue';
 import TabIcon from '@/components/icons/TabIcon.vue';
 
 const route = useRoute();
-const router = useRouter();
 const tabsStore = useTabsStore();
 
 const tabId = computed(() => route.params.id as string);
@@ -32,10 +31,7 @@ onMounted(async () => {
     <ErrorDisplay v-else-if="!currentTab || !currentTab" message="No content." />
     <BaseView v-else>
         <template #above-header>
-            <BackButton
-                :on-click="() => router.push({ name: 'tabSearch' })"
-                display-text="Tab Search"
-            />
+            <BackLink :to="{ name: 'tabSearch' }" display-text="Tab Search" />
         </template>
         <template #header>
             <div class="flex flex-row items-center gap-6">

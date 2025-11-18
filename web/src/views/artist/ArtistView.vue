@@ -3,19 +3,17 @@ import { useRoute } from 'vue-router';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import TabsDisplay from '@/components/TabsDisplay.vue';
-import BackButton from '@/components/BackButton.vue';
+import BackLink from '@/components/BackLink.vue';
 import { useArtistsStore } from '@/stores/artistsStore';
 import { useTabsStore } from '@/stores/tabsStore';
 import { computed, onMounted, ref } from 'vue';
 import type { Artist, TabListItem } from '@/types/types';
-import { useRouter } from 'vue-router';
 import PersonIcon from '@/components/icons/PersonIcon.vue';
 import EditIcon from '@/components/icons/EditIcon.vue';
 import DeleteIcon from '@/components/icons/DeleteIcon.vue';
 import BaseView from '../BaseView.vue';
 
 const route = useRoute();
-const router = useRouter();
 const artistsStore = useArtistsStore();
 const tabsStore = useTabsStore();
 
@@ -36,10 +34,6 @@ onMounted(async () => {
         );
     }
 });
-
-const handleBack = () => {
-    router.push({ name: 'artistSearch' });
-};
 </script>
 
 <template>
@@ -51,7 +45,7 @@ const handleBack = () => {
     <ErrorDisplay v-else-if="!currentArtist" message="Artist not found." />
     <BaseView v-else>
         <template #above-header>
-            <BackButton :on-click="handleBack" display-text="Artist Search" />
+            <BackLink :to="{ name: 'artistSearch' }" display-text="Artist Search" />
         </template>
         <template #header>
             <div class="flex items-center gap-4">

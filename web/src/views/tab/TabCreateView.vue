@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import SelectArtist from '@/components/SelectArtist.vue';
 import SelectTags from '@/components/SelectTags.vue';
-import BackButton from '@/components/BackButton.vue';
+import BackLink from '@/components/BackLink.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import SaveCancelButtons from '@/components/SaveCancelButtons.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
@@ -49,7 +49,7 @@ const handleCancel = () => {
     <ContentWrapper>
         <div class="p-6 md:p-10 max-w-4xl mx-auto">
             <div class="mb-8">
-                <BackButton :on-click="handleCancel" class="mb-4" />
+                <BackLink :to="{ name: 'tabSearch' }" class="mb-4" />
                 <PageHeader title="Create Tab" icon-color="primary">
                     <template #icon>
                         <PlusIcon class="h-8 w-8 text-primary-content" />

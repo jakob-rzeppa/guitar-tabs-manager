@@ -2,7 +2,7 @@
 import ContentWrapper from '@/components/ContentWrapper.vue';
 import { useRouter } from 'vue-router';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
-import BackButton from '@/components/BackButton.vue';
+import BackLink from '@/components/BackLink.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import SaveCancelButtons from '@/components/SaveCancelButtons.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
@@ -39,7 +39,7 @@ const handleCancel = () => {
     <ContentWrapper>
         <div class="p-6 md:p-10 max-w-4xl mx-auto">
             <div class="mb-8">
-                <BackButton :on-click="handleCancel" class="mb-4" />
+                <BackLink :to="{ name: 'tagSearch' }" class="mb-4" />
                 <PageHeader title="Create Tag" icon-color="primary">
                     <template #icon>
                         <PlusIcon class="h-8 w-8 text-primary-content" />
