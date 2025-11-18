@@ -34,7 +34,7 @@ watch(
 </script>
 
 <template>
-    <BaseSearchView>
+    <BaseSearchView :create-route="{ name: 'artistCreate' }">
         <template #title> Search for Artists </template>
         <template #search-input>
             <input placeholder="Search by name..." v-model="searchValue" />
