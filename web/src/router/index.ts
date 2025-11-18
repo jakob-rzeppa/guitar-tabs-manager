@@ -18,85 +18,85 @@ const router = createRouter({
         {
             path: '/tabSearch',
             name: 'tabSearch',
-            component: () => import('../views/TabSearchView.vue'),
+            component: () => import('../views/tab/TabSearchView.vue'),
         },
         {
             path: '/tab/create',
             name: 'tabCreate',
-            component: () => import('../views/TabCreateView.vue'),
+            component: () => import('../views/tab/TabCreateView.vue'),
         },
         {
             path: '/tab/:id',
             name: 'tab',
-            component: () => import('../views/TabView.vue'),
+            component: () => import('../views/tab/TabView.vue'),
         },
         {
             path: '/tab/:id/edit',
             name: 'tabEdit',
-            component: () => import('../views/TabEditView.vue'),
+            component: () => import('../views/tab/TabEditView.vue'),
         },
 
         {
             path: '/tab/:id/delete',
             name: 'tabDelete',
-            component: () => import('../views/TabDeleteView.vue'),
+            component: () => import('../views/tab/TabDeleteView.vue'),
         },
 
         {
             path: '/tab/:id/format',
             name: 'tabFormat',
-            component: () => import('../views/TabFormatView.vue'),
+            component: () => import('../views/tab/TabFormatView.vue'),
         },
 
         {
             path: '/tab/:id/transpose',
             name: 'tabTranspose',
-            component: () => import('../views/TabTransposeView.vue'),
+            component: () => import('../views/tab/TabTransposeView.vue'),
         },
         {
             path: '/artistSearch',
             name: 'artistSearch',
-            component: () => import('../views/ArtistSearchView.vue'),
+            component: () => import('../views/artist/ArtistSearchView.vue'),
         },
         {
             path: '/artist/:id',
             name: 'artist',
-            component: () => import('../views/ArtistView.vue'),
+            component: () => import('../views/artist/ArtistView.vue'),
         },
         {
             path: '/artist/:id/edit',
             name: 'artistEdit',
-            component: () => import('../views/ArtistEditView.vue'),
+            component: () => import('../views/artist/ArtistEditView.vue'),
         },
         {
             path: '/artist/:id/delete',
             name: 'artistDelete',
-            component: () => import('../views/ArtistDeleteView.vue'),
+            component: () => import('../views/artist/ArtistDeleteView.vue'),
         },
         {
             path: '/tagSearch',
             name: 'tagSearch',
-            component: () => import('../views/TagSearchView.vue'),
+            component: () => import('../views/tag/TagSearchView.vue'),
         },
         {
             path: '/tag/create',
             name: 'tagCreate',
-            component: () => import('../views/TagCreateView.vue'),
+            component: () => import('../views/tag/TagCreateView.vue'),
         },
         {
             path: '/tag/:id',
             name: 'tag',
-            component: () => import('../views/TagView.vue'),
+            component: () => import('../views/tag/TagView.vue'),
         },
         {
             path: '/tag/:id/edit',
             name: 'tagEdit',
-            component: () => import('../views/TagEditView.vue'),
+            component: () => import('../views/tag/TagEditView.vue'),
         },
         {
             path: '/tag/:id/delete',
             name: 'tagDelete',
-            component: () => import('../views/TagDeleteView.vue'),
+            component: () => import('../views/tag/TagDeleteView.vue'),
         },
     ],
 });
