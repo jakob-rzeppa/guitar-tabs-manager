@@ -4,10 +4,14 @@ import type { Tag } from '@/types/types.ts';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import { useTagsStore } from '@/stores/tagsStore';
+import { useModalStore } from '@/stores/modalStore';
+import CreateTagModal from '@/components/CreateTagModal.vue';
+import PlusIcon from '@/components/icons/PlusIcon.vue';
 
 const model = defineModel<Tag[]>({ required: true });
 
 const tagsStore = useTagsStore();
+const modalStore = useModalStore();
 
 const inputValue = ref<string>('');
 
@@ -125,5 +129,13 @@ function removeActiveTag(id?: number) {
                 :value="tag.name"
             />
         </datalist>
+
+        <button
+            class="btn btn-sm btn-outline btn-secondary w-max mt-2"
+            @click="modalStore.openModal(CreateTagModal)"
+        >
+            <PlusIcon />
+            Create new Tag
+        </button>
     </div>
 </template>
