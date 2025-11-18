@@ -76,9 +76,7 @@ describe('tagsStore', () => {
         it('should not refetch if data already loaded unless force is true', async () => {
             const store = useTagsStore();
             const mockData: ApiResponse<TagDto[]> = {
-                content: [
-                    { id: 1, name: 'rock' },
-                ],
+                content: [{ id: 1, name: 'rock' }],
             };
 
             vi.mocked(api.get).mockResolvedValue({ data: mockData });
@@ -129,9 +127,7 @@ describe('tagsStore', () => {
         it('should properly map tag DTOs to internal format', async () => {
             const store = useTagsStore();
             const mockData: ApiResponse<TagDto[]> = {
-                content: [
-                    { id: 99, name: 'progressive-rock' },
-                ],
+                content: [{ id: 99, name: 'progressive-rock' }],
             };
 
             vi.mocked(api.get).mockResolvedValue({ data: mockData });
@@ -159,11 +155,158 @@ describe('tagsStore', () => {
             });
 
             expect(store.loading).toBe(false);
-            
+
             await store.fetchAllTags();
-            
+
             expect(loadingDuringCall).toBe(true);
             expect(store.loading).toBe(false);
+        });
+    });
+
+    describe('createTag', () => {
+        it('should create a new tag and add to state', async () => {
+            const store = useTagsStore();
+            const mockData: ApiResponse<TagDto> = {
+                content: { id: 4, name: 'jazz' },
+                message: 'Tag created successfully',
+            };
+
+            vi.mocked(api.post).mockResolvedValue({ data: mockData });
+
+            await store.createTag({ name: 'jazz' });
+
+            expect(api.post).toHaveBeenCalledWith('/tags', { name: 'jazz' });
+            expect(store.tags).toHaveLength(1);
+            expect(store.tags[0]).toEqual({ id: 4, name: 'jazz' });
+            expect(store.error).toBeNull();
+        });
+
+        it('should set error when content is empty', async () => {
+            const store = useTagsStore();
+            vi.mocked(api.post).mockResolvedValue({ data: {} });
+
+            await store.createTag({ name: 'jazz' });
+
+            expect(store.error).toBe('Request content is empty');
+        });
+
+        it('should handle API errors', async () => {
+            const store = useTagsStore();
+            vi.mocked(api.post).mockRejectedValue(new Error('Creation failed'));
+
+            await expect(store.createTag({ name: 'jazz' })).rejects.toThrow('Creation failed');
+            expect(store.error).toBe('Creation failed');
+        });
+    });
+
+    describe('updateTag', () => {
+        it('should update a tag and refresh state', async () => {
+            const store = useTagsStore();
+            store.tags = [
+                { id: 1, name: 'rock' },
+                { id: 2, name: 'acoustic' },
+            ];
+
+            const mockData: ApiResponse<TagDto> = {
+                content: { id: 1, name: 'pop' },
+                message: 'Tag updated successfully',
+            };
+
+            vi.mocked(api.put).mockResolvedValue({ data: mockData });
+
+            await store.updateTag(1, { name: 'pop' });
+
+            expect(api.put).toHaveBeenCalledWith('/tags/1', { name: 'pop' });
+            expect(store.tags[0].name).toBe('pop');
+            expect(store.error).toBeNull();
+        });
+
+        it('should set error when content is empty', async () => {
+            const store = useTagsStore();
+            store.tags = [{ id: 1, name: 'rock' }];
+
+            vi.mocked(api.put).mockResolvedValue({ data: {} });
+
+            await store.updateTag(1, { name: 'updated' });
+
+            expect(store.error).toBe('Response content is empty');
+        });
+
+        it('should handle tag not found in local state', async () => {
+            const store = useTagsStore();
+            store.tags = [{ id: 2, name: 'acoustic' }];
+
+            const mockData: ApiResponse<TagDto> = {
+                content: { id: 1, name: 'pop' },
+            };
+
+            vi.mocked(api.put).mockResolvedValue({ data: mockData });
+
+            await store.updateTag(1, { name: 'pop' });
+
+            // Tag not found, so state remains unchanged
+            expect(store.tags).toHaveLength(1);
+            expect(store.tags[0].id).toBe(2);
+        });
+
+        it('should handle API errors', async () => {
+            const store = useTagsStore();
+            store.tags = [{ id: 1, name: 'rock' }];
+
+            vi.mocked(api.put).mockRejectedValue(new Error('Update failed'));
+
+            await expect(store.updateTag(1, { name: 'updated' })).rejects.toThrow('Update failed');
+            expect(store.error).toBe('Update failed');
+        });
+    });
+
+    describe('deleteTag', () => {
+        it('should delete a tag from state', async () => {
+            const store = useTagsStore();
+            store.tags = [
+                { id: 1, name: 'rock' },
+                { id: 2, name: 'acoustic' },
+                { id: 3, name: 'classic' },
+            ];
+
+            vi.mocked(api.delete).mockResolvedValue({
+                data: { message: 'Tag deleted successfully' },
+            });
+
+            await store.deleteTag(2);
+
+            expect(api.delete).toHaveBeenCalledWith('/tags/2');
+            expect(store.tags).toHaveLength(2);
+            expect(store.tags[0].id).toBe(1);
+            expect(store.tags[1].id).toBe(3);
+        });
+
+        it('should handle deleting non-existent tag', async () => {
+            const store = useTagsStore();
+            store.tags = [
+                { id: 1, name: 'rock' },
+                { id: 2, name: 'acoustic' },
+            ];
+
+            vi.mocked(api.delete).mockResolvedValue({
+                data: { message: 'Tag deleted successfully' },
+            });
+
+            await store.deleteTag(99);
+
+            expect(api.delete).toHaveBeenCalledWith('/tags/99');
+            // State remains unchanged since tag wasn't there
+            expect(store.tags).toHaveLength(2);
+        });
+
+        it('should handle API errors', async () => {
+            const store = useTagsStore();
+            store.tags = [{ id: 1, name: 'rock' }];
+
+            vi.mocked(api.delete).mockRejectedValue(new Error('Deletion failed'));
+
+            await expect(store.deleteTag(1)).rejects.toThrow('Deletion failed');
+            expect(store.error).toBe('Deletion failed');
         });
     });
 });
