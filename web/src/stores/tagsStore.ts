@@ -2,6 +2,7 @@ import api, { useApiInStore } from '@/services/api';
 import type { CreateTagRequest, TagDto, UpdateTagRequest } from '@/types/dtos';
 import type { Tag } from '@/types/types';
 import { defineStore } from 'pinia';
+import { useTabsStore } from './tabsStore';
 
 interface State {
     tags: Tag[];
@@ -86,6 +87,22 @@ export const useTagsStore = defineStore('tags', {
                     if (index !== -1) {
                         this.tags[index] = data.content;
                     }
+
+                    // Update tag reference in tabs list
+                    const tabsStore = useTabsStore();
+                    tabsStore.tabsList.forEach((tab) => {
+                        tab.tags = tab.tags.map((t) =>
+                            t.id === tagId ? { id: tagId, name: data.content!.name } : t
+                        );
+                    });
+
+                    // Update tag reference in detailed tabs
+                    Object.keys(tabsStore.detailedTabs).forEach((key) => {
+                        const tab = tabsStore.detailedTabs[key];
+                        tab.tags = tab.tags.map((t) =>
+                            t.id === tagId ? { id: tagId, name: tag.name ?? t.name } : t
+                        );
+                    });
                 },
             });
         },
@@ -100,8 +117,20 @@ export const useTagsStore = defineStore('tags', {
                 apiCall: () => api.delete(`/tags/${tagId}`),
                 onSuccess: () => {
                     this.tags = this.tags.filter((t) => t.id !== tagId);
+
+                    // Clear tag reference in tabs list
+                    const tabsStore = useTabsStore();
+                    tabsStore.tabsList.forEach((tab) => {
+                        tab.tags = tab.tags.filter(tag => tag.id !== tagId);
+                    });
+
+                    // Clear tag reference in detailed tabs
+                    Object.keys(tabsStore.detailedTabs).forEach((key) => {
+                        const tab = tabsStore.detailedTabs[key];
+                        tab.tags = tab.tags.filter(tag => tag.id !== tagId);
+                    });
                 },
             });
-        },
+        }
     },
 });
