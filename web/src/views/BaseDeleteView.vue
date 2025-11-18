@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import ContentWrapper from '@/components/ContentWrapper.vue';
 import DeleteIcon from '@/components/icons/DeleteIcon.vue';
 import XIcon from '@/components/icons/XIcon.vue';
-import PageHeader from '@/components/PageHeader.vue';
 import type { RouterLinkProps } from 'vue-router';
+import BaseActionView from './BaseActionView.vue';
+import WarningIcon from '@/components/icons/WarningIcon.vue';
 
 interface Props {
     elementType: string;
@@ -19,18 +19,13 @@ const emit = defineEmits<Emits>();
 </script>
 
 <template>
-    <ContentWrapper>
-        <div class="p-6 space-y-6">
-            <div class="mb-8">
-                <BackLink :to="props.backTo" class="mb-4" />
-                <PageHeader :title="`Delete ${props.elementType}`" icon-color="error">
-                    <template #icon>
-                        <DeleteIcon class="h-8 w-8 text-error-content" />
-                    </template>
-                </PageHeader>
-            </div>
-
-            <div class="alert alert-warning shadow-lg">
+    <BaseActionView :back-to="props.backTo" color-scheme="error">
+        <template #title> Delete {{ props.elementType }} </template>
+        <template #icon>
+            <DeleteIcon class="h-8 w-8 text-error-content" />
+        </template>
+        <template #content
+            ><div class="alert alert-warning shadow-lg">
                 <WarningIcon />
                 <div>
                     <h3 class="font-bold">Warning!</h3>
@@ -57,6 +52,6 @@ const emit = defineEmits<Emits>();
                     Cancel
                 </RouterLink>
             </div>
-        </div>
-    </ContentWrapper>
+        </template>
+    </BaseActionView>
 </template>
