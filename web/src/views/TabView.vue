@@ -47,14 +47,15 @@ onMounted(async () => {
 
                 <!-- Tags -->
                 <div class="flex flex-row flex-wrap gap-2 mb-4">
-                    <div
+                    <RouterLink
                         v-for="tag in currentTab.tags"
                         class="badge badge-secondary badge-lg gap-2"
                         :key="tag.id"
+                        :to="{ name: 'tag', params: { id: tag.id } }"
                     >
                         <TagIcon />
                         {{ tag.name }}
-                    </div>
+                    </RouterLink>
                 </div>
 
                 <!-- Capo Info -->
