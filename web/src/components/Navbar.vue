@@ -18,6 +18,7 @@ import SearchIcon from './icons/SearchIcon.vue';
                     <li><RouterLink to="/">Homepage</RouterLink></li>
                     <li><RouterLink to="/tabSearch">Tab Search</RouterLink></li>
                     <li><RouterLink to="/artistSearch">Artist Search</RouterLink></li>
+                    <li><RouterLink to="/tagSearch">Tag Search</RouterLink></li>
                 </ul>
             </div>
         </div>
