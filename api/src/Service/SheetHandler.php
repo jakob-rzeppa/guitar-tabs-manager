@@ -2,14 +2,21 @@
 
 namespace App\Service;
 
+use App\Dto\Request\CreateSheetRequestDto;
+use App\Dto\Request\UpdateSheetRequestDto;
+use App\Entity\Sheet;
+use App\Repository\ArtistRepository;
 use App\Repository\SheetRepository;
+use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SheetHandler
 {
     public function __construct(
         private SheetRepository $sheetRepository,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private ArtistRepository $artistRepository,
+        private TagRepository $tagRepository
     ) {}
 
     public function getWithLessDetailsAllSheets()
@@ -41,6 +48,86 @@ class SheetHandler
         }
 
         return $reducedSheets;
+    }
+
+    public function createSheet(CreateSheetRequestDto $dto): Sheet
+    {
+        $sheet = new Sheet();
+        $sheet->setTitle($dto->title);
+        $sheet->setCapo($dto->capo);
+        $sheet->setSourceURL($dto->source_url);
+        $sheet->setContent($dto->content);
+
+        if ($dto->artist_id !== null) {
+            $artist = $this->artistRepository->find($dto->artist_id);
+
+            $sheet->setArtist($artist);
+        }
+
+        if (!empty($dto->tag_ids)) {
+            $tags = $this->tagRepository->findBy(['id' => $dto->tag_ids]);
+            foreach ($tags as $tag) {
+                $sheet->addTag($tag);
+            }
+        }
+
+        $this->entityManager->persist($sheet);
+        $this->entityManager->flush();
+
+        return $sheet;
+    }
+
+    public function updateSheet(int $id, UpdateSheetRequestDto $dto): Sheet
+    {
+        $sheet = $this->sheetRepository->find($id);
+
+        if (null === $sheet) {
+            throw new \InvalidArgumentException("Sheet with id $id not found.");
+        }
+
+        if (null !== $dto->title) {
+            $sheet->setTitle($dto->title);
+        }
+        if (null !== $dto->capo) {
+            $sheet->setCapo($dto->capo);
+        }
+        if (null !== $dto->source_url) {
+            $sheet->setSourceURL($dto->source_url);
+        }
+        if (null !== $dto->content) {
+            $sheet->setContent($dto->content);
+        }
+
+        if ($dto->artist_id !== null) {
+            $artist = $this->artistRepository->find($dto->artist_id);
+
+            $sheet->setArtist($artist);
+        }
+
+        if ($dto->tag_ids !== null) {
+            $sheet->getTags()->clear();
+
+            $tags = $this->tagRepository->findBy(['id' => $dto->tag_ids]);
+            foreach ($tags as $tag) {
+                $sheet->addTag($tag);
+            }
+        }
+
+        $this->entityManager->flush();
+
+        return $sheet;
+    }
+
+    public function deleteSheetById(int $id): void
+    {
+        $sheet = $this->sheetRepository->find($id);
+
+        if (null === $sheet) {
+            throw new \InvalidArgumentException("Sheet with id $id not found.");
+        }
+
+        $this->entityManager->remove($sheet);
+        $this->entityManager->flush();
     }
 
     public function deleteArtistFromAllSheets(int $artistId): void
