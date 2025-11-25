@@ -28,11 +28,9 @@ final class TagController extends AbstractController
             ];
         }
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => $reducedTags,
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('/{id}', name: 'app_tags_get_by_id', methods: ['GET'])]
@@ -44,11 +42,9 @@ final class TagController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => $tag
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('', name: 'app_tags_create', methods: ['POST'])]
@@ -68,12 +64,10 @@ final class TagController extends AbstractController
             'name' => $tag->getName()
         ];
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => $responseData,
             'message' => 'Tag created successfully'
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('/{id}', name: 'app_tags_update', methods: ['PUT'])]
@@ -98,12 +92,10 @@ final class TagController extends AbstractController
             'name' => $tag->getName()
         ];
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => $responseData,
             'message' => 'Tag updated successfully'
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('/{id}', name: 'app_tags_delete', methods: ['DELETE'])]
@@ -118,10 +110,8 @@ final class TagController extends AbstractController
         $entityManager->remove($tag);
         $entityManager->flush();
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'message' => 'Tag deleted successfully'
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 }

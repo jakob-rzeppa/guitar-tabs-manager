@@ -29,11 +29,9 @@ final class ArtistController extends AbstractController
             ];
         }
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => $reducedArtists,
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('/{id}', name: 'app_artists_get_by_id', methods: ['GET'])]
@@ -45,11 +43,9 @@ final class ArtistController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => $artist
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('', name: 'app_artists_create', methods: ['POST'])]
@@ -63,12 +59,10 @@ final class ArtistController extends AbstractController
         $entityManager->persist($artist);
         $entityManager->flush();
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => $artist,
             'message' => 'Artist created successfully'
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('/{id}', name: 'app_artists_update', methods: ['PUT'])]
@@ -94,12 +88,10 @@ final class ArtistController extends AbstractController
             'name' => $artist->getName()
         ];
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => $responseData,
             'message' => 'Artist updated successfully'
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('/{id}', name: 'app_artists_delete', methods: ['DELETE'])]
@@ -116,10 +108,8 @@ final class ArtistController extends AbstractController
         $entityManager->remove($artist);
         $entityManager->flush();
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'message' => 'Artist deleted successfully'
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 }

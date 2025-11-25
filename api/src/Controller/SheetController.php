@@ -24,11 +24,9 @@ final class SheetController extends AbstractController
     {
         $sheets = $sheetHandler->getWithLessDetailsAllSheets();
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => $sheets,
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('/{id}', name: 'app_sheets_get_by_id', methods: ['GET'])]
@@ -53,7 +51,7 @@ final class SheetController extends AbstractController
             ];
         }
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => [
                 'id' => $sheet->getId(),
                 'title' => $sheet->getTitle(),
@@ -63,9 +61,7 @@ final class SheetController extends AbstractController
                 'source_url' => $sheet->getSourceURL(),
                 'content' => $sheet->getContent()
             ]
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('', name: 'app_tabs_create', methods: ['POST'])]
@@ -117,7 +113,7 @@ final class SheetController extends AbstractController
             ];
         }
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => [
                 'id' => $sheet->getId(),
                 'title' => $sheet->getTitle(),
@@ -127,9 +123,7 @@ final class SheetController extends AbstractController
                 'source_url' => $sheet->getSourceURL(),
                 'content' => $sheet->getContent()
             ]
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('/{id}', name: 'app_tabs_update', methods: ['PUT'])]
@@ -188,7 +182,7 @@ final class SheetController extends AbstractController
             ];
         }
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'content' => [
                 'id' => $sheet->getId(),
                 'title' => $sheet->getTitle(),
@@ -198,9 +192,7 @@ final class SheetController extends AbstractController
                 'source_url' => $sheet->getSourceURL(),
                 'content' => $sheet->getContent()
             ]
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('/{id}', name: 'app_sheets_delete', methods: ['DELETE'])]
@@ -215,28 +207,28 @@ final class SheetController extends AbstractController
         $entityManager->remove($sheet);
         $entityManager->flush();
 
-        $jsonResponse = $serializer->serialize([
+        return JsonResponse::fromJsonString($serializer->serialize([
             'message' => 'Sheet deleted successfully'
-        ], 'json');
-
-        return JsonResponse::fromJsonString($jsonResponse);
+        ], 'json'));
     }
 
     #[Route('/format', name: 'app_sheets_format', methods: ['POST'])]
-    public function format(Request $request, FormatService $formatService): JsonResponse
+    public function format(Request $request, FormatService $formatService, SerializerInterface $serializer): JsonResponse
     {
         $requestContent = $request->toArray();
 
         $sheetContent = $requestContent['content'];
         $sheetContent = $formatService->formatSheet($sheetContent);
 
-        return $this->json(['content' => [
-            'content' => $sheetContent
-        ]]);
+        return JsonResponse::fromJsonString($serializer->serialize([
+            'content' => [
+                'content' => $sheetContent
+            ]
+        ], 'json'));
     }
 
     #[Route('/transpose', name: 'app_sheets_transpose', methods: ['POST'])]
-    public function transpose(Request $request, TransposeService $transposeService): JsonResponse
+    public function transpose(Request $request, TransposeService $transposeService, SerializerInterface $serializer): JsonResponse
     {
         $requestContent = $request->toArray();
 
@@ -245,8 +237,10 @@ final class SheetController extends AbstractController
 
         $sheetContent = $transposeService->transposeSheet($sheetContent, $dir);
 
-        return $this->json(['content' => [
-            'content' => $sheetContent
-        ]]);
+        return JsonResponse::fromJsonString($serializer->serialize([
+            'content' => [
+                'content' => $sheetContent
+            ]
+        ], 'json'));
     }
 }
