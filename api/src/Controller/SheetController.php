@@ -7,7 +7,6 @@ use App\Dto\Request\UpdateSheetRequestDto;
 use App\Dto\SheetDto;
 use App\Service\FormatService;
 use App\Service\TransposeService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
