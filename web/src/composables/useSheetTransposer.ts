@@ -1,28 +1,28 @@
 import api, { useApi } from '@/services/api';
-import type { ApiResponse, TransposeTabDto } from '@/types/dtos';
+import type { ApiResponse, TransposeSheetDto } from '@/types/dtos';
 import { ref, watch } from 'vue';
 
-export const useTabTransposer = () => {
+export const useSheetTransposer = () => {
     const transposeLoading = ref<boolean>(false);
     const transposeError = ref<string | null>(null);
-    const transposeResponse = ref<ApiResponse<TransposeTabDto> | null>(null);
+    const transposeResponse = ref<ApiResponse<TransposeSheetDto> | null>(null);
 
-    const transposedTabContent = ref<string | null>(null);
+    const transposedSheetContent = ref<string | null>(null);
 
     watch(transposeResponse, (newValue) => {
         if (newValue && newValue.content) {
-            transposedTabContent.value = newValue.content.content;
+            transposedSheetContent.value = newValue.content.content;
         } else {
-            transposedTabContent.value = null;
+            transposedSheetContent.value = null;
         }
     });
 
-    const transposeTab = (content: string, transposeDir: 'up' | 'down') => {
-        useApi<TransposeTabDto>({
+    const transposeSheet = (content: string, transposeDir: 'up' | 'down') => {
+        useApi<TransposeSheetDto>({
             loading: transposeLoading,
             error: transposeError,
             response: transposeResponse,
-            apiCall: () => api.post('/tabs/transpose', { content, dir: transposeDir }),
+            apiCall: () => api.post('/sheets/transpose', { content, dir: transposeDir }),
         }).then(() => {
             if (transposeError.value) {
                 return;
@@ -38,7 +38,7 @@ export const useTabTransposer = () => {
     return {
         transposeLoading,
         transposeError,
-        transposedTabContent,
-        transposeTab,
+        transposedSheetContent,
+        transposeSheet,
     };
 };

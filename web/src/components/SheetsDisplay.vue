@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { TabListItem } from '@/types/types.ts';
+import type { SheetListItem } from '@/types/types.ts';
 import { useRouter } from 'vue-router';
 import TagIcon from './icons/TagIcon.vue';
 
 const router = useRouter();
 
 interface Props {
-    tabs: TabListItem[];
+    sheets: SheetListItem[];
 }
 
 defineProps<Props>();
@@ -14,21 +14,21 @@ defineProps<Props>();
 
 <template>
     <ul class="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 p-8">
-        <li v-for="tab in tabs" :key="tab.id">
+        <li v-for="sheet in sheets" :key="sheet.id">
             <div
                 class="card bg-base-200 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 cursor-pointer border-2 border-transparent hover:border-primary"
-                @click="router.push({ name: 'tab', params: { id: tab.id } })"
+                @click="router.push({ name: 'sheet', params: { id: sheet.id } })"
             >
                 <div class="card-body">
                     <h2 class="card-title text-lg">
-                        {{ tab.title }}
+                        {{ sheet.title }}
                     </h2>
-                    <p v-if="tab.artist !== null" class="text-sm text-base-content/70">
-                        <span class="text-primary font-semibold">by</span> {{ tab.artist.name }}
+                    <p v-if="sheet.artist !== null" class="text-sm text-base-content/70">
+                        <span class="text-primary font-semibold">by</span> {{ sheet.artist.name }}
                     </p>
                     <div class="card-actions justify-start mt-2">
                         <div
-                            v-for="tag in tab.tags"
+                            v-for="tag in sheet.tags"
                             :key="tag.id"
                             class="badge badge-secondary badge-sm gap-1"
                         >

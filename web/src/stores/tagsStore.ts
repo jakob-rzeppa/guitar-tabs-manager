@@ -2,7 +2,7 @@ import api, { useApiInStore } from '@/services/api';
 import type { CreateTagRequest, TagDto, UpdateTagRequest } from '@/types/dtos';
 import type { Tag } from '@/types/types';
 import { defineStore } from 'pinia';
-import { useTabsStore } from './tabsStore';
+import { useSheetsStore } from './sheetsStore';
 
 interface State {
     tags: Tag[];
@@ -88,18 +88,18 @@ export const useTagsStore = defineStore('tags', {
                         this.tags[index] = data.content;
                     }
 
-                    // Update tag reference in tabs list
-                    const tabsStore = useTabsStore();
-                    tabsStore.tabsList.forEach((tab) => {
-                        tab.tags = tab.tags.map((t) =>
+                    // Update tag reference in sheets list
+                    const sheetsStore = useSheetsStore();
+                    sheetsStore.sheetsList.forEach((sheet) => {
+                        sheet.tags = sheet.tags.map((t) =>
                             t.id === tagId ? { id: tagId, name: data.content!.name } : t
                         );
                     });
 
-                    // Update tag reference in detailed tabs
-                    Object.keys(tabsStore.detailedTabs).forEach((key) => {
-                        const tab = tabsStore.detailedTabs[key];
-                        tab.tags = tab.tags.map((t) =>
+                    // Update tag reference in detailed sheets
+                    Object.keys(sheetsStore.detailedSheets).forEach((key) => {
+                        const sheet = sheetsStore.detailedSheets[key];
+                        sheet.tags = sheet.tags.map((t) =>
                             t.id === tagId ? { id: tagId, name: tag.name ?? t.name } : t
                         );
                     });
@@ -118,16 +118,16 @@ export const useTagsStore = defineStore('tags', {
                 onSuccess: () => {
                     this.tags = this.tags.filter((t) => t.id !== tagId);
 
-                    // Clear tag reference in tabs list
-                    const tabsStore = useTabsStore();
-                    tabsStore.tabsList.forEach((tab) => {
-                        tab.tags = tab.tags.filter(tag => tag.id !== tagId);
+                    // Clear tag reference in sheets list
+                    const sheetsStore = useSheetsStore();
+                    sheetsStore.sheetsList.forEach((sheet) => {
+                        sheet.tags = sheet.tags.filter(tag => tag.id !== tagId);
                     });
 
-                    // Clear tag reference in detailed tabs
-                    Object.keys(tabsStore.detailedTabs).forEach((key) => {
-                        const tab = tabsStore.detailedTabs[key];
-                        tab.tags = tab.tags.filter(tag => tag.id !== tagId);
+                    // Clear tag reference in detailed sheets
+                    Object.keys(sheetsStore.detailedSheets).forEach((key) => {
+                        const sheet = sheetsStore.detailedSheets[key];
+                        sheet.tags = sheet.tags.filter(tag => tag.id !== tagId);
                     });
                 },
             });

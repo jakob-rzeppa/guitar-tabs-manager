@@ -2,12 +2,12 @@
 import { useRoute } from 'vue-router';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
-import TabsDisplay from '@/components/TabsDisplay.vue';
+import SheetsDisplay from '@/components/SheetsDisplay.vue';
 import BackLink from '@/components/BackLink.vue';
 import { useArtistsStore } from '@/stores/artistsStore';
-import { useTabsStore } from '@/stores/tabsStore';
+import { useSheetsStore } from '@/stores/sheetsStore';
 import { computed, onMounted, ref } from 'vue';
-import type { Artist, TabListItem } from '@/types/types';
+import type { Artist, SheetListItem } from '@/types/types';
 import PersonIcon from '@/components/icons/PersonIcon.vue';
 import EditIcon from '@/components/icons/EditIcon.vue';
 import DeleteIcon from '@/components/icons/DeleteIcon.vue';
@@ -15,32 +15,32 @@ import BaseView from '../BaseView.vue';
 
 const route = useRoute();
 const artistsStore = useArtistsStore();
-const tabsStore = useTabsStore();
+const sheetsStore = useSheetsStore();
 
 const artistId = computed(() => route.params.id as string);
 const currentArtist = ref<Artist | null>(null);
-const artistTabs = ref<TabListItem[]>([]);
+const artistSheets = ref<SheetListItem[]>([]);
 
 onMounted(async () => {
     await artistsStore.fetchAllArtists();
-    await tabsStore.fetchAllTabs();
+    await sheetsStore.fetchAllSheets();
 
     currentArtist.value =
         artistsStore.artists.find((a) => a.id === parseInt(artistId.value)) || null;
 
     if (currentArtist.value) {
-        artistTabs.value = tabsStore.tabsList.filter(
-            (tab) => tab.artist && tab.artist.id === currentArtist.value!.id,
+        artistSheets.value = sheetsStore.sheetsList.filter(
+            (sheet) => sheet.artist && sheet.artist.id === currentArtist.value!.id,
         );
     }
 });
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="artistsStore.loading || tabsStore.loading" />
+    <LoadingPlaceholder v-if="artistsStore.loading || sheetsStore.loading" />
     <ErrorDisplay
-        v-else-if="artistsStore.error || tabsStore.error"
-        :message="artistsStore.error || tabsStore.error || ''"
+        v-else-if="artistsStore.error || sheetsStore.error"
+        :message="artistsStore.error || sheetsStore.error || ''"
     />
     <ErrorDisplay v-else-if="!currentArtist" message="Artist not found." />
     <BaseView v-else>
@@ -60,8 +60,8 @@ onMounted(async () => {
         <template #subheader>
             <div class="stats shadow bg-base-200">
                 <div class="stat">
-                    <div class="stat-title">Total Tabs</div>
-                    <div class="stat-value text-primary">{{ artistTabs.length }}</div>
+                    <div class="stat-title">Total Sheets</div>
+                    <div class="stat-value text-primary">{{ artistSheets.length }}</div>
                 </div>
             </div>
         </template>
@@ -76,12 +76,12 @@ onMounted(async () => {
             </RouterLink>
         </template>
         <template #content>
-            <div v-if="artistTabs.length === 0" class="text-center py-16">
-                <p class="text-xl opacity-60">No tabs found for this artist.</p>
+            <div v-if="artistSheets.length === 0" class="text-center py-16">
+                <p class="text-xl opacity-60">No sheets found for this artist.</p>
             </div>
             <div v-else>
-                <h2 class="text-2xl font-bold mb-4">Tabs by {{ currentArtist.name }}</h2>
-                <TabsDisplay :tabs="artistTabs" />
+                <h2 class="text-2xl font-bold mb-4">Sheets by {{ currentArtist.name }}</h2>
+                <SheetsDisplay :sheets="artistSheets" />
             </div>
         </template>
     </BaseView>

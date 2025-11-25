@@ -1,7 +1,7 @@
 import api, { useApiInStore } from '@/services/api';
 import type { Artist } from '@/types/types';
 import { defineStore } from 'pinia';
-import { useTabsStore } from './tabsStore';
+import { useSheetsStore } from './sheetsStore';
 import type { ArtistDto } from '@/types/dtos';
 
 interface State {
@@ -77,18 +77,18 @@ export const useArtistsStore = defineStore('artists', {
                         this.artists[index] = data.content;
                     }
 
-                    // Update artist name in tabs list
-                    const tabsStore = useTabsStore();
-                    tabsStore.tabsList.forEach((tab) => {
-                        if (tab.artist && tab.artist.id === artistId) {
-                            tab.artist = this.artists[index];
+                    // Update artist name in sheets list
+                    const sheetsStore = useSheetsStore();
+                    sheetsStore.sheetsList.forEach((sheet) => {
+                        if (sheet.artist && sheet.artist.id === artistId) {
+                            sheet.artist = this.artists[index];
                         }
                     });
 
-                    // Update artist name in detailed tabs
-                    Object.values(tabsStore.detailedTabs).forEach((tab) => {
-                        if (tab.artist && tab.artist.id === artistId) {
-                            tab.artist = this.artists[index];
+                    // Update artist name in detailed sheets
+                    Object.values(sheetsStore.detailedSheets).forEach((sheet) => {
+                        if (sheet.artist && sheet.artist.id === artistId) {
+                            sheet.artist = this.artists[index];
                         }
                     });
                 },
@@ -102,19 +102,19 @@ export const useArtistsStore = defineStore('artists', {
                 onSuccess: () => {
                     this.artists = this.artists.filter((a) => a.id !== artistId);
 
-                    // Clear artist reference in tabs list
-                    const tabsStore = useTabsStore();
-                    tabsStore.tabsList.forEach((tab) => {
-                        if (tab.artist && tab.artist.id === artistId) {
-                            tab.artist = null;
+                    // Clear artist reference in sheets list
+                    const sheetsStore = useSheetsStore();
+                    sheetsStore.sheetsList.forEach((sheet) => {
+                        if (sheet.artist && sheet.artist.id === artistId) {
+                            sheet.artist = null;
                         }
                     });
 
-                    // Clear artist reference in detailed tabs
-                    Object.keys(tabsStore.detailedTabs).forEach((key) => {
-                        const tab = tabsStore.detailedTabs[key];
-                        if (tab.artist && tab.artist.id === artistId) {
-                            tabsStore.detailedTabs[key].artist = null;
+                    // Clear artist reference in detailed sheets
+                    Object.keys(sheetsStore.detailedSheets).forEach((key) => {
+                        const sheet = sheetsStore.detailedSheets[key];
+                        if (sheet.artist && sheet.artist.id === artistId) {
+                            sheetsStore.detailedSheets[key].artist = null;
                         }
                     });
                 },

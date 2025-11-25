@@ -16,42 +16,42 @@ const router = createRouter({
             component: HomeView,
         },
         {
-            path: '/tabSearch',
-            name: 'tabSearch',
-            component: () => import('../views/tab/TabSearchView.vue'),
+            path: '/sheetSearch',
+            name: 'sheetSearch',
+            component: () => import('../views/sheet/SheetSearchView.vue'),
         },
         {
-            path: '/tab/create',
-            name: 'tabCreate',
-            component: () => import('../views/tab/TabCreateView.vue'),
+            path: '/sheet/create',
+            name: 'sheetCreate',
+            component: () => import('../views/sheet/SheetCreateView.vue'),
         },
         {
-            path: '/tab/:id',
-            name: 'tab',
-            component: () => import('../views/tab/TabView.vue'),
+            path: '/sheet/:id',
+            name: 'sheet',
+            component: () => import('../views/sheet/SheetView.vue'),
         },
         {
-            path: '/tab/:id/edit',
-            name: 'tabEdit',
-            component: () => import('../views/tab/TabEditView.vue'),
-        },
-
-        {
-            path: '/tab/:id/delete',
-            name: 'tabDelete',
-            component: () => import('../views/tab/TabDeleteView.vue'),
+            path: '/sheet/:id/edit',
+            name: 'sheetEdit',
+            component: () => import('../views/sheet/SheetEditView.vue'),
         },
 
         {
-            path: '/tab/:id/format',
-            name: 'tabFormat',
-            component: () => import('../views/tab/TabFormatView.vue'),
+            path: '/sheet/:id/delete',
+            name: 'sheetDelete',
+            component: () => import('../views/sheet/SheetDeleteView.vue'),
         },
 
         {
-            path: '/tab/:id/transpose',
-            name: 'tabTranspose',
-            component: () => import('../views/tab/TabTransposeView.vue'),
+            path: '/sheet/:id/format',
+            name: 'sheetFormat',
+            component: () => import('../views/sheet/SheetFormatView.vue'),
+        },
+
+        {
+            path: '/sheet/:id/transpose',
+            name: 'sheetTranspose',
+            component: () => import('../views/sheet/SheetTransposeView.vue'),
         },
         {
             path: '/artistSearch',

@@ -4,18 +4,18 @@ import SelectArtist from '@/components/SelectArtist.vue';
 import SelectTags from '@/components/SelectTags.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
 import { ref } from 'vue';
-import { useTabsStore } from '@/stores/tabsStore';
-import type { Tab } from '@/types/types';
+import { useSheetsStore } from '@/stores/sheetsStore';
+import type { Sheet } from '@/types/types';
 import { useModalStore } from '@/stores/modalStore';
 import CreateArtistModal from '@/components/CreateArtistModal.vue';
 import BaseEditView from '../BaseEditView.vue';
 
 const router = useRouter();
 
-const tabsStore = useTabsStore();
+const sheetsStore = useSheetsStore();
 const modalStore = useModalStore();
 
-const newTab = ref<Omit<Tab, 'id'>>({
+const newSheet = ref<Omit<Sheet, 'id'>>({
     title: '',
     artist: null,
     tags: [],
@@ -25,22 +25,22 @@ const newTab = ref<Omit<Tab, 'id'>>({
 });
 
 const handleSave = async () => {
-    if (!newTab.value.title || !newTab.value.content) {
+    if (!newSheet.value.title || !newSheet.value.content) {
         return;
     }
 
-    await tabsStore.createTab(newTab.value);
+    await sheetsStore.createSheet(newSheet.value);
 
-    if (!tabsStore.error) {
-        router.push({ name: 'tabSearch' });
+    if (!sheetsStore.error) {
+        router.push({ name: 'sheetSearch' });
     }
 };
 </script>
 
 <template>
     <BaseEditView
-        elementType="Tab"
-        :back-to="{ name: 'tabSearch' }"
+        elementType="Sheet"
+        :back-to="{ name: 'sheetSearch' }"
         @save="handleSave"
         :is-new-element="true"
     >
@@ -52,17 +52,17 @@ const handleSave = async () => {
                 </label>
                 <input
                     id="title"
-                    v-model="newTab.title"
+                    v-model="newSheet.title"
                     type="text"
                     required
-                    placeholder="Enter tab title"
+                    placeholder="Enter sheet title"
                     class="input input-bordered input-lg w-full"
                 />
             </div>
 
             <!-- Artist -->
             <div class="space-y-2">
-                <SelectArtist v-model="newTab.artist" />
+                <SelectArtist v-model="newSheet.artist" />
 
                 <button
                     class="btn btn-sm btn-outline btn-secondary w-max"
@@ -74,7 +74,7 @@ const handleSave = async () => {
             </div>
 
             <!-- Tags -->
-            <SelectTags v-model="newTab.tags" />
+            <SelectTags v-model="newSheet.tags" />
 
             <!-- Capo -->
             <div>
@@ -84,7 +84,7 @@ const handleSave = async () => {
                 </label>
                 <input
                     id="capo"
-                    v-model.number="newTab.capo"
+                    v-model.number="newSheet.capo"
                     type="number"
                     min="0"
                     max="12"
@@ -99,7 +99,7 @@ const handleSave = async () => {
                 </label>
                 <input
                     id="sourceURL"
-                    v-model="newTab.sourceURL"
+                    v-model="newSheet.sourceURL"
                     type="text"
                     required
                     placeholder="Enter source URL"
@@ -107,20 +107,20 @@ const handleSave = async () => {
                 />
             </div>
 
-            <!-- Content (Tab notation) -->
+            <!-- Content (Sheet notation) -->
             <div>
                 <label class="label" for="content">
-                    <span class="label-text text-base font-semibold">Tab Content</span>
-                    <span class="label-text-alt">Tab notation goes here</span>
+                    <span class="label-text text-base font-semibold">Sheet Content</span>
+                    <span class="label-text-alt">Sheet notation goes here</span>
                 </label>
                 <textarea
                     @keypress.enter.stop=""
                     id="content"
-                    v-model="newTab.content"
+                    v-model="newSheet.content"
                     rows="20"
                     required
                     class="textarea textarea-bordered w-full font-mono text-sm h-96"
-                    placeholder="Enter tab notation here..."
+                    placeholder="Enter sheet notation here..."
                 ></textarea>
             </div>
         </template>

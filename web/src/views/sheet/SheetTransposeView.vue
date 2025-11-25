@@ -11,36 +11,36 @@ import InfoIcon from '@/components/icons/InfoIcon.vue';
 import ChevronUpIcon from '@/components/icons/ChevronUpIcon.vue';
 import ChevronDownIcon from '@/components/icons/ChevronDownIcon.vue';
 import { computed, onMounted, ref } from 'vue';
-import { useTabsStore } from '@/stores/tabsStore';
-import { useTabTransposer } from '@/composables/useTabTransposer';
+import { useSheetsStore } from '@/stores/sheetsStore';
+import { useSheetTransposer } from '@/composables/useSheetTransposer';
 
 const route = useRoute();
 const router = useRouter();
 
-const tabId = computed(() => route.params.id as string);
+const sheetId = computed(() => route.params.id as string);
 
-const tabsStore = useTabsStore();
+const sheetsStore = useSheetsStore();
 
-const { transposeLoading, transposeError, transposedTabContent, transposeTab } = useTabTransposer();
+const { transposeLoading, transposeError, transposedSheetContent, transposeSheet } = useSheetTransposer();
 
 const capo = ref<number | null>(null);
-// The computed property to bind the textarea input to the formatted tab content
+// The computed property to bind the textarea input to the formatted sheet content
 const textareaInput = computed({
-    get: () => transposedTabContent.value,
+    get: () => transposedSheetContent.value,
     set: (value: string) => {
-        transposedTabContent.value = value;
+        transposedSheetContent.value = value;
     },
 });
 
 onMounted(() => {
-    tabsStore.fetchTab(tabId.value);
+    sheetsStore.fetchSheet(sheetId.value);
 });
 
 const handleTranspose = (direction: 'up' | 'down', changeCapo: boolean) => {
-    if (tabsStore.detailedTabs[tabId.value]) {
-        transposeTab(tabsStore.detailedTabs[tabId.value].content, direction);
+    if (sheetsStore.detailedSheets[sheetId.value]) {
+        transposeSheet(sheetsStore.detailedSheets[sheetId.value].content, direction);
 
-        capo.value = tabsStore.detailedTabs[tabId.value].capo;
+        capo.value = sheetsStore.detailedSheets[sheetId.value].capo;
         if (changeCapo && capo.value !== null) {
             if (direction === 'up') {
                 capo.value += 1;
@@ -52,20 +52,20 @@ const handleTranspose = (direction: 'up' | 'down', changeCapo: boolean) => {
 };
 
 const handleSave = async () => {
-    if (!transposedTabContent.value) return;
+    if (!transposedSheetContent.value) return;
 
-    await tabsStore.updateTab(tabId.value, {
-        content: transposedTabContent.value,
+    await sheetsStore.updateSheet(sheetId.value, {
+        content: transposedSheetContent.value,
         capo: capo.value ?? undefined,
     });
 
-    if (!tabsStore.error) {
-        router.push({ name: 'tab', params: { id: tabId.value } });
+    if (!sheetsStore.error) {
+        router.push({ name: 'sheet', params: { id: sheetId.value } });
     }
 };
 
 const handleCancel = () => {
-    router.push({ name: 'tab', params: { id: tabId.value } });
+    router.push({ name: 'sheet', params: { id: sheetId.value } });
 };
 </script>
 
@@ -73,23 +73,23 @@ const handleCancel = () => {
     <ContentWrapper>
         <div class="p-6 md:p-10 max-w-4xl mx-auto">
             <div class="mb-8">
-                <BackLink :to="{ name: 'tab', params: { id: tabId } }" class="mb-4" />
-                <PageHeader title="Transpose Tab" icon-color="secondary">
+                <BackLink :to="{ name: 'sheet', params: { id: sheetId } }" class="mb-4" />
+                <PageHeader title="Transpose Sheet" icon-color="secondary">
                     <template #icon>
                         <MusicIcon class="h-8 w-8 text-secondary-content" />
                     </template>
                 </PageHeader>
             </div>
 
-            <LoadingPlaceholder v-if="tabsStore.loading || transposeLoading" />
+            <LoadingPlaceholder v-if="sheetsStore.loading || transposeLoading" />
             <ErrorDisplay
-                v-else-if="tabsStore.error !== null || transposeError !== null"
-                :message="tabsStore.error || transposeError"
+                v-else-if="sheetsStore.error !== null || transposeError !== null"
+                :message="sheetsStore.error || transposeError"
             />
-            <div v-else-if="transposedTabContent === null || capo === null" class="space-y-6">
+            <div v-else-if="transposedSheetContent === null || capo === null" class="space-y-6">
                 <div class="alert alert-info shadow-lg">
                     <InfoIcon />
-                    <span>Choose a transpose option to change the key of this tab.</span>
+                    <span>Choose a transpose option to change the key of this sheet.</span>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -127,13 +127,13 @@ const handleCancel = () => {
                     <div class="card-body">
                         <h3 class="card-title text-sm opacity-60">Original Capo:</h3>
                         <pre>{{
-                            tabsStore.detailedTabs[tabId]?.capo === 0
+                            sheetsStore.detailedSheets[sheetId]?.capo === 0
                                 ? 'None'
-                                : `Fret ${tabsStore.detailedTabs[tabId]?.capo}`
+                                : `Fret ${sheetsStore.detailedSheets[sheetId]?.capo}`
                         }}</pre>
                         <h3 class="card-title text-sm opacity-60">Original Content:</h3>
                         <pre class="text-sm overflow-x-auto">{{
-                            tabsStore.detailedTabs[tabId]?.content
+                            sheetsStore.detailedSheets[sheetId]?.content
                         }}</pre>
                     </div>
                 </div>
@@ -158,7 +158,7 @@ const handleCancel = () => {
                 <div>
                     <label class="label" for="content">
                         <span class="label-text text-base font-semibold"
-                            >Transposed Tab Content</span
+                            >Transposed Sheet Content</span
                         >
                         <span class="label-text-alt">Review and edit if needed</span>
                     </label>
@@ -168,7 +168,7 @@ const handleCancel = () => {
                         rows="20"
                         required
                         class="textarea textarea-bordered w-full font-mono text-sm h-96"
-                        placeholder="Enter tab notation here..."
+                        placeholder="Enter sheet notation here..."
                     ></textarea>
                 </div>
 

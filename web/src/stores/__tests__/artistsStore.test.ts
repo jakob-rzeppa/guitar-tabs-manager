@@ -4,11 +4,11 @@ import { useArtistsStore } from '../artistsStore';
 import type { ApiResponse, ArtistDto } from '@/types/dtos';
 import * as apiModule from '@/services/api';
 
-// Mock the tabs store
-vi.mock('../tabsStore', () => ({
-    useTabsStore: vi.fn(() => ({
-        tabsList: [],
-        detailedTabs: {},
+// Mock the sheets store
+vi.mock('../sheetsStore', () => ({
+    useSheetsStore: vi.fn(() => ({
+        sheetsList: [],
+        detailedSheets: {},
     })),
 }));
 
@@ -175,10 +175,10 @@ describe('artistsStore', () => {
             expect(store.error).toBeNull();
         });
 
-        it('should update artist reference in tabs', async () => {
-            const { useTabsStore } = await import('../tabsStore');
-            const mockTabsStore = {
-                tabsList: [
+        it('should update artist reference in sheets', async () => {
+            const { useSheetsStore } = await import('../sheetsStore');
+            const mockSheetsStore = {
+                sheetsList: [
                     {
                         id: 1,
                         title: 'Wonderwall',
@@ -186,7 +186,7 @@ describe('artistsStore', () => {
                         tags: [],
                     },
                 ],
-                detailedTabs: {
+                detailedSheets: {
                     '1': {
                         id: 1,
                         title: 'Wonderwall',
@@ -199,7 +199,7 @@ describe('artistsStore', () => {
                 },
             };
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            vi.mocked(useTabsStore).mockReturnValue(mockTabsStore as any);
+            vi.mocked(useSheetsStore).mockReturnValue(mockSheetsStore as any);
 
             const artistStore = useArtistsStore();
 
@@ -213,8 +213,8 @@ describe('artistsStore', () => {
 
             await artistStore.updateArtist(1, { name: 'Oasis (Updated)' });
 
-            expect(mockTabsStore.tabsList[0].artist?.name).toBe('Oasis (Updated)');
-            expect(mockTabsStore.detailedTabs['1'].artist?.name).toBe('Oasis (Updated)');
+            expect(mockSheetsStore.sheetsList[0].artist?.name).toBe('Oasis (Updated)');
+            expect(mockSheetsStore.detailedSheets['1'].artist?.name).toBe('Oasis (Updated)');
         });
 
         it('should set error when content is empty', async () => {
@@ -248,10 +248,10 @@ describe('artistsStore', () => {
             expect(store.artists[0].id).toBe(2);
         });
 
-        it('should clear artist reference in tabs', async () => {
-            const { useTabsStore } = await import('../tabsStore');
-            const mockTabsStore = {
-                tabsList: [
+        it('should clear artist reference in sheets', async () => {
+            const { useSheetsStore } = await import('../sheetsStore');
+            const mockSheetsStore = {
+                sheetsList: [
                     {
                         id: 1,
                         title: 'Wonderwall',
@@ -265,7 +265,7 @@ describe('artistsStore', () => {
                         tags: [],
                     },
                 ],
-                detailedTabs: {
+                detailedSheets: {
                     '1': {
                         id: 1,
                         title: 'Wonderwall',
@@ -278,7 +278,7 @@ describe('artistsStore', () => {
                 },
             };
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            vi.mocked(useTabsStore).mockReturnValue(mockTabsStore as any);
+            vi.mocked(useSheetsStore).mockReturnValue(mockSheetsStore as any);
 
             const artistStore = useArtistsStore();
 
@@ -290,9 +290,9 @@ describe('artistsStore', () => {
 
             await artistStore.deleteArtist(1);
 
-            expect(mockTabsStore.tabsList[0].artist).toBeNull();
-            expect(mockTabsStore.tabsList[1].artist?.id).toBe(2); // Other artist unchanged
-            expect(mockTabsStore.detailedTabs['1'].artist).toBeNull();
+            expect(mockSheetsStore.sheetsList[0].artist).toBeNull();
+            expect(mockSheetsStore.sheetsList[1].artist?.id).toBe(2); // Other artist unchanged
+            expect(mockSheetsStore.detailedSheets['1'].artist).toBeNull();
         });
 
         it('should handle API errors', async () => {

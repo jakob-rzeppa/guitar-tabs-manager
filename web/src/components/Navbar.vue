@@ -16,18 +16,18 @@ import SearchIcon from './icons/SearchIcon.vue';
                     class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
                 >
                     <li><RouterLink to="/">Homepage</RouterLink></li>
-                    <li><RouterLink to="/tabSearch">Tab Search</RouterLink></li>
+                    <li><RouterLink to="/sheetSearch">Sheet Search</RouterLink></li>
                     <li><RouterLink to="/artistSearch">Artist Search</RouterLink></li>
                     <li><RouterLink to="/tagSearch">Tag Search</RouterLink></li>
                 </ul>
             </div>
         </div>
         <div class="navbar-center">
-            <RouterLink to="/" class="btn btn-ghost text-xl">Guitar Tab Manager</RouterLink>
+            <RouterLink to="/" class="btn btn-ghost text-xl">Guitar Sheet Manager</RouterLink>
         </div>
         <div class="navbar-end">
-            <div class="tooltip tooltip-info tooltip-bottom" data-tip="Search for Tabs">
-                <RouterLink class="btn btn-ghost btn-circle" to="/tabSearch">
+            <div class="tooltip tooltip-info tooltip-bottom" data-tip="Search for Sheets">
+                <RouterLink class="btn btn-ghost btn-circle" to="/sheetSearch">
                     <SearchIcon />
                 </RouterLink>
             </div>

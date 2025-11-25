@@ -70,14 +70,14 @@ export interface UpdateTagRequest {
 }
 
 // ============================================================================
-// Tab DTOs
+// Sheet DTOs
 // ============================================================================
 
 /**
- * Tab entity (reduced format - without full content)
+ * Sheet entity (reduced format - without full content)
  * Used for list views
  */
-export interface TabListItemDto {
+export interface SheetListItemDto {
     id: number;
     title: string;
     artist: ArtistDto | null;
@@ -85,10 +85,10 @@ export interface TabListItemDto {
 }
 
 /**
- * Tab entity (full format - with content)
+ * Sheet entity (full format - with content)
  * Used for detail views
  */
-export interface TabDto {
+export interface SheetDto {
     id: number;
     title: string;
     artist: ArtistDto | null;
@@ -99,9 +99,9 @@ export interface TabDto {
 }
 
 /**
- * Request body for creating a tab
+ * Request body for creating a sheet
  */
-export interface CreateTabRequest {
+export interface CreateSheetRequest {
     title: string;
     content: string;
     capo: number;
@@ -111,9 +111,9 @@ export interface CreateTabRequest {
 }
 
 /**
- * Request body for updating a tab
+ * Request body for updating a sheet
  */
-export interface UpdateTabRequest {
+export interface UpdateSheetRequest {
     title?: string;
     content?: string;
     capo?: number;
@@ -123,31 +123,31 @@ export interface UpdateTabRequest {
 }
 
 /**
- * Request body for formatting tab content
+ * Request body for formatting sheet content
  */
-export interface FormatTabRequest {
+export interface FormatSheetRequest {
     content: string;
 }
 
 /**
- * Dto for formatting tab content
+ * Dto for formatting sheet content
  */
-export interface FormatTabDto {
+export interface FormatSheetDto {
     content: string;
 }
 
 /**
- * Request body for transposing tab content
+ * Request body for transposing sheet content
  */
-export interface TransposeTabRequest {
+export interface TransposeSheetRequest {
     content: string;
     dir: number;
 }
 
 /**
- * Dto for transposing tab content
+ * Dto for transposing sheet content
  */
-export interface TransposeTabDto {
+export interface TransposeSheetDto {
     content: string;
 }
 

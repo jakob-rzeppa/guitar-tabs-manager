@@ -2,12 +2,12 @@
 import { useRoute } from 'vue-router';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
-import TabsDisplay from '@/components/TabsDisplay.vue';
+import SheetsDisplay from '@/components/SheetsDisplay.vue';
 import BackLink from '@/components/BackLink.vue';
 import { useTagsStore } from '@/stores/tagsStore';
-import { useTabsStore } from '@/stores/tabsStore';
+import { useSheetsStore } from '@/stores/sheetsStore';
 import { computed, onMounted, ref } from 'vue';
-import type { Tag, TabListItem } from '@/types/types';
+import type { Tag, SheetListItem } from '@/types/types';
 import EditIcon from '@/components/icons/EditIcon.vue';
 import DeleteIcon from '@/components/icons/DeleteIcon.vue';
 import BaseView from '../BaseView.vue';
@@ -15,31 +15,31 @@ import TagIcon from '@/components/icons/TagIcon.vue';
 
 const route = useRoute();
 const tagsStore = useTagsStore();
-const tabsStore = useTabsStore();
+const sheetsStore = useSheetsStore();
 
 const tagId = computed(() => route.params.id as string);
 const currentTag = ref<Tag | null>(null);
-const tagTabs = ref<TabListItem[]>([]);
+const tagSheets = ref<SheetListItem[]>([]);
 
 onMounted(async () => {
     await tagsStore.fetchAllTags();
-    await tabsStore.fetchAllTabs();
+    await sheetsStore.fetchAllSheets();
 
     currentTag.value = tagsStore.tags.find((t) => t.id === parseInt(tagId.value)) || null;
 
     if (currentTag.value) {
-        tagTabs.value = tabsStore.tabsList.filter((tab) =>
-            tab.tags.some((tag) => tag.id === currentTag.value!.id),
+        tagSheets.value = sheetsStore.sheetsList.filter((sheet) =>
+            sheet.tags.some((tag) => tag.id === currentTag.value!.id),
         );
     }
 });
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="tagsStore.loading || tabsStore.loading" />
+    <LoadingPlaceholder v-if="tagsStore.loading || sheetsStore.loading" />
     <ErrorDisplay
-        v-else-if="tagsStore.error || tabsStore.error"
-        :message="tagsStore.error || tabsStore.error || ''"
+        v-else-if="tagsStore.error || sheetsStore.error"
+        :message="tagsStore.error || sheetsStore.error || ''"
     />
     <ErrorDisplay v-else-if="!currentTag" message="Tag not found." />
     <BaseView v-else>
@@ -59,8 +59,8 @@ onMounted(async () => {
         <template #subheader>
             <div class="stats shadow bg-base-200">
                 <div class="stat">
-                    <div class="stat-title">Total Tabs</div>
-                    <div class="stat-value text-primary">{{ tagTabs.length }}</div>
+                    <div class="stat-title">Total Sheets</div>
+                    <div class="stat-value text-primary">{{ tagSheets.length }}</div>
                 </div>
             </div>
         </template>
@@ -75,12 +75,12 @@ onMounted(async () => {
             </RouterLink>
         </template>
         <template #content>
-            <div v-if="tagTabs.length === 0" class="text-center">
-                <p class="text-xl opacity-60">No tabs found with this tag.</p>
+            <div v-if="tagSheets.length === 0" class="text-center">
+                <p class="text-xl opacity-60">No sheets found with this tag.</p>
             </div>
             <div v-else>
-                <h2 class="text-2xl font-bold">Tabs tagged with "{{ currentTag.name }}"</h2>
-                <TabsDisplay :tabs="tagTabs" />
+                <h2 class="text-2xl font-bold">Sheets tagged with "{{ currentTag.name }}"</h2>
+                <SheetsDisplay :sheets="tagSheets" />
             </div>
         </template>
     </BaseView>

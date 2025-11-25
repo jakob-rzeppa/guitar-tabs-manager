@@ -5,8 +5,8 @@ import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import SelectArtist from '@/components/SelectArtist.vue';
 import SelectTags from '@/components/SelectTags.vue';
 import { computed, onMounted, ref, watch } from 'vue';
-import { useTabsStore } from '@/stores/tabsStore';
-import type { Tab } from '@/types/types';
+import { useSheetsStore } from '@/stores/sheetsStore';
+import type { Sheet } from '@/types/types';
 import { useModalStore } from '@/stores/modalStore';
 import CreateArtistModal from '@/components/CreateArtistModal.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
@@ -15,51 +15,51 @@ import BaseEditView from '../BaseEditView.vue';
 const route = useRoute();
 const router = useRouter();
 
-const tabsStore = useTabsStore();
+const sheetsStore = useSheetsStore();
 const modalStore = useModalStore();
 
-const tabId = computed(() => route.params.id as string);
+const sheetId = computed(() => route.params.id as string);
 
-const localTab = ref<Tab | null>(null);
+const localSheet = ref<Sheet | null>(null);
 
 watch(
-    () => tabsStore.detailedTabs[tabId.value],
-    (newTab) => {
-        if (newTab) {
-            // If we directly assign newTab to localTab, changes to localTab would affect the store's state.
-            localTab.value = JSON.parse(JSON.stringify(newTab));
+    () => sheetsStore.detailedSheets[sheetId.value],
+    (newSheet) => {
+        if (newSheet) {
+            // If we directly assign newSheet to localSheet, changes to localSheet would affect the store's state.
+            localSheet.value = JSON.parse(JSON.stringify(newSheet));
         }
     },
     { immediate: true, deep: true },
 );
 
 onMounted(() => {
-    tabsStore.fetchTab(tabId.value);
+    sheetsStore.fetchSheet(sheetId.value);
 });
 
 const handleSave = async () => {
-    if (!localTab.value) return;
+    if (!localSheet.value) return;
 
     // Exclude the id field from the update payload
-    const fieldsToUpdate = Object.assign({}, localTab.value) as Partial<Tab>;
+    const fieldsToUpdate = Object.assign({}, localSheet.value) as Partial<Sheet>;
     delete fieldsToUpdate.id;
 
-    await tabsStore.updateTab(tabId.value, fieldsToUpdate);
+    await sheetsStore.updateSheet(sheetId.value, fieldsToUpdate);
 
-    if (!tabsStore.error) {
-        router.push({ name: 'tab', params: { id: tabId.value } });
+    if (!sheetsStore.error) {
+        router.push({ name: 'sheet', params: { id: sheetId.value } });
     }
 };
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="tabsStore.loading" />
-    <ErrorDisplay v-else-if="tabsStore.error !== null" :message="tabsStore.error" />
+    <LoadingPlaceholder v-if="sheetsStore.loading" />
+    <ErrorDisplay v-else-if="sheetsStore.error !== null" :message="sheetsStore.error" />
     <ErrorDisplay
-        v-else-if="localTab === null"
-        message="Something went wrong while loading the tab."
+        v-else-if="localSheet === null"
+        message="Something went wrong while loading the sheet."
     />
-    <BaseEditView v-else :back-to="{ name: 'tab', params: { id: tabId } }" element-type="Tab">
+    <BaseEditView v-else :back-to="{ name: 'sheet', params: { id: sheetId } }" element-type="Sheet">
         <template #content>
             <div @keypress.enter="handleSave" class="space-y-6">
                 <!-- Title -->
@@ -69,17 +69,17 @@ const handleSave = async () => {
                     </label>
                     <input
                         id="title"
-                        v-model="localTab.title"
+                        v-model="localSheet.title"
                         type="text"
                         required
-                        placeholder="Enter tab title"
+                        placeholder="Enter sheet title"
                         class="input input-bordered input-lg w-full"
                     />
                 </div>
 
                 <!-- Artist -->
                 <div class="space-y-2">
-                    <SelectArtist v-model="localTab.artist" />
+                    <SelectArtist v-model="localSheet.artist" />
 
                     <button
                         class="btn btn-sm btn-outline btn-secondary w-max"
@@ -91,7 +91,7 @@ const handleSave = async () => {
                 </div>
 
                 <!-- Tags -->
-                <SelectTags v-model="localTab.tags" />
+                <SelectTags v-model="localSheet.tags" />
 
                 <!-- Capo -->
                 <div>
@@ -101,7 +101,7 @@ const handleSave = async () => {
                     </label>
                     <input
                         id="capo"
-                        v-model.number="localTab.capo"
+                        v-model.number="localSheet.capo"
                         type="number"
                         min="0"
                         max="12"
@@ -116,7 +116,7 @@ const handleSave = async () => {
                     </label>
                     <input
                         id="sourceURL"
-                        v-model="localTab.sourceURL"
+                        v-model="localSheet.sourceURL"
                         type="text"
                         required
                         placeholder="Enter source URL"
@@ -124,20 +124,20 @@ const handleSave = async () => {
                     />
                 </div>
 
-                <!-- Content (Tab notation) -->
+                <!-- Content (Sheet notation) -->
                 <div>
                     <label class="label" for="content">
-                        <span class="label-text text-base font-semibold">Tab Content</span>
-                        <span class="label-text-alt">Tab notation goes here</span>
+                        <span class="label-text text-base font-semibold">Sheet Content</span>
+                        <span class="label-text-alt">Sheet notation goes here</span>
                     </label>
                     <textarea
                         @keypress.enter.stop=""
                         id="content"
-                        v-model="localTab.content"
+                        v-model="localSheet.content"
                         rows="20"
                         required
                         class="textarea textarea-bordered w-full font-mono text-sm h-96"
-                        placeholder="Enter tab notation here..."
+                        placeholder="Enter sheet notation here..."
                     ></textarea>
                 </div>
             </div>

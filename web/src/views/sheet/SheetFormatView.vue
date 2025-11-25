@@ -9,48 +9,48 @@ import SaveCancelButtons from '@/components/SaveCancelButtons.vue';
 import FormatIcon from '@/components/icons/FormatIcon.vue';
 import InfoIcon from '@/components/icons/InfoIcon.vue';
 import { computed, onMounted } from 'vue';
-import { useTabsStore } from '@/stores/tabsStore';
-import { useTabFormatter } from '@/composables/useTabFormatter';
+import { useSheetsStore } from '@/stores/sheetsStore';
+import { useSheetFormatter } from '@/composables/useSheetFormatter';
 
 const route = useRoute();
 const router = useRouter();
 
-const tabId = computed(() => route.params.id as string);
+const sheetId = computed(() => route.params.id as string);
 
-const tabsStore = useTabsStore();
+const sheetsStore = useSheetsStore();
 
-const { formatLoading, formatError, formattedTabContent, formatTab } = useTabFormatter();
+const { formatLoading, formatError, formattedSheetContent, formatSheet } = useSheetFormatter();
 
-// The computed property to bind the textarea input to the formatted tab content
+// The computed property to bind the textarea input to the formatted sheet content
 const textareaInput = computed({
-    get: () => formattedTabContent.value,
+    get: () => formattedSheetContent.value,
     set: (value: string) => {
-        formattedTabContent.value = value;
+        formattedSheetContent.value = value;
     },
 });
 
 onMounted(() => {
-    tabsStore.fetchTab(tabId.value);
+    sheetsStore.fetchSheet(sheetId.value);
 });
 
 const handleFormat = () => {
-    if (tabsStore.detailedTabs[tabId.value]) {
-        formatTab(tabsStore.detailedTabs[tabId.value].content);
+    if (sheetsStore.detailedSheets[sheetId.value]) {
+        formatSheet(sheetsStore.detailedSheets[sheetId.value].content);
     }
 };
 
 const handleSave = async () => {
-    if (!formattedTabContent.value) return;
+    if (!formattedSheetContent.value) return;
 
-    await tabsStore.updateTab(tabId.value, { content: formattedTabContent.value });
+    await sheetsStore.updateSheet(sheetId.value, { content: formattedSheetContent.value });
 
-    if (!tabsStore.error) {
-        router.push({ name: 'tab', params: { id: tabId.value } });
+    if (!sheetsStore.error) {
+        router.push({ name: 'sheet', params: { id: sheetId.value } });
     }
 };
 
 const handleCancel = () => {
-    router.push({ name: 'tab', params: { id: tabId.value } });
+    router.push({ name: 'sheet', params: { id: sheetId.value } });
 };
 </script>
 
@@ -58,36 +58,36 @@ const handleCancel = () => {
     <ContentWrapper>
         <div class="p-6 md:p-10 max-w-4xl mx-auto">
             <div class="mb-8">
-                <BackLink :to="{ name: 'tab', params: { id: tabId } }" class="mb-4" />
-                <PageHeader title="Format Tab" icon-color="accent">
+                <BackLink :to="{ name: 'sheet', params: { id: sheetId } }" class="mb-4" />
+                <PageHeader title="Format Sheet" icon-color="accent">
                     <template #icon>
                         <FormatIcon class="h-8 w-8 text-accent-content" />
                     </template>
                 </PageHeader>
             </div>
 
-            <LoadingPlaceholder v-if="tabsStore.loading || formatLoading" />
+            <LoadingPlaceholder v-if="sheetsStore.loading || formatLoading" />
             <ErrorDisplay
-                v-else-if="tabsStore.error !== null || formatError !== null"
-                :message="tabsStore.error || formatError"
+                v-else-if="sheetsStore.error !== null || formatError !== null"
+                :message="sheetsStore.error || formatError"
             />
-            <div v-else-if="formattedTabContent === null" class="space-y-6">
+            <div v-else-if="formattedSheetContent === null" class="space-y-6">
                 <div class="alert alert-info shadow-lg">
                     <InfoIcon />
                     <span
-                        >Click the button below to automatically format this tab for better
+                        >Click the button below to automatically format this sheet for better
                         readability.</span
                     >
                 </div>
                 <button @click="handleFormat" class="btn btn-accent btn-lg gap-2">
                     <FormatIcon class="h-6 w-6" />
-                    Format Tab
+                    Format Sheet
                 </button>
                 <div class="card bg-base-200 shadow-xl">
                     <div class="card-body">
                         <h3 class="card-title text-sm opacity-60">Original Content:</h3>
                         <pre class="text-sm overflow-x-auto">{{
-                            tabsStore.detailedTabs[tabId]?.content
+                            sheetsStore.detailedSheets[sheetId]?.content
                         }}</pre>
                     </div>
                 </div>
@@ -96,7 +96,7 @@ const handleCancel = () => {
                 <div>
                     <label class="label" for="content">
                         <span class="label-text text-base font-semibold"
-                            >Formatted Tab Content</span
+                            >Formatted Sheet Content</span
                         >
                         <span class="label-text-alt">Review and edit if needed</span>
                     </label>
@@ -106,7 +106,7 @@ const handleCancel = () => {
                         rows="20"
                         required
                         class="textarea textarea-bordered w-full font-mono text-sm h-96"
-                        placeholder="Enter tab notation here..."
+                        placeholder="Enter sheet notation here..."
                     ></textarea>
                 </div>
 

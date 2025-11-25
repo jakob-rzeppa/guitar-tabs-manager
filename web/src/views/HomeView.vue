@@ -12,15 +12,15 @@ import MusicIcon from '@/components/icons/MusicIcon.vue';
                 <h1
                     class="text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-6"
                 >
-                    Guitar Tab Manager
+                    Guitar Sheet Manager
                 </h1>
                 <p class="text-xl mb-8 opacity-80">
-                    Your personal collection of guitar tabs, organized and easily accessible.
+                    Your personal collection of guitar sheets, organized and easily accessible.
                 </p>
                 <div class="flex gap-4 justify-center flex-wrap">
-                    <RouterLink to="/tabSearch" class="btn btn-primary btn-lg gap-2">
+                    <RouterLink to="/sheetSearch" class="btn btn-primary btn-lg gap-2">
                         <SearchIcon class="h-6 w-6" />
-                        Browse Tabs
+                        Browse Sheets
                     </RouterLink>
                 </div>
             </div>
@@ -37,7 +37,7 @@ import MusicIcon from '@/components/icons/MusicIcon.vue';
                     </div>
                     <h3 class="card-title">Search & Filter</h3>
                     <p>
-                        Quickly find tabs by title, artist, or tags with powerful filtering options.
+                        Quickly find sheets by title, artist, or tags with powerful filtering options.
                     </p>
                 </div>
             </div>
@@ -48,7 +48,7 @@ import MusicIcon from '@/components/icons/MusicIcon.vue';
                         <EditIcon class="h-8 w-8 text-secondary-content" />
                     </div>
                     <h3 class="card-title">Edit & Organize</h3>
-                    <p>Easily edit tab content, add artists, and organize with custom tags.</p>
+                    <p>Easily edit sheet content, add artists, and organize with custom tags.</p>
                 </div>
             </div>
 
@@ -58,7 +58,7 @@ import MusicIcon from '@/components/icons/MusicIcon.vue';
                         <MusicIcon class="h-8 w-8 text-accent-content" />
                     </div>
                     <h3 class="card-title">Transpose & Format</h3>
-                    <p>Transpose tabs to different keys and format them for better readability.</p>
+                    <p>Transpose sheets to different keys and format them for better readability.</p>
                 </div>
             </div>
         </div>

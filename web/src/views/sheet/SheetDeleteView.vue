@@ -1,47 +1,47 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 import { computed, onMounted } from 'vue';
-import { useTabsStore } from '@/stores/tabsStore';
+import { useSheetsStore } from '@/stores/sheetsStore';
 import BaseDeleteView from '../BaseDeleteView.vue';
 
 const route = useRoute();
 const router = useRouter();
-const tabsStore = useTabsStore();
+const sheetsStore = useSheetsStore();
 
-const tabId = computed(() => route.params.id as string);
-const currentTab = computed(() => tabsStore.detailedTabs[tabId.value]);
+const sheetId = computed(() => route.params.id as string);
+const currentSheet = computed(() => sheetsStore.detailedSheets[sheetId.value]);
 
 onMounted(() => {
-    tabsStore.fetchTab(tabId.value);
+    sheetsStore.fetchSheet(sheetId.value);
 });
 
 const handleDelete = async () => {
-    await tabsStore.deleteTab(tabId.value);
+    await sheetsStore.deleteSheet(sheetId.value);
 
-    if (!tabsStore.error) {
-        router.push({ name: 'tabSearch' });
+    if (!sheetsStore.error) {
+        router.push({ name: 'sheetSearch' });
     }
 };
 </script>
 
 <template>
     <BaseDeleteView
-        elementType="Tab"
-        :back-to="{ name: 'tab', params: { id: tabId } }"
+        elementType="Sheet"
+        :back-to="{ name: 'sheet', params: { id: sheetId } }"
         @delete="handleDelete"
     >
         <template #info-card>
             <h2 class="card-title text-3xl font-bold text-base-content">
-                {{ currentTab.title }}
+                {{ currentSheet.title }}
             </h2>
-            <p v-if="currentTab.artist" class="text-lg">
+            <p v-if="currentSheet.artist" class="text-lg">
                 <span class="text-base-content/70">by </span>
-                <span class="text-primary font-semibold">{{ currentTab.artist.name }}</span>
+                <span class="text-primary font-semibold">{{ currentSheet.artist.name }}</span>
             </p>
 
-            <div v-if="currentTab.tags.length > 0" class="flex flex-wrap gap-2">
+            <div v-if="currentSheet.tags.length > 0" class="flex flex-wrap gap-2">
                 <div
-                    v-for="tag in currentTab.tags"
+                    v-for="tag in currentSheet.tags"
                     :key="tag.id"
                     class="badge badge-secondary badge-lg"
                 >

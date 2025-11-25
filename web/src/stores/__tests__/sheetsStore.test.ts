@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
-import { useTabsStore } from '../tabsStore';
-import type { ApiResponse, TabDto, TabListItemDto } from '@/types/dtos';
+import { useSheetsStore } from '../sheetsStore';
+import type { ApiResponse, SheetDto, SheetListItemDto } from '@/types/dtos';
 import * as apiModule from '@/services/api';
 
 // Mock the API module
@@ -34,7 +34,7 @@ vi.mock('@/services/api', async () => {
 
 const api = apiModule.default;
 
-describe('tabsStore', () => {
+describe('sheetsStore', () => {
     beforeEach(() => {
         setActivePinia(createPinia());
         vi.clearAllMocks();
@@ -42,19 +42,19 @@ describe('tabsStore', () => {
 
     describe('state', () => {
         it('should have correct initial state', () => {
-            const store = useTabsStore();
+            const store = useSheetsStore();
 
-            expect(store.detailedTabs).toEqual({});
-            expect(store.tabsList).toEqual([]);
+            expect(store.detailedSheets).toEqual({});
+            expect(store.sheetsList).toEqual([]);
             expect(store.loading).toBe(false);
             expect(store.error).toBeNull();
         });
     });
 
-    describe('fetchAllTabs', () => {
-        it('should fetch all tabs and update tabsList', async () => {
-            const store = useTabsStore();
-            const mockData: ApiResponse<TabListItemDto[]> = {
+    describe('fetchAllSheets', () => {
+        it('should fetch all sheets and update sheetsList', async () => {
+            const store = useSheetsStore();
+            const mockData: ApiResponse<SheetListItemDto[]> = {
                 content: [
                     {
                         id: 1,
@@ -73,11 +73,11 @@ describe('tabsStore', () => {
 
             vi.mocked(api.get).mockResolvedValue({ data: mockData });
 
-            await store.fetchAllTabs();
+            await store.fetchAllSheets();
 
-            expect(api.get).toHaveBeenCalledWith('/tabs');
-            expect(store.tabsList).toHaveLength(2);
-            expect(store.tabsList[0]).toEqual({
+            expect(api.get).toHaveBeenCalledWith('/sheets');
+            expect(store.sheetsList).toHaveLength(2);
+            expect(store.sheetsList[0]).toEqual({
                 id: 1,
                 title: 'Wonderwall',
                 artist: { id: 1, name: 'Oasis' },
@@ -87,8 +87,8 @@ describe('tabsStore', () => {
         });
 
         it('should not refetch if data already loaded unless force is true', async () => {
-            const store = useTabsStore();
-            const mockData: ApiResponse<TabListItemDto[]> = {
+            const store = useSheetsStore();
+            const mockData: ApiResponse<SheetListItemDto[]> = {
                 content: [
                     {
                         id: 1,
@@ -101,38 +101,38 @@ describe('tabsStore', () => {
 
             vi.mocked(api.get).mockResolvedValue({ data: mockData });
 
-            await store.fetchAllTabs();
+            await store.fetchAllSheets();
             expect(api.get).toHaveBeenCalledTimes(1);
 
-            await store.fetchAllTabs();
+            await store.fetchAllSheets();
             expect(api.get).toHaveBeenCalledTimes(1); // Should not call again
 
-            await store.fetchAllTabs({ force: true });
+            await store.fetchAllSheets({ force: true });
             expect(api.get).toHaveBeenCalledTimes(2); // Should call when forced
         });
 
         it('should set error when content is empty', async () => {
-            const store = useTabsStore();
+            const store = useSheetsStore();
             vi.mocked(api.get).mockResolvedValue({ data: {} });
 
-            await store.fetchAllTabs();
+            await store.fetchAllSheets();
 
             expect(store.error).toBe('Request content is empty');
         });
 
         it('should handle API errors', async () => {
-            const store = useTabsStore();
+            const store = useSheetsStore();
             vi.mocked(api.get).mockRejectedValue(new Error('Network error'));
 
-            await expect(store.fetchAllTabs()).rejects.toThrow('Network error');
+            await expect(store.fetchAllSheets()).rejects.toThrow('Network error');
             expect(store.error).toBe('Network error');
         });
     });
 
-    describe('fetchTab', () => {
-        it('should fetch a single tab with full details', async () => {
-            const store = useTabsStore();
-            const mockData: ApiResponse<TabDto> = {
+    describe('fetchSheet', () => {
+        it('should fetch a single sheet with full details', async () => {
+            const store = useSheetsStore();
+            const mockData: ApiResponse<SheetDto> = {
                 content: {
                     id: 1,
                     title: 'Wonderwall',
@@ -146,10 +146,10 @@ describe('tabsStore', () => {
 
             vi.mocked(api.get).mockResolvedValue({ data: mockData });
 
-            await store.fetchTab('1');
+            await store.fetchSheet('1');
 
-            expect(api.get).toHaveBeenCalledWith('/tabs/1');
-            expect(store.detailedTabs['1']).toEqual({
+            expect(api.get).toHaveBeenCalledWith('/sheets/1');
+            expect(store.detailedSheets['1']).toEqual({
                 id: 1,
                 title: 'Wonderwall',
                 artist: { id: 1, name: 'Oasis' },
@@ -161,9 +161,9 @@ describe('tabsStore', () => {
             expect(store.error).toBeNull();
         });
 
-        it('should not refetch if tab already cached unless force is true', async () => {
-            const store = useTabsStore();
-            const mockData: ApiResponse<TabDto> = {
+        it('should not refetch if sheet already cached unless force is true', async () => {
+            const store = useSheetsStore();
+            const mockData: ApiResponse<SheetDto> = {
                 content: {
                     id: 1,
                     title: 'Wonderwall',
@@ -177,30 +177,30 @@ describe('tabsStore', () => {
 
             vi.mocked(api.get).mockResolvedValue({ data: mockData });
 
-            await store.fetchTab('1');
+            await store.fetchSheet('1');
             expect(api.get).toHaveBeenCalledTimes(1);
 
-            await store.fetchTab('1');
+            await store.fetchSheet('1');
             expect(api.get).toHaveBeenCalledTimes(1); // Should not call again
 
-            await store.fetchTab('1', { force: true });
+            await store.fetchSheet('1', { force: true });
             expect(api.get).toHaveBeenCalledTimes(2); // Should call when forced
         });
 
         it('should set error when content is empty', async () => {
-            const store = useTabsStore();
+            const store = useSheetsStore();
             vi.mocked(api.get).mockResolvedValue({ data: {} });
 
-            await store.fetchTab('1');
+            await store.fetchSheet('1');
 
             expect(store.error).toBe('Request content is empty');
         });
     });
 
-    describe('createTab', () => {
-        it('should create a new tab and add to both caches', async () => {
-            const store = useTabsStore();
-            const mockData: ApiResponse<TabDto> = {
+    describe('createSheet', () => {
+        it('should create a new sheet and add to both caches', async () => {
+            const store = useSheetsStore();
+            const mockData: ApiResponse<SheetDto> = {
                 content: {
                     id: 3,
                     title: 'New Song',
@@ -214,7 +214,7 @@ describe('tabsStore', () => {
 
             vi.mocked(api.post).mockResolvedValue({ data: mockData });
 
-            await store.createTab({
+            await store.createSheet({
                 title: 'New Song',
                 artist: { id: 1, name: 'Oasis' },
                 tags: [{ id: 1, name: 'rock' }],
@@ -223,7 +223,7 @@ describe('tabsStore', () => {
                 content: 'C G Am F...',
             });
 
-            expect(api.post).toHaveBeenCalledWith('/tabs', {
+            expect(api.post).toHaveBeenCalledWith('/sheets', {
                 title: 'New Song',
                 content: 'C G Am F...',
                 capo: 0,
@@ -232,14 +232,14 @@ describe('tabsStore', () => {
                 tag_ids: [1],
             });
 
-            expect(store.detailedTabs[3]).toBeDefined();
-            expect(store.tabsList).toHaveLength(1);
-            expect(store.tabsList[0].id).toBe(3);
+            expect(store.detailedSheets[3]).toBeDefined();
+            expect(store.sheetsList).toHaveLength(1);
+            expect(store.sheetsList[0].id).toBe(3);
         });
 
-        it('should handle tab creation without optional fields', async () => {
-            const store = useTabsStore();
-            const mockData: ApiResponse<TabDto> = {
+        it('should handle sheet creation without optional fields', async () => {
+            const store = useSheetsStore();
+            const mockData: ApiResponse<SheetDto> = {
                 content: {
                     id: 3,
                     title: 'New Song',
@@ -253,7 +253,7 @@ describe('tabsStore', () => {
 
             vi.mocked(api.post).mockResolvedValue({ data: mockData });
 
-            await store.createTab({
+            await store.createSheet({
                 title: 'New Song',
                 artist: null,
                 tags: [],
@@ -262,7 +262,7 @@ describe('tabsStore', () => {
                 content: 'C G Am F...',
             });
 
-            expect(api.post).toHaveBeenCalledWith('/tabs', {
+            expect(api.post).toHaveBeenCalledWith('/sheets', {
                 title: 'New Song',
                 content: 'C G Am F...',
                 capo: 0,
@@ -272,12 +272,12 @@ describe('tabsStore', () => {
         });
     });
 
-    describe('updateTab', () => {
-        it('should update a tab with changed fields only', async () => {
-            const store = useTabsStore();
+    describe('updateSheet', () => {
+        it('should update a sheet with changed fields only', async () => {
+            const store = useSheetsStore();
 
-            // Set up initial tab
-            store.detailedTabs['1'] = {
+            // Set up initial sheet
+            store.detailedSheets['1'] = {
                 id: 1,
                 title: 'Wonderwall',
                 artist: { id: 1, name: 'Oasis' },
@@ -287,7 +287,7 @@ describe('tabsStore', () => {
                 content: 'E A D...',
             };
 
-            const mockData: ApiResponse<TabDto> = {
+            const mockData: ApiResponse<SheetDto> = {
                 content: {
                     id: 1,
                     title: 'Wonderwall (Updated)',
@@ -301,21 +301,21 @@ describe('tabsStore', () => {
 
             vi.mocked(api.put).mockResolvedValue({ data: mockData });
 
-            await store.updateTab('1', { title: 'Wonderwall (Updated)', capo: 3 });
+            await store.updateSheet('1', { title: 'Wonderwall (Updated)', capo: 3 });
 
-            expect(api.put).toHaveBeenCalledWith('/tabs/1', {
+            expect(api.put).toHaveBeenCalledWith('/sheets/1', {
                 title: 'Wonderwall (Updated)',
                 capo: 3,
             });
 
-            expect(store.detailedTabs['1'].title).toBe('Wonderwall (Updated)');
-            expect(store.detailedTabs['1'].capo).toBe(3);
+            expect(store.detailedSheets['1'].title).toBe('Wonderwall (Updated)');
+            expect(store.detailedSheets['1'].capo).toBe(3);
         });
 
         it('should not send request if nothing changed', async () => {
-            const store = useTabsStore();
+            const store = useSheetsStore();
 
-            store.detailedTabs['1'] = {
+            store.detailedSheets['1'] = {
                 id: 1,
                 title: 'Wonderwall',
                 artist: { id: 1, name: 'Oasis' },
@@ -325,15 +325,15 @@ describe('tabsStore', () => {
                 content: 'E A D...',
             };
 
-            await store.updateTab('1', { title: 'Wonderwall', capo: 2 });
+            await store.updateSheet('1', { title: 'Wonderwall', capo: 2 });
 
             expect(api.put).not.toHaveBeenCalled();
         });
 
-        it('should update tabsList when updating a tab', async () => {
-            const store = useTabsStore();
+        it('should update sheetsList when updating a sheet', async () => {
+            const store = useSheetsStore();
 
-            store.detailedTabs['1'] = {
+            store.detailedSheets['1'] = {
                 id: 1,
                 title: 'Wonderwall',
                 artist: { id: 1, name: 'Oasis' },
@@ -343,7 +343,7 @@ describe('tabsStore', () => {
                 content: 'E A D...',
             };
 
-            store.tabsList = [
+            store.sheetsList = [
                 {
                     id: 1,
                     title: 'Wonderwall',
@@ -352,7 +352,7 @@ describe('tabsStore', () => {
                 },
             ];
 
-            const mockData: ApiResponse<TabDto> = {
+            const mockData: ApiResponse<SheetDto> = {
                 content: {
                     id: 1,
                     title: 'Wonderwall (Updated)',
@@ -366,21 +366,21 @@ describe('tabsStore', () => {
 
             vi.mocked(api.put).mockResolvedValue({ data: mockData });
 
-            await store.updateTab('1', {
+            await store.updateSheet('1', {
                 title: 'Wonderwall (Updated)',
                 artist: { id: 2, name: 'Beatles' },
             });
 
-            expect(store.tabsList[0].title).toBe('Wonderwall (Updated)');
-            expect(store.tabsList[0].artist?.name).toBe('Beatles');
+            expect(store.sheetsList[0].title).toBe('Wonderwall (Updated)');
+            expect(store.sheetsList[0].artist?.name).toBe('Beatles');
         });
     });
 
-    describe('deleteTab', () => {
-        it('should delete a tab from both caches', async () => {
-            const store = useTabsStore();
+    describe('deleteSheet', () => {
+        it('should delete a sheet from both caches', async () => {
+            const store = useSheetsStore();
 
-            store.detailedTabs['1'] = {
+            store.detailedSheets['1'] = {
                 id: 1,
                 title: 'Wonderwall',
                 artist: { id: 1, name: 'Oasis' },
@@ -390,7 +390,7 @@ describe('tabsStore', () => {
                 content: 'E A D...',
             };
 
-            store.tabsList = [
+            store.sheetsList = [
                 {
                     id: 1,
                     title: 'Wonderwall',
@@ -406,15 +406,15 @@ describe('tabsStore', () => {
             ];
 
             vi.mocked(api.delete).mockResolvedValue({
-                data: { message: 'Tab deleted successfully' },
+                data: { message: 'Sheet deleted successfully' },
             });
 
-            await store.deleteTab('1');
+            await store.deleteSheet('1');
 
-            expect(api.delete).toHaveBeenCalledWith('/tabs/1');
-            expect(store.detailedTabs['1']).toBeUndefined();
-            expect(store.tabsList).toHaveLength(1);
-            expect(store.tabsList[0].id).toBe(2);
+            expect(api.delete).toHaveBeenCalledWith('/sheets/1');
+            expect(store.detailedSheets['1']).toBeUndefined();
+            expect(store.sheetsList).toHaveLength(1);
+            expect(store.sheetsList[0].id).toBe(2);
         });
     });
 });

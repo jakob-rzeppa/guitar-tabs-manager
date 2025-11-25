@@ -1,4 +1,4 @@
-export type Tab = {
+export type Sheet = {
     id: number;
     title: string;
     artist: Artist | null;
@@ -8,7 +8,7 @@ export type Tab = {
     content: string;
 };
 
-export type TabListItem = {
+export type SheetListItem = {
     id: number;
     title: string;
     artist: Artist | null;
