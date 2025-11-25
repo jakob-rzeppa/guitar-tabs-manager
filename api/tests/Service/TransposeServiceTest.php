@@ -85,7 +85,7 @@ class TransposeServiceTest extends TestCase
         $transposeService = new TransposeService();
 
         foreach ($chords as $index => $chord) {
-            $result = $transposeService->transposeTab($chord, 'up');
+            $result = $transposeService->transposeSheet($chord, 'up');
 
             $this->assertEquals(
                 $expected[$index],
@@ -173,7 +173,7 @@ class TransposeServiceTest extends TestCase
         $transposeService = new TransposeService();
 
         foreach ($chords as $index => $chord) {
-            $result = $transposeService->transposeTab($chord, 'down');
+            $result = $transposeService->transposeSheet($chord, 'down');
 
             $this->assertEquals(
                 $expected[$index],
@@ -185,91 +185,91 @@ class TransposeServiceTest extends TestCase
 
     public function testLyrics(): void
     {
-        $tab = 'This is a test line with chords: C, D, E, F, G, A, B, that should be transposed.';
+        $sheet = 'This is a test line with chords: C, D, E, F, G, A, B, that should be transposed.';
         $expected = 'This is a test line with chords: C, D, E, F, G, A, B, that should be transposed.';
 
         $transposeService = new TransposeService();
-        $result = $transposeService->transposeTab($tab, 'up');
+        $result = $transposeService->transposeSheet($sheet, 'up');
 
         $this->assertEquals(
             $expected,
             $result,
-            'The transposed tab should be equal to the expected tab'
+            'The transposed sheet should be equal to the expected sheet'
         );
     }
 
-    public function testEmptyTab(): void
+    public function testEmptySheet(): void
     {
-        $tab = '';
+        $sheet = '';
         $expected = '';
 
         $transposeService = new TransposeService();
-        $result = $transposeService->transposeTab($tab, 'up');
+        $result = $transposeService->transposeSheet($sheet, 'up');
 
         $this->assertEquals(
             $expected,
             $result,
-            'The transposed tab should be equal to the expected tab'
+            'The transposed sheet should be equal to the expected sheet'
         );
     }
 
     public function testHeadings(): void
     {
-        $tab = '[Intro]';
+        $sheet = '[Intro]';
         $expected = '[Intro]';
 
         $transposeService = new TransposeService();
-        $result = $transposeService->transposeTab($tab, 'up');
+        $result = $transposeService->transposeSheet($sheet, 'up');
 
         $this->assertEquals(
             $expected,
             $result,
-            'The transposed tab should be equal to the expected tab'
+            'The transposed sheet should be equal to the expected sheet'
         );
     }
 
-    public function testMultilineTab(): void
+    public function testMultilineSheet(): void
     {
-        $tab = "[Intro]\nG\n\n[Verse 1]\n          G        Em\nI found a love for me\n              C                            D\nDarling, just dive right in, and follow my lead\n                G          Em\nWell, I found a girl beautiful and sweet\n        C                                     D\nI never knew you were the someone waiting for me";
+        $sheet = "[Intro]\nG\n\n[Verse 1]\n          G        Em\nI found a love for me\n              C                            D\nDarling, just dive right in, and follow my lead\n                G          Em\nWell, I found a girl beautiful and sweet\n        C                                     D\nI never knew you were the someone waiting for me";
         $expected = "[Intro]\nG#\n\n[Verse 1]\n          G#        Fm\nI found a love for me\n              C#                            D#\nDarling, just dive right in, and follow my lead\n                G#          Fm\nWell, I found a girl beautiful and sweet\n        C#                                     D#\nI never knew you were the someone waiting for me";
 
         $transposeService = new TransposeService();
-        $result = $transposeService->transposeTab($tab, 'up');
+        $result = $transposeService->transposeSheet($sheet, 'up');
 
         $this->assertEquals(
             $expected,
             $result,
-            'The transposed tab should be equal to the expected tab'
+            'The transposed sheet should be equal to the expected sheet'
         );
     }
 
     public function testChordsRightNextToEachOther(): void
     {
-        $tab = 'C D E';
+        $sheet = 'C D E';
         $expected = 'C# D# F';
 
         $transposeService = new TransposeService();
-        $result = $transposeService->transposeTab($tab, 'up');
+        $result = $transposeService->transposeSheet($sheet, 'up');
 
         $this->assertEquals(
             $expected,
             $result,
-            'The transposed tab should be equal to the expected tab'
+            'The transposed sheet should be equal to the expected sheet'
         );
     }
 
     public function testChordsWithSpaces(): void
     {
-        $tab = 'C  D  E';
+        $sheet = 'C  D  E';
         $expected = 'C#  D#  F';
 
         $transposeService = new TransposeService();
-        $result = $transposeService->transposeTab($tab, 'up');
+        $result = $transposeService->transposeSheet($sheet, 'up');
 
         $this->assertEquals(
             $expected,
             $result,
-            'The transposed tab should be equal to the expected tab'
+            'The transposed sheet should be equal to the expected sheet'
         );
     }
 
@@ -294,7 +294,7 @@ class TransposeServiceTest extends TestCase
         $transposeService = new TransposeService();
 
         foreach ($chords as $index => $chord) {
-            $result = $transposeService->transposeTab($chord, 'up');
+            $result = $transposeService->transposeSheet($chord, 'up');
 
             $this->assertEquals(
                 $expected[$index],
@@ -326,7 +326,7 @@ class TransposeServiceTest extends TestCase
         $transposeService = new TransposeService();
 
         foreach ($chords as $index => $chord) {
-            $result = $transposeService->transposeTab($chord, 'up');
+            $result = $transposeService->transposeSheet($chord, 'up');
 
             $this->assertEquals(
                 $expected[$index],

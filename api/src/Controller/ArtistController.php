@@ -9,8 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\ArtistRepository;
-use App\Service\TabHandler;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use App\Service\SheetHandler;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/artists')]
@@ -104,7 +103,7 @@ final class ArtistController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_artists_delete', methods: ['DELETE'])]
-    public function delete(int $id, ArtistRepository $artistRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer, TabHandler $tabHandler): JsonResponse
+    public function delete(int $id, ArtistRepository $artistRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer, SheetHandler $sheetHandler): JsonResponse
     {
         $artist = $artistRepository->find($id);
 
@@ -112,7 +111,7 @@ final class ArtistController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $tabHandler->deleteArtistFromAllTabs($artist->getId());
+        $sheetHandler->deleteArtistFromAllSheets($artist->getId());
 
         $entityManager->remove($artist);
         $entityManager->flush();

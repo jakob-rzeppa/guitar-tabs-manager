@@ -2,14 +2,14 @@
 
 namespace App\Repository;
 
-use App\Entity\Artist;
+use App\Entity\Sheet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class ArtistRepository extends ServiceEntityRepository
+class SheetRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Artist::class);
+        parent::__construct($registry, Sheet::class);
     }
 }

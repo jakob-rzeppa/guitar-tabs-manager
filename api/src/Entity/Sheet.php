@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\TabRepository;
+use App\Repository\SheetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TabRepository::class)]
-class Tab
+#[ORM\Entity(repositoryClass: SheetRepository::class)]
+class Sheet
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

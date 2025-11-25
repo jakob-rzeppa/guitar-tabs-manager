@@ -4,36 +4,35 @@ namespace App\Service;
 
 class FormatService
 {
-    public function formatTab(string $tab): string
+    public function formatSheet(string $sheet): string
     {
-        $tabLines = explode("\n", $tab);
+        $sheetLines = explode("\n", $sheet);
 
-        $tabLines = array_filter($tabLines, fn($line) => !$this->isUnwantedLine($line));
-
-        $tabLines = array_values($tabLines);
+        $sheetLines = array_filter($sheetLines, fn($line) => !$this->isUnwantedLine($line));
+        $sheetLines = array_values($sheetLines);
 
         // Add newlines before and after headings and instrumental parts
-        foreach ($tabLines as $index => $line) {
+        foreach ($sheetLines as $index => $line) {
             if ($this->isHeading($line)) {
-                $tabLines[$index] = "\n" . $line . "\n";
+                $sheetLines[$index] = "\n" . $line . "\n";
             } else if ($this->isInstrumental($line)) {
-                $prefix = isset($tabLines[$index - 1]) && $this->isInstrumental($tabLines[$index - 1]) ? '' : "\n";
-                $suffix = isset($tabLines[$index + 1]) && $this->isInstrumental($tabLines[$index + 1]) ? '' : "\n";
-                $tabLines[$index] = $prefix . $line . $suffix;
+                $prefix = isset($sheetLines[$index - 1]) && $this->isInstrumental($sheetLines[$index - 1]) ? '' : "\n";
+                $suffix = isset($sheetLines[$index + 1]) && $this->isInstrumental($sheetLines[$index + 1]) ? '' : "\n";
+                $sheetLines[$index] = $prefix . $line . $suffix;
             }
         }
 
-        $tab = implode("\n", $tabLines);
+        $sheet = implode("\n", $sheetLines);
 
         // Reduce multiple newlines to two
-        $tab = preg_replace('/\n{3,}/', "\n\n", $tab);
+        $sheet = preg_replace('/\n{3,}/', "\n\n", $sheet);
 
         // Remove leading newlines
-        $tab = ltrim($tab, "\n");
+        $sheet = ltrim($sheet, "\n");
         // Remove trailing newlines
-        $tab = rtrim($tab, "\n");
+        $sheet = rtrim($sheet, "\n");
 
-        return $tab;
+        return $sheet;
     }
 
     private function isHeading(string $line): bool

@@ -6,13 +6,13 @@ use InvalidArgumentException;
 
 class TransposeService
 {
-    public function transposeTab(string $tab, string $direction): string
+    public function transposeSheet(string $sheet, string $direction): string
     {
-        $tabRows = explode("\n", $tab);
+        $sheetRows = explode("\n", $sheet);
 
         $result = '';
 
-        foreach ($tabRows as $row) {
+        foreach ($sheetRows as $row) {
             $transposedRow = '';
 
             if ($direction === 'down') {

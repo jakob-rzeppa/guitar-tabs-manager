@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Tab;
+use App\Entity\Sheet;
 use App\Repository\ArtistRepository;
 use App\Repository\TagRepository;
 use App\Service\FormatService;
@@ -12,41 +12,41 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\TabRepository;
-use App\Service\TabHandler;
+use App\Repository\SheetRepository;
+use App\Service\SheetHandler;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route('/tabs')]
-final class TabController extends AbstractController
+#[Route('/sheets')]
+final class SheetController extends AbstractController
 {
-    #[Route('', name: 'app_tabs_get_all', methods: ['GET'])]
-    public function getAll(TabHandler $tabHandler, SerializerInterface $serializer): JsonResponse
+    #[Route('', name: 'app_sheets_get_all', methods: ['GET'])]
+    public function getAll(SheetHandler $sheetHandler, SerializerInterface $serializer): JsonResponse
     {
-        $tabs = $tabHandler->getWithLessDetailsAllTabs();
+        $sheets = $sheetHandler->getWithLessDetailsAllSheets();
 
         $jsonResponse = $serializer->serialize([
-            'content' => $tabs,
+            'content' => $sheets,
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/{id}', name: 'app_tabs_get_by_id', methods: ['GET'])]
-    public function getById(int $id, TabRepository $tabRepository, SerializerInterface $serializer): JsonResponse
+    #[Route('/{id}', name: 'app_sheets_get_by_id', methods: ['GET'])]
+    public function getById(int $id, SheetRepository $sheetRepository, SerializerInterface $serializer): JsonResponse
     {
-        $tab = $tabRepository->find($id);
+        $sheet = $sheetRepository->find($id);
 
-        if (null === $tab) {
+        if (null === $sheet) {
             throw $this->createNotFoundException();
         }
 
-        $artist = $tab->getArtist() !== null ? [
-            'id' => $tab->getArtist()->getId(),
-            'name' => $tab->getArtist()->getName(),
+        $artist = $sheet->getArtist() !== null ? [
+            'id' => $sheet->getArtist()->getId(),
+            'name' => $sheet->getArtist()->getName(),
         ] : null;
 
         $tags = [];
-        foreach ($tab->getTags() as $tag) {
+        foreach ($sheet->getTags() as $tag) {
             $tags[] = [
                 'id' => $tag->getId(),
                 'name' => $tag->getName()
@@ -55,13 +55,13 @@ final class TabController extends AbstractController
 
         $jsonResponse = $serializer->serialize([
             'content' => [
-                'id' => $tab->getId(),
-                'title' => $tab->getTitle(),
+                'id' => $sheet->getId(),
+                'title' => $sheet->getTitle(),
                 'tags' => $tags,
                 'artist' => $artist,
-                'capo' => $tab->getCapo(),
-                'source_url' => $tab->getSourceURL(),
-                'content' => $tab->getContent()
+                'capo' => $sheet->getCapo(),
+                'source_url' => $sheet->getSourceURL(),
+                'content' => $sheet->getContent()
             ]
         ], 'json');
 
@@ -78,39 +78,39 @@ final class TabController extends AbstractController
     ): JsonResponse {
         $requestContent = $request->toArray();
 
-        $tab = new Tab();
-        $tab->setTitle($requestContent['title']);
-        $tab->setContent($requestContent['content']);
-        $tab->setCapo($requestContent['capo']);
-        $tab->setSourceURL($requestContent['source_url']);
+        $sheet = new Sheet();
+        $sheet->setTitle($requestContent['title']);
+        $sheet->setContent($requestContent['content']);
+        $sheet->setCapo($requestContent['capo']);
+        $sheet->setSourceURL($requestContent['source_url']);
 
         $artistId = $requestContent['artist_id'] ?? null;
         if ($artistId !== null) {
             $artist = $artistRepository->find($artistId);
 
-            $tab->setArtist($artist);
+            $sheet->setArtist($artist);
         }
 
         $tagIds = $requestContent['tag_ids'] ?? null;
         if ($tagIds !== null) {
-            $tab->getTags()->clear();
+            $sheet->getTags()->clear();
 
             $tags = $tagRepository->findBy(['id' => $tagIds]);
             foreach ($tags as $tag) {
-                $tab->addTag($tag);
+                $sheet->addTag($tag);
             }
         }
 
-        $entityManager->persist($tab);
+        $entityManager->persist($sheet);
         $entityManager->flush();
 
-        $artist = $tab->getArtist() !== null ? [
-            'id' => $tab->getArtist()->getId(),
-            'name' => $tab->getArtist()->getName(),
+        $artist = $sheet->getArtist() !== null ? [
+            'id' => $sheet->getArtist()->getId(),
+            'name' => $sheet->getArtist()->getName(),
         ] : null;
 
         $tags = [];
-        foreach ($tab->getTags() as $tag) {
+        foreach ($sheet->getTags() as $tag) {
             $tags[] = [
                 'id' => $tag->getId(),
                 'name' => $tag->getName()
@@ -119,13 +119,13 @@ final class TabController extends AbstractController
 
         $jsonResponse = $serializer->serialize([
             'content' => [
-                'id' => $tab->getId(),
-                'title' => $tab->getTitle(),
+                'id' => $sheet->getId(),
+                'title' => $sheet->getTitle(),
                 'tags' => $tags,
                 'artist' => $artist,
-                'capo' => $tab->getCapo(),
-                'source_url' => $tab->getSourceURL(),
-                'content' => $tab->getContent()
+                'capo' => $sheet->getCapo(),
+                'source_url' => $sheet->getSourceURL(),
+                'content' => $sheet->getContent()
             ]
         ], 'json');
 
@@ -135,53 +135,53 @@ final class TabController extends AbstractController
     #[Route('/{id}', name: 'app_tabs_update', methods: ['PUT'])]
     public function update(
         int $id,
-        TabRepository $tabRepository,
+        SheetRepository $sheetRepository,
         ArtistRepository $artistRepository,
         TagRepository $tagRepository,
         Request $request,
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer
     ): JsonResponse {
-        $tab = $tabRepository->find($id);
+        $sheet = $sheetRepository->find($id);
 
-        if (null === $tab) {
+        if (null === $sheet) {
             throw $this->createNotFoundException();
         }
 
         $requestContent = $request->toArray();
 
-        $tab->setTitle($requestContent['title'] ?? $tab->getTitle());
-        $tab->setContent($requestContent['content'] ?? $tab->getContent());
-        $tab->setCapo($requestContent['capo'] ?? $tab->getCapo());
-        $tab->setSourceURL($requestContent['source_url'] ?? $tab->getSourceURL());
+        $sheet->setTitle($requestContent['title'] ?? $sheet->getTitle());
+        $sheet->setContent($requestContent['content'] ?? $sheet->getContent());
+        $sheet->setCapo($requestContent['capo'] ?? $sheet->getCapo());
+        $sheet->setSourceURL($requestContent['source_url'] ?? $sheet->getSourceURL());
 
         $artistId = $requestContent['artist_id'] ?? null;
         if ($artistId !== null) {
             $artist = $artistRepository->find($artistId);
 
-            $tab->setArtist($artist);
+            $sheet->setArtist($artist);
         }
 
         $tagIds = $requestContent['tag_ids'] ?? null;
         if ($tagIds !== null) {
-            $tab->getTags()->clear();
+            $sheet->getTags()->clear();
 
             $tags = $tagRepository->findBy(['id' => $tagIds]);
             foreach ($tags as $tag) {
-                $tab->addTag($tag);
+                $sheet->addTag($tag);
             }
         }
 
-        $entityManager->persist($tab);
+        $entityManager->persist($sheet);
         $entityManager->flush();
 
-        $artist = $tab->getArtist() !== null ? [
-            'id' => $tab->getArtist()->getId(),
-            'name' => $tab->getArtist()->getName(),
+        $artist = $sheet->getArtist() !== null ? [
+            'id' => $sheet->getArtist()->getId(),
+            'name' => $sheet->getArtist()->getName(),
         ] : null;
 
         $tags = [];
-        foreach ($tab->getTags() as $tag) {
+        foreach ($sheet->getTags() as $tag) {
             $tags[] = [
                 'id' => $tag->getId(),
                 'name' => $tag->getName()
@@ -190,64 +190,63 @@ final class TabController extends AbstractController
 
         $jsonResponse = $serializer->serialize([
             'content' => [
-                'id' => $tab->getId(),
-                'title' => $tab->getTitle(),
+                'id' => $sheet->getId(),
+                'title' => $sheet->getTitle(),
                 'tags' => $tags,
                 'artist' => $artist,
-                'capo' => $tab->getCapo(),
-                'source_url' => $tab->getSourceURL(),
-                'content' => $tab->getContent()
+                'capo' => $sheet->getCapo(),
+                'source_url' => $sheet->getSourceURL(),
+                'content' => $sheet->getContent()
             ]
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/{id}', name: 'app_tabs_delete', methods: ['DELETE'])]
-    public function delete(int $id, TabRepository $tabRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    #[Route('/{id}', name: 'app_sheets_delete', methods: ['DELETE'])]
+    public function delete(int $id, SheetRepository $sheetRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
-        $tab = $tabRepository->find($id);
+        $sheet = $sheetRepository->find($id);
 
-        if (null === $tab) {
+        if (null === $sheet) {
             throw $this->createNotFoundException();
         }
 
-        $entityManager->remove($tab);
+        $entityManager->remove($sheet);
         $entityManager->flush();
 
         $jsonResponse = $serializer->serialize([
-            'message' => 'Tab deleted successfully'
+            'message' => 'Sheet deleted successfully'
         ], 'json');
 
         return JsonResponse::fromJsonString($jsonResponse);
     }
 
-    #[Route('/format', name: 'app_tabs_format', methods: ['POST'])]
+    #[Route('/format', name: 'app_sheets_format', methods: ['POST'])]
     public function format(Request $request, FormatService $formatService): JsonResponse
     {
         $requestContent = $request->toArray();
 
-        $tabContent = $requestContent['content'];
-
-        $tabContent = $formatService->formatTab($tabContent);
+        $sheetContent = $requestContent['content'];
+        $sheetContent = $formatService->formatSheet($sheetContent);
 
         return $this->json(['content' => [
-            'content' => $tabContent
+            'content' => $sheetContent
         ]]);
     }
 
-    #[Route('/transpose', name: 'app_tabs_transpose', methods: ['POST'])]
+    #[Route('/transpose', name: 'app_sheets_transpose', methods: ['POST'])]
     public function transpose(Request $request, TransposeService $transposeService): JsonResponse
     {
         $requestContent = $request->toArray();
 
-        $tabContent = $requestContent['content'];
+        $sheetContent = $requestContent['content'];
         $dir = $requestContent['dir'];
 
-        $tabContent = $transposeService->transposeTab($tabContent, $dir);
+        $sheetContent = $transposeService->transposeSheet($sheetContent, $dir);
 
         return $this->json(['content' => [
-            'content' => $tabContent
+            'content' => $sheetContent
         ]]);
     }
 }

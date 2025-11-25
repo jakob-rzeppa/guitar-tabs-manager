@@ -19,14 +19,14 @@ class Tag
     private ?string $name = null;
 
     /**
-     * @var Collection<int, Tab>
+     * @var Collection<int, Sheet>
      */
-    #[ORM\ManyToMany(targetEntity: Tab::class, mappedBy: 'tags')]
-    private Collection $tabs;
+    #[ORM\ManyToMany(targetEntity: Sheet::class, mappedBy: 'sheets')]
+    private Collection $sheets;
 
     public function __construct()
     {
-        $this->tabs = new ArrayCollection();
+        $this->sheets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -47,27 +47,27 @@ class Tag
     }
 
     /**
-     * @return Collection<int, Tab>
+     * @return Collection<int, Sheet>
      */
-    public function getTabs(): Collection
+    public function getSheets(): Collection
     {
-        return $this->tabs;
+        return $this->sheets;
     }
 
-    public function addTab(Tab $tab): static
+    public function addSheet(Sheet $sheet): static
     {
-        if (!$this->tabs->contains($tab)) {
-            $this->tabs->add($tab);
-            $tab->addTag($this);
+        if (!$this->sheets->contains($sheet)) {
+            $this->sheets->add($sheet);
+            $sheet->addTag($this);
         }
 
         return $this;
     }
 
-    public function removeTab(Tab $tab): static
+    public function removeSheet(Sheet $sheet): static
     {
-        if ($this->tabs->removeElement($tab)) {
-            $tab->removeTag($this);
+        if ($this->sheets->removeElement($sheet)) {
+            $sheet->removeTag($this);
         }
 
         return $this;

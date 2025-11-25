@@ -19,14 +19,14 @@ class Artist
     private ?string $name = null;
 
     /**
-     * @var Collection<int, Tab>
+     * @var Collection<int, Sheet>
      */
-    #[ORM\OneToMany(targetEntity: Tab::class, mappedBy: 'artist')]
-    private Collection $tabs;
+    #[ORM\OneToMany(targetEntity: Sheet::class, mappedBy: 'artist')]
+    private Collection $sheets;
 
     public function __construct()
     {
-        $this->tabs = new ArrayCollection();
+        $this->sheets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -47,29 +47,29 @@ class Artist
     }
 
     /**
-     * @return Collection<int, Tab>
+     * @return Collection<int, Sheet>
      */
-    public function getTabs(): Collection
+    public function getSheets(): Collection
     {
-        return $this->tabs;
+        return $this->sheets;
     }
 
-    public function addTab(Tab $tab): static
+    public function addSheet(Sheet $sheet): static
     {
-        if (!$this->tabs->contains($tab)) {
-            $this->tabs->add($tab);
-            $tab->setArtist($this);
+        if (!$this->sheets->contains($sheet)) {
+            $this->sheets->add($sheet);
+            $sheet->setArtist($this);
         }
 
         return $this;
     }
 
-    public function removeTab(Tab $tab): static
+    public function removeSheet(Sheet $sheet): static
     {
-        if ($this->tabs->removeElement($tab)) {
+        if ($this->sheets->removeElement($sheet)) {
             // set the owning side to null (unless already changed)
-            if ($tab->getArtist() === $this) {
-                $tab->setArtist(null);
+            if ($sheet->getArtist() === $this) {
+                $sheet->setArtist(null);
             }
         }
 
