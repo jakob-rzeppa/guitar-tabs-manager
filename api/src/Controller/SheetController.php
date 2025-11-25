@@ -74,28 +74,7 @@ final class SheetController extends AbstractController
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer
     ): JsonResponse {
-        $sheet = new Sheet();
-        $sheet->setTitle($requestPayload->title);
-        $sheet->setContent($requestPayload->content);
-        $sheet->setCapo($requestPayload->capo);
-        $sheet->setSourceURL($requestPayload->source_url);
-
-        $artistId = $requestPayload->artist_id ?? null;
-        if ($artistId !== null) {
-            $artist = $artistRepository->find($artistId);
-
-            $sheet->setArtist($artist);
-        }
-
-        $tagIds = $requestPayload->tag_ids ?? null;
-        if ($tagIds !== null) {
-            $sheet->getTags()->clear();
-
-            $tags = $tagRepository->findBy(['id' => $tagIds]);
-            foreach ($tags as $tag) {
-                $sheet->addTag($tag);
-            }
-        }
+        $sheet = Sheet::fromCreateSheetRequestDto($requestPayload, $artistRepository, $tagRepository);
 
         $entityManager->persist($sheet);
         $entityManager->flush();
