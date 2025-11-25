@@ -59,7 +59,7 @@ const handleSave = async () => {
         v-else-if="localSheet === null"
         message="Something went wrong while loading the sheet."
     />
-    <BaseEditView v-else :back-to="{ name: 'sheet', params: { id: sheetId } }" element-type="Sheet">
+    <BaseEditView v-else :back-to="{ name: 'sheet', params: { id: sheetId } }" element-type="Sheet" @save="handleSave">
         <template #content>
             <div @keypress.enter="handleSave" class="space-y-6">
                 <!-- Title -->
