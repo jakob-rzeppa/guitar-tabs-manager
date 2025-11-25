@@ -46,34 +46,6 @@ class Sheet
         $this->tags = new ArrayCollection();
     }
 
-    public static function fromCreateSheetRequestDto(CreateSheetRequestDto $requestPayload, ArtistRepository $artistRepository, TagRepository $tagRepository): self
-    {
-        $sheet = new self();
-        $sheet->setTitle($requestPayload->title);
-        $sheet->setContent($requestPayload->content);
-        $sheet->setCapo($requestPayload->capo);
-        $sheet->setSourceURL($requestPayload->source_url);
-
-        $artistId = $requestPayload->artist_id ?? null;
-        if ($artistId !== null) {
-            $artist = $artistRepository->find($artistId);
-
-            $sheet->setArtist($artist);
-        }
-
-        $tagIds = $requestPayload->tag_ids ?? null;
-        if ($tagIds !== null) {
-            $sheet->getTags()->clear();
-
-            $tags = $tagRepository->findBy(['id' => $tagIds]);
-            foreach ($tags as $tag) {
-                $sheet->addTag($tag);
-            }
-        }
-
-        return $sheet;
-    }
-
     public function getId(): ?int
     {
         return $this->id;
