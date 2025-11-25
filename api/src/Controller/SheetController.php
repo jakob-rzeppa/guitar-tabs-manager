@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Dto\CreateSheetRequestDto;
 use App\Entity\Sheet;
 use App\Repository\ArtistRepository;
 use App\Repository\TagRepository;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\SheetRepository;
 use App\Service\SheetHandler;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/sheets')]
@@ -66,28 +68,26 @@ final class SheetController extends AbstractController
 
     #[Route('', name: 'app_tabs_create', methods: ['POST'])]
     public function create(
-        Request $request,
+        #[MapRequestPayload('json')] CreateSheetRequestDto $requestPayload,
         ArtistRepository $artistRepository,
         TagRepository $tagRepository,
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer
     ): JsonResponse {
-        $requestContent = $request->toArray();
-
         $sheet = new Sheet();
-        $sheet->setTitle($requestContent['title']);
-        $sheet->setContent($requestContent['content']);
-        $sheet->setCapo($requestContent['capo']);
-        $sheet->setSourceURL($requestContent['source_url']);
+        $sheet->setTitle($requestPayload->title);
+        $sheet->setContent($requestPayload->content);
+        $sheet->setCapo($requestPayload->capo);
+        $sheet->setSourceURL($requestPayload->source_url);
 
-        $artistId = $requestContent['artist_id'] ?? null;
+        $artistId = $requestPayload->artist_id ?? null;
         if ($artistId !== null) {
             $artist = $artistRepository->find($artistId);
 
             $sheet->setArtist($artist);
         }
 
-        $tagIds = $requestContent['tag_ids'] ?? null;
+        $tagIds = $requestPayload->tag_ids ?? null;
         if ($tagIds !== null) {
             $sheet->getTags()->clear();
 
