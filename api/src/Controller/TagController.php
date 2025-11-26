@@ -2,39 +2,36 @@
 
 namespace App\Controller;
 
+use App\Dto\Request\CreateTagRequestDto;
+use App\Dto\Request\UpdateTagRequestDto;
+use App\Dto\TagDto;
 use App\Entity\Tag;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\TagRepository;
-use Symfony\Component\Serializer\SerializerInterface;
+use App\Service\TagHandler;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 
 #[Route('/tags')]
 final class TagController extends AbstractController
 {
     #[Route('', name: 'app_tags_get_all', methods: ['GET'])]
-    public function getAll(TagRepository $tagRepository, SerializerInterface $serializer): JsonResponse
+    public function getAll(TagRepository $tagRepository): JsonResponse
     {
         $tags = $tagRepository->findAll();
 
-        $reducedTags = [];
+        $tagPayloads = array_map(function (Tag $tag) {
+            return TagDto::fromTag($tag);
+        }, $tags);
 
-        foreach ($tags as $tag) {
-            $reducedTags[] = [
-                'id' => $tag->getId(),
-                'name' => $tag->getName(),
-            ];
-        }
-
-        return JsonResponse::fromJsonString($serializer->serialize([
-            'content' => $reducedTags,
-        ], 'json'));
+        return $this->json([
+            'content' => array_map(fn(TagDto $tagPayload) => $tagPayload->toArray(), $tagPayloads),
+        ]);
     }
 
     #[Route('/{id}', name: 'app_tags_get_by_id', methods: ['GET'])]
-    public function getById(int $id, TagRepository $tagRepository, SerializerInterface $serializer): JsonResponse
+    public function getById(int $id, TagRepository $tagRepository): JsonResponse
     {
         $tag = $tagRepository->find($id);
 
@@ -42,76 +39,45 @@ final class TagController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        return JsonResponse::fromJsonString($serializer->serialize([
-            'content' => $tag
-        ], 'json'));
+        return $this->json([
+            'content' => TagDto::fromTag($tag)->toArray()
+        ]);
     }
 
     #[Route('', name: 'app_tags_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
-    {
-        $requestContent = $request->toArray();
+    public function create(
+        #[MapRequestPayload('json')] CreateTagRequestDto $createTagRequestDto,
+        TagHandler $tagHandler,
+    ): JsonResponse {
+        $tag = $tagHandler->createTag($createTagRequestDto->name);
 
-        $tag = new Tag();
-        $tag->setName($requestContent['name']);
-
-        $entityManager->persist($tag);
-        $entityManager->flush();
-
-        // Manually construct response to avoid circular reference
-        $responseData = [
-            'id' => $tag->getId(),
-            'name' => $tag->getName()
-        ];
-
-        return JsonResponse::fromJsonString($serializer->serialize([
-            'content' => $responseData,
+        return $this->json([
+            'content' => TagDto::fromTag($tag)->toArray(),
             'message' => 'Tag created successfully'
-        ], 'json'));
+        ]);
     }
 
     #[Route('/{id}', name: 'app_tags_update', methods: ['PUT'])]
-    public function update(int $id, TagRepository $tagRepository, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
-    {
-        $tag = $tagRepository->find($id);
+    public function update(
+        int $id,
+        #[MapRequestPayload('json')] UpdateTagRequestDto $updateTagRequestDto,
+        TagHandler $tagHandler
+    ): JsonResponse {
+        $tag = $tagHandler->updateTag($id, $updateTagRequestDto);
 
-        if (null === $tag) {
-            throw $this->createNotFoundException();
-        }
-
-        $requestContent = $request->toArray();
-
-        $tag->setName($requestContent['name'] ?? $tag->getName());
-
-        $entityManager->persist($tag);
-        $entityManager->flush();
-
-        // Manually construct response to avoid circular reference
-        $responseData = [
-            'id' => $tag->getId(),
-            'name' => $tag->getName()
-        ];
-
-        return JsonResponse::fromJsonString($serializer->serialize([
-            'content' => $responseData,
-            'message' => 'Tag updated successfully'
-        ], 'json'));
+        return $this->json([
+            'message' => 'Tag updated successfully',
+            'content' => TagDto::fromTag($tag)->toArray(),
+        ]);
     }
 
     #[Route('/{id}', name: 'app_tags_delete', methods: ['DELETE'])]
-    public function delete(int $id, TagRepository $tagRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function delete(int $id, TagHandler $tagHandler): JsonResponse
     {
-        $tag = $tagRepository->find($id);
+        $tagHandler->deleteTag($id);
 
-        if (null === $tag) {
-            throw $this->createNotFoundException();
-        }
-
-        $entityManager->remove($tag);
-        $entityManager->flush();
-
-        return JsonResponse::fromJsonString($serializer->serialize([
+        return $this->json([
             'message' => 'Tag deleted successfully'
-        ], 'json'));
+        ]);
     }
 }
