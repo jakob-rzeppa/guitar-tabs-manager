@@ -8,21 +8,25 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Guide Getting-Started', link: '/guide/getting-started' },
+      { text: 'Api Overview', link: '/api/overview' }
     ],
 
     sidebar: [
       {
         text: 'Examples',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'Guide Getting-Started', link: '/guide/getting-started' },
+          { text: 'Api Overview', link: '/api/overview' },
+          { text: 'Sheets Api', link: '/api/sheet' },
+          { text: 'Artists Api', link: '/api/artist' },
+          { text: 'Tags Api', link: '/api/tag' },
         ]
       }
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+      { icon: 'github', link: 'https://github.com/jakob-rzeppa/chord-sheets-manager' }
     ]
   }
 })
