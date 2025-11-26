@@ -50,6 +50,11 @@ class SheetHandler
         return $reducedSheets;
     }
 
+    public function getSheetById(int $id): ?Sheet
+    {
+        return $this->sheetRepository->find($id);
+    }
+
     public function createSheet(CreateSheetRequestDto $dto): Sheet
     {
         $sheet = new Sheet();
