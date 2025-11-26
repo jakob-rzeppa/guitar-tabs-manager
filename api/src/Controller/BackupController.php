@@ -16,7 +16,10 @@ final class BackupController extends AbstractController
     {
         $backupString = $backupHandler->createBackupString();
 
-        return JsonResponse::fromJsonString($backupString);
+        return $this->json([
+            'message' => 'Backup created successfully',
+            'content' => $backupString
+        ]);
     }
 
     #[Route('', name: 'app_backups_post', methods: ['POST'])]
@@ -25,6 +28,8 @@ final class BackupController extends AbstractController
         $requestContent = $request->getContent();
         $backupHandler->restoreFromBackupString($requestContent, true);
 
-        return new JsonResponse(['status' => 'Backup restored successfully']);
+        return $this->json([
+            'message' => 'Backup restored successfully'
+        ]);
     }
 }
