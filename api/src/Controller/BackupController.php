@@ -18,7 +18,7 @@ final class BackupController extends AbstractController
 
         return $this->json([
             'message' => 'Backup created successfully',
-            'content' => $backupString
+            'data' => $backupString
         ]);
     }
 
