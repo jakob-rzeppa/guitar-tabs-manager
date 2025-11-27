@@ -12,7 +12,7 @@ All API responses follow a consistent structure:
 
 ```json
 {
-  "data": <optional data>,
+  "payload": <data>,
   "message": "<optional message>"
 }
 ```

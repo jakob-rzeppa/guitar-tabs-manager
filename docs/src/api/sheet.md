@@ -20,12 +20,18 @@ Returns list of all sheets without full content.
 
 ```json
 {
-  "data": [
+  "payload": [
     {
       "id": 1,
       "title": "Hotel California",
       "artist": { "id": 1, "name": "Eagles" },
       "tags": [{ "id": 1, "name": "classic rock" }]
+    },
+    {
+      "id": 2,
+      "title": "Perfect",
+      "artist": { "id": 2, "name": "Ed Sheeran" },
+      "tags": []
     }
   ]
 }
@@ -45,14 +51,14 @@ Returns full sheet including content.
 
 ```json
 {
-  "data": {
+  "payload": {
     "id": 1,
-    "title": "Wish You Were Here",
-    "artist": { "id": 2, "name": "Pink Floyd" },
-    "tags": [{ "id": 2, "name": "classic rock" }],
+    "title": "Hotel California",
+    "artist": { "id": 1, "name": "Eagles" },
+    "tags": [{ "id": 1, "name": "classic rock" }],
     "capo": 0,
     "source_url": "https://...",
-    "content": "Em7  G  Em7  G  Em7  A7sus4  Em7  A7sus4\n[Verse 1]\nC              D\nSo, so you think you can tell..."
+    "content": "Bm  F#  A  E  G  D  Em  F#\n[Intro]\nBm       F#       A       E\nChords go here..."
   }
 }
 ```
@@ -65,12 +71,12 @@ Create a new sheet.
 
 ```json
 {
-  "title": "Blackbird",
-  "content": "G  Am7  G/B  G  A7sus4  D7sus4\n[Verse]\nG       Am7      G/B      G\nBlackbird singing in the dead of night...",
-  "capo": 3,
+  "title": "Hotel California",
+  "content": "Bm  F#  A  E  G  D  Em  F#\n[Intro]\nBm       F#       A       E\nChords go here...",
+  "capo": 0,
   "source_url": "https://...",
-  "artist_id": 3,
-  "tag_ids": [1, 3]
+  "artist_id": 1,
+  "tag_ids": [1]
 }
 ```
 
@@ -87,15 +93,15 @@ Create a new sheet.
 
 ```json
 {
-  \"message\": \"Sheet created successfully\",
-  \"data\": {
-    \"id\": 3,
-    \"title\": \"Blackbird\",
-    \"artist\": { \"id\": 3, \"name\": \"The Beatles\" },
-    \"tags\": [{ \"id\": 1, \"name\": \"classic rock\" }, { \"id\": 3, \"name\": \"fingerstyle\" }],
-    \"capo\": 3,
-    \"source_url\": \"https://...\",
-    \"content\": \"G  Am7  G/B  G  A7sus4  D7sus4\\n[Verse]\\nG       Am7      G/B      G\\nBlackbird singing in the dead of night...\"
+  "message": "Sheet created successfully",
+  "payload": {
+    "id": 3,
+    "title": "Hotel California",
+    "artist": { "id": 1, "name": "Eagles" },
+    "tags": [{ "id": 1, "name": "classic rock" }],
+    "capo": 0,
+    "source_url": "https://...",
+    "content": "Bm  F#  A  E  G  D  Em  F#\n[Intro]\nBm       F#       A       E\nChords go here..."
   }
 }
 ```
@@ -116,12 +122,12 @@ All fields are optional:
 
 ```json
 {
-  "title": "Tears in Heaven",
-  "content": "A  E/G#  F#m  A/E  D/F#  E7sus4  E7\n[Verse]\nA        E/G#     F#m    A/E\nWould you know my name...",
-  "capo": 2,
+  "title": "Hotel California",
+  "content": "Bm  F#  A  E  G  D  Em  F#\n[Verse]\nBm       F#       A       E\nUpdated chords...",
+  "capo": 0,
   "source_url": "https://...",
-  "artist_id": 4,
-  "tag_ids": [2, 3]
+  "artist_id": 1,
+  "tag_ids": [1]
 }
 ```
 
@@ -129,15 +135,15 @@ All fields are optional:
 
 ```json
 {
-  \"message\": \"Sheet updated successfully\",
-  \"data\": {
-    \"id\": 1,
-    \"title\": \"Tears in Heaven\",
-    \"artist\": { \"id\": 4, \"name\": \"Eric Clapton\" },
-    \"tags\": [{ \"id\": 2, \"name\": \"acoustic\" }, { \"id\": 3, \"name\": \"fingerstyle\" }],
-    \"capo\": 2,
-    \"source_url\": \"https://...\",
-    \"content\": \"A  E/G#  F#m  A/E  D/F#  E7sus4  E7\\n[Verse]\\nA        E/G#     F#m    A/E\\nWould you know my name...\"
+  "message": "Sheet updated successfully",
+  "payload": {
+    "id": 1,
+    "title": "Hotel California",
+    "artist": { "id": 1, "name": "Eagles" },
+    "tags": [{ "id": 1, "name": "classic rock" }],
+    "capo": 0,
+    "source_url": "https://...",
+    "content": "Bm  F#  A  E  G  D  Em  F#\n[Verse]\nBm       F#       A       E\nUpdated chords..."
   }
 }
 ```
@@ -176,7 +182,7 @@ Format sheet content with consistent spacing and layout.
 
 ```json
 {
-  "data": {
+  "payload": {
     "content": "formatted sheet content"
   }
 }
@@ -204,7 +210,7 @@ Transpose sheet content up or down.
 
 ```json
 {
-  "data": {
+  "payload": {
     "content": "G#  C#  D#  G#"
   }
 }

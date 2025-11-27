@@ -18,10 +18,9 @@ Returns list of all tags.
 
 ```json
 {
-  "data": [
-    { "id": 1, "name": "classic rock" },
-    { "id": 2, "name": "acoustic" },
-    { "id": 3, "name": "fingerstyle" }
+  "payload": [
+    { "id": 1, "name": "acoustic" },
+    { "id": 2, "name": "fingerstyle" }
   ]
 }
 ```
@@ -40,7 +39,7 @@ Returns a single tag by ID.
 
 ```json
 {
-  "data": { "id": 2, "name": "acoustic" }
+  "payload": { "id": 2, "name": "acoustic" }
 }
 ```
 
@@ -64,7 +63,7 @@ Create a new tag.
 
 ```json
 {
-  "data": { "id": 3, "name": "fingerstyle" },
+  "payload": { "id": 3, "name": "fingerstyle" },
   "message": "Tag created successfully"
 }
 ```
@@ -92,7 +91,7 @@ Update an existing tag.
 ```json
 {
   "message": "Tag updated successfully",
-  "data": { "id": 3, "name": "fingerpicking" }
+  "payload": { "id": 3, "name": "fingerpicking" }
 }
 ```
 

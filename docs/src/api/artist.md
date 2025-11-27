@@ -18,11 +18,9 @@ Returns list of all artists.
 
 ```json
 {
-  "data": [
+  "payload": [
     { "id": 1, "name": "Eagles" },
-    { "id": 2, "name": "Pink Floyd" },
-    { "id": 3, "name": "The Beatles" },
-    { "id": 4, "name": "Eric Clapton" }
+    { "id": 2, "name": "The Beatles" }
   ]
 }
 ```
@@ -41,7 +39,7 @@ Returns a single artist by ID.
 
 ```json
 {
-  "data": { "id": 1, "name": "Eagles" }
+  "payload": { "id": 1, "name": "The Beatles" }
 }
 ```
 
@@ -53,7 +51,7 @@ Create a new artist.
 
 ```json
 {
-  "name": "Simon & Garfunkel"
+  "name": "The Beatles"
 }
 ```
 
@@ -65,7 +63,7 @@ Create a new artist.
 
 ```json
 {
-  "data": { "id": 5, "name": "Simon & Garfunkel" },
+  "payload": { "id": 5, "name": "The Beatles" },
   "message": "Artist created successfully"
 }
 ```
@@ -84,7 +82,7 @@ Update an existing artist.
 
 ```json
 {
-  "name": "Paul Simon"
+  "name": "Ed Sheeran"
 }
 ```
 
@@ -92,7 +90,7 @@ Update an existing artist.
 
 ```json
 {
-  "data": { "id": 5, "name": "Paul Simon" },
+  "payload": { "id": 5, "name": "Ed Sheeran" },
   "message": "Artist updated successfully"
 }
 ```
@@ -113,4 +111,4 @@ Delete an artist.
 {
   "message": "Artist deleted successfully"
 }
-``` -->
+```
