@@ -6,6 +6,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useArtistsStore } from '@/stores/artistsStore';
 import type { Artist } from '@/types/types';
 import BaseEditView from '../BaseEditView.vue';
+import { fetchAllArtists, updateArtist } from '@/services/api/artistClient';
 
 const route = useRoute();
 const router = useRouter();
@@ -27,13 +28,13 @@ watch(
 );
 
 onMounted(() => {
-    artistsStore.fetchAllArtists();
+    fetchAllArtists();
 });
 
 const handleSave = async () => {
     if (!localArtist.value) return;
 
-    await artistsStore.updateArtist(parseInt(artistId.value), {
+    await updateArtist(parseInt(artistId.value), {
         name: localArtist.value.name,
     });
 

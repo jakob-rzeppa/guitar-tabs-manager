@@ -12,6 +12,7 @@ import PersonIcon from '@/components/icons/PersonIcon.vue';
 import EditIcon from '@/components/icons/EditIcon.vue';
 import DeleteIcon from '@/components/icons/DeleteIcon.vue';
 import BaseView from '../BaseView.vue';
+import { fetchAllArtists } from '@/services/api/artistClient';
 
 const route = useRoute();
 const artistsStore = useArtistsStore();
@@ -22,7 +23,7 @@ const currentArtist = ref<Artist | null>(null);
 const artistSheets = ref<SheetListItem[]>([]);
 
 onMounted(async () => {
-    await artistsStore.fetchAllArtists();
+    await fetchAllArtists();
     await sheetsStore.fetchAllSheets();
 
     currentArtist.value =

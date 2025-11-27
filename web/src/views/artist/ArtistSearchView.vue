@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import type { Artist } from '@/types/types.ts';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
@@ -7,10 +7,13 @@ import calculateSimilarity from '@/services/calculateSimilarity.ts';
 import { useArtistsStore } from '@/stores/artistsStore';
 import PersonIcon from '@/components/icons/PersonIcon.vue';
 import BaseSearchView from '@/views/BaseSearchView.vue';
+import { fetchAllArtists } from '@/services/api/artistClient';
 
 const artistsStore = useArtistsStore();
 
-artistsStore.fetchAllArtists();
+onMounted(() => {
+    fetchAllArtists();
+});
 
 const searchValue = ref<string>('');
 const displayedArtists = ref<Artist[]>([]);

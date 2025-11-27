@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { useArtistsStore } from '@/stores/artistsStore';
 import type { Artist } from '@/types/types';
 import BaseEditView from '../BaseEditView.vue';
+import { createArtist } from '@/services/api/artistClient';
 
 const router = useRouter();
 const artistsStore = useArtistsStore();
@@ -15,9 +16,7 @@ const localArtist = ref<Omit<Artist, 'id'>>({
 const handleSave = async () => {
     if (!localArtist.value) return;
 
-    await artistsStore.createArtist({
-        name: localArtist.value.name,
-    });
+    await createArtist(localArtist.value);
 
     if (!artistsStore.error) {
         router.push({ name: 'artistSearch' });

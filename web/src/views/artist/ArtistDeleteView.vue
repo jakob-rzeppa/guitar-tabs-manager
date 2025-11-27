@@ -5,6 +5,7 @@ import { useArtistsStore } from '@/stores/artistsStore';
 import type { Artist } from '@/types/types';
 import BaseDeleteView from '../BaseDeleteView.vue';
 import PersonIcon from '@/components/icons/PersonIcon.vue';
+import { deleteArtist, fetchAllArtists } from '@/services/api/artistClient';
 
 const route = useRoute();
 const router = useRouter();
@@ -14,13 +15,13 @@ const artistId = computed(() => route.params.id as string);
 const currentArtist = ref<Artist | null>(null);
 
 onMounted(async () => {
-    await artistsStore.fetchAllArtists();
+    await fetchAllArtists();
     currentArtist.value =
         artistsStore.artists.find((a) => a.id === parseInt(artistId.value)) || null;
 });
 
 const handleDelete = async () => {
-    await artistsStore.deleteArtist(parseInt(artistId.value));
+    await deleteArtist(parseInt(artistId.value));
 
     if (!artistsStore.error) {
         router.push({ name: 'artistSearch' });
