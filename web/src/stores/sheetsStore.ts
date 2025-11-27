@@ -31,12 +31,12 @@ export const useSheetsStore = defineStore('sheets', {
                 store: this,
                 apiCall: () => api.get('/sheets'),
                 onSuccess: ({ data }) => {
-                    if (!data.content) {
+                    if (!data.payload) {
                         this.error = 'Request content is empty';
                         return;
                     }
 
-                    this.sheetsList = data.content.map((sheet) => ({
+                    this.sheetsList = data.payload.map((sheet) => ({
                         id: sheet.id,
                         title: sheet.title,
                         artist: sheet.artist,
@@ -59,19 +59,19 @@ export const useSheetsStore = defineStore('sheets', {
                 store: this,
                 apiCall: () => api.get(`/sheets/${id}`),
                 onSuccess: ({ data }) => {
-                    if (!data.content) {
-                        this.error = 'Request content is empty';
+                    if (!data.payload) {
+                        this.error = 'Request payload is empty';
                         return;
                     }
 
                     this.detailedSheets[id] = {
-                        id: data.content.id,
-                        title: data.content.title,
-                        artist: data.content.artist,
-                        tags: data.content.tags,
-                        capo: data.content.capo,
-                        sourceURL: data.content.source_url,
-                        content: data.content.content,
+                        id: data.payload.id,
+                        title: data.payload.title,
+                        artist: data.payload.artist,
+                        tags: data.payload.tags,
+                        capo: data.payload.capo,
+                        sourceURL: data.payload.source_url,
+                        content: data.payload.content,
                     };
                 },
             });
@@ -95,27 +95,27 @@ export const useSheetsStore = defineStore('sheets', {
                 store: this,
                 apiCall: () => api.post('/sheets', payload),
                 onSuccess: ({ data }) => {
-                    if (!data.content) {
-                        this.error = 'Request content is empty';
+                    if (!data.payload) {
+                        this.error = 'Request payload is empty';
                         return;
                     }
 
-                    this.detailedSheets[data.content.id] = {
-                        id: data.content.id,
-                        title: data.content.title,
-                        artist: data.content.artist,
-                        tags: data.content.tags,
-                        capo: data.content.capo,
-                        sourceURL: data.content.source_url,
-                        content: data.content.content,
+                    this.detailedSheets[data.payload.id] = {
+                        id: data.payload.id,
+                        title: data.payload.title,
+                        artist: data.payload.artist,
+                        tags: data.payload.tags,
+                        capo: data.payload.capo,
+                        sourceURL: data.payload.source_url,
+                        content: data.payload.content,
                     };
 
                     // Add to sheetsList as well
                     this.sheetsList.push({
-                        id: data.content.id,
-                        title: data.content.title,
-                        artist: data.content.artist,
-                        tags: data.content.tags,
+                        id: data.payload.id,
+                        title: data.payload.title,
+                        artist: data.payload.artist,
+                        tags: data.payload.tags,
                     });
                 },
             });
@@ -184,29 +184,29 @@ export const useSheetsStore = defineStore('sheets', {
                 store: this,
                 apiCall: () => api.put(`/sheets/${id}`, payload),
                 onSuccess: ({ data }) => {
-                    if (!data.content) {
-                        this.error = 'Request content is empty';
+                    if (!data.payload) {
+                        this.error = 'Request payload is empty';
                         return;
                     }
 
                     this.detailedSheets[id] = {
-                        id: data.content.id,
-                        title: data.content.title,
-                        artist: data.content.artist,
-                        tags: data.content.tags,
-                        capo: data.content.capo,
-                        sourceURL: data.content.source_url,
-                        content: data.content.content,
+                        id: data.payload.id,
+                        title: data.payload.title,
+                        artist: data.payload.artist,
+                        tags: data.payload.tags,
+                        capo: data.payload.capo,
+                        sourceURL: data.payload.source_url,
+                        content: data.payload.content,
                     };
 
                     // Also update sheetsList entry
                     const index = this.sheetsList.findIndex((sheet) => sheet.id === Number(id));
                     if (index !== -1) {
                         this.sheetsList[index] = {
-                            id: data.content.id,
-                            title: data.content.title,
-                            artist: data.content.artist,
-                            tags: data.content.tags,
+                            id: data.payload.id,
+                            title: data.payload.title,
+                            artist: data.payload.artist,
+                            tags: data.payload.tags,
                         };
                     }
                 },

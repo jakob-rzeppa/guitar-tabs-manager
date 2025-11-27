@@ -6,15 +6,8 @@
  * Generic API response wrapper
  */
 export interface ApiResponse<T> {
-    content?: T;
+    payload?: T;
     message?: string;
-}
-
-/**
- * API error response
- */
-export interface ApiError {
-    error: string;
 }
 
 // ============================================================================

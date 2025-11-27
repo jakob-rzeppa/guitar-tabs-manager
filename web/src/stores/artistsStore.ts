@@ -29,12 +29,12 @@ export const useArtistsStore = defineStore('artists', {
                 store: this,
                 apiCall: () => api.get('/artists'),
                 onSuccess: ({ data }) => {
-                    if (!data.content) {
+                    if (!data.payload) {
                         this.error = 'Request content is empty';
                         return;
                     }
 
-                    this.artists = data.content.map((artistDto) => ({
+                    this.artists = data.payload.map((artistDto) => ({
                         id: artistDto.id,
                         name: artistDto.name,
                     }));
@@ -47,14 +47,14 @@ export const useArtistsStore = defineStore('artists', {
                 store: this,
                 apiCall: () => api.post('/artists', artist),
                 onSuccess: ({ data }) => {
-                    if (!data.content) {
+                    if (!data.payload) {
                         this.error = 'Request content is empty';
                         return;
                     }
 
                     this.artists.push({
-                        id: data.content.id,
-                        name: data.content.name,
+                        id: data.payload.id,
+                        name: data.payload.name,
                     });
                 },
             });
@@ -67,14 +67,14 @@ export const useArtistsStore = defineStore('artists', {
                 store: this,
                 apiCall: () => api.put(`/artists/${artistId}`, payload),
                 onSuccess: ({ data }) => {
-                    if (!data.content) {
+                    if (!data.payload) {
                         this.error = 'Response content is empty';
                         return;
                     }
 
                     const index = this.artists.findIndex((a) => a.id === artistId);
                     if (index !== -1) {
-                        this.artists[index] = data.content;
+                        this.artists[index] = data.payload;
                     }
 
                     // Update artist name in sheets list

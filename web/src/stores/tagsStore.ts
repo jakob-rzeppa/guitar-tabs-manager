@@ -29,12 +29,12 @@ export const useTagsStore = defineStore('tags', {
                 store: this,
                 apiCall: () => api.get('/tags'),
                 onSuccess: ({ data }) => {
-                    if (!data.content) {
+                    if (!data.payload) {
                         this.error = 'Request content is empty';
                         return;
                     }
 
-                    this.tags = data.content.map((tagDto) => ({
+                    this.tags = data.payload.map((tagDto) => ({
                         id: tagDto.id,
                         name: tagDto.name,
                     }));
@@ -53,14 +53,14 @@ export const useTagsStore = defineStore('tags', {
                 store: this,
                 apiCall: () => api.post('/tags', payload),
                 onSuccess: ({ data }) => {
-                    if (!data.content) {
+                    if (!data.payload) {
                         this.error = 'Request content is empty';
                         return;
                     }
 
                     this.tags.push({
-                        id: data.content.id,
-                        name: data.content.name,
+                        id: data.payload.id,
+                        name: data.payload.name,
                     });
                 },
             });
@@ -78,21 +78,21 @@ export const useTagsStore = defineStore('tags', {
                 store: this,
                 apiCall: () => api.put(`/tags/${tagId}`, payload),
                 onSuccess: ({ data }) => {
-                    if (!data.content) {
+                    if (!data.payload) {
                         this.error = 'Response content is empty';
                         return;
                     }
 
                     const index = this.tags.findIndex((t) => t.id === tagId);
                     if (index !== -1) {
-                        this.tags[index] = data.content;
+                        this.tags[index] = data.payload;
                     }
 
                     // Update tag reference in sheets list
                     const sheetsStore = useSheetsStore();
                     sheetsStore.sheetsList.forEach((sheet) => {
                         sheet.tags = sheet.tags.map((t) =>
-                            t.id === tagId ? { id: tagId, name: data.content!.name } : t,
+                            t.id === tagId ? { id: tagId, name: data.payload!.name } : t,
                         );
                     });
 
