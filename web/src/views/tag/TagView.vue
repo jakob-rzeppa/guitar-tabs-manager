@@ -13,6 +13,7 @@ import DeleteIcon from '@/components/icons/DeleteIcon.vue';
 import BaseView from '../BaseView.vue';
 import TagIcon from '@/components/icons/TagIcon.vue';
 import { fetchAllTags } from '@/services/api/tagClient';
+import { fetchAllSheets } from '@/services/api/sheetClient';
 
 const route = useRoute();
 const tagsStore = useTagsStore();
@@ -24,7 +25,7 @@ const tagSheets = ref<SheetListItem[]>([]);
 
 onMounted(async () => {
     await fetchAllTags();
-    await sheetsStore.fetchAllSheets();
+    await fetchAllSheets();
 
     currentTag.value = tagsStore.tags.find((t) => t.id === parseInt(tagId.value)) || null;
 

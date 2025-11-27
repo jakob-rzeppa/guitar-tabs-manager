@@ -13,6 +13,7 @@ import DeleteIcon from '@/components/icons/DeleteIcon.vue';
 import BaseView from '../BaseView.vue';
 import BackLink from '@/components/BackLink.vue';
 import SheetIcon from '@/components/icons/SheetIcon.vue';
+import { fetchSheet } from '@/services/api/sheetClient';
 
 const route = useRoute();
 const sheetsStore = useSheetsStore();
@@ -21,7 +22,7 @@ const sheetId = computed(() => route.params.id as string);
 const currentSheet = computed(() => sheetsStore.detailedSheets[sheetId.value]);
 
 onMounted(async () => {
-    await sheetsStore.fetchSheet(sheetId.value);
+    await fetchSheet(sheetId.value);
 });
 </script>
 

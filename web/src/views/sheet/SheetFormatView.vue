@@ -11,6 +11,7 @@ import InfoIcon from '@/components/icons/InfoIcon.vue';
 import { computed, onMounted } from 'vue';
 import { useSheetsStore } from '@/stores/sheetsStore';
 import { useSheetFormatter } from '@/composables/useSheetFormatter';
+import { fetchSheet, updateSheet } from '@/services/api/sheetClient';
 
 const route = useRoute();
 const router = useRouter();
@@ -30,7 +31,7 @@ const textareaInput = computed({
 });
 
 onMounted(() => {
-    sheetsStore.fetchSheet(sheetId.value);
+    fetchSheet(sheetId.value);
 });
 
 const handleFormat = () => {
@@ -42,7 +43,7 @@ const handleFormat = () => {
 const handleSave = async () => {
     if (!formattedSheetContent.value) return;
 
-    await sheetsStore.updateSheet(sheetId.value, { content: formattedSheetContent.value });
+    await updateSheet(sheetId.value, { content: formattedSheetContent.value });
 
     if (!sheetsStore.error) {
         router.push({ name: 'sheet', params: { id: sheetId.value } });

@@ -9,10 +9,11 @@ import SelectArtist from '@/components/SelectArtist.vue';
 import SelectTags from '@/components/SelectTags.vue';
 import { useSheetsStore } from '@/stores/sheetsStore';
 import BaseSearchView from '@/views/BaseSearchView.vue';
+import { fetchAllSheets } from '@/services/api/sheetClient';
 
 const sheetsStore = useSheetsStore();
 
-sheetsStore.fetchAllSheets();
+fetchAllSheets();
 
 const searchValue = ref<string>('');
 const artistFilter = ref<Artist | null>(null);

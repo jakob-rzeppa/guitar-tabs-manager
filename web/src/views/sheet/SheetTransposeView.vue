@@ -13,6 +13,7 @@ import ChevronDownIcon from '@/components/icons/ChevronDownIcon.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useSheetsStore } from '@/stores/sheetsStore';
 import { useSheetTransposer } from '@/composables/useSheetTransposer';
+import { fetchSheet, updateSheet } from '@/services/api/sheetClient';
 
 const route = useRoute();
 const router = useRouter();
@@ -34,7 +35,7 @@ const textareaInput = computed({
 });
 
 onMounted(() => {
-    sheetsStore.fetchSheet(sheetId.value);
+    fetchSheet(sheetId.value);
 });
 
 const handleTranspose = (direction: 'up' | 'down', changeCapo: boolean) => {
@@ -55,7 +56,7 @@ const handleTranspose = (direction: 'up' | 'down', changeCapo: boolean) => {
 const handleSave = async () => {
     if (!transposedSheetContent.value) return;
 
-    await sheetsStore.updateSheet(sheetId.value, {
+    await updateSheet(sheetId.value, {
         content: transposedSheetContent.value,
         capo: capo.value ?? undefined,
     });

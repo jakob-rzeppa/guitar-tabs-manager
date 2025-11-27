@@ -11,6 +11,7 @@ import { useModalStore } from '@/stores/modalStore';
 import CreateArtistModal from '@/components/CreateArtistModal.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
 import BaseEditView from '../BaseEditView.vue';
+import { fetchSheet, updateSheet } from '@/services/api/sheetClient';
 
 const route = useRoute();
 const router = useRouter();
@@ -34,7 +35,7 @@ watch(
 );
 
 onMounted(() => {
-    sheetsStore.fetchSheet(sheetId.value);
+    fetchSheet(sheetId.value);
 });
 
 const handleSave = async () => {
@@ -44,7 +45,7 @@ const handleSave = async () => {
     const fieldsToUpdate = Object.assign({}, localSheet.value) as Partial<Sheet>;
     delete fieldsToUpdate.id;
 
-    await sheetsStore.updateSheet(sheetId.value, fieldsToUpdate);
+    await updateSheet(sheetId.value, fieldsToUpdate);
 
     if (!sheetsStore.error) {
         router.push({ name: 'sheet', params: { id: sheetId.value } });

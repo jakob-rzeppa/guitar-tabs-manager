@@ -13,6 +13,7 @@ import EditIcon from '@/components/icons/EditIcon.vue';
 import DeleteIcon from '@/components/icons/DeleteIcon.vue';
 import BaseView from '../BaseView.vue';
 import { fetchAllArtists } from '@/services/api/artistClient';
+import { fetchAllSheets } from '@/services/api/sheetClient';
 
 const route = useRoute();
 const artistsStore = useArtistsStore();
@@ -24,7 +25,7 @@ const artistSheets = ref<SheetListItem[]>([]);
 
 onMounted(async () => {
     await fetchAllArtists();
-    await sheetsStore.fetchAllSheets();
+    await fetchAllSheets();
 
     currentArtist.value =
         artistsStore.artists.find((a) => a.id === parseInt(artistId.value)) || null;

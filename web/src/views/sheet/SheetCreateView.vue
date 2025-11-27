@@ -9,6 +9,7 @@ import type { Sheet } from '@/types/types';
 import { useModalStore } from '@/stores/modalStore';
 import CreateArtistModal from '@/components/CreateArtistModal.vue';
 import BaseEditView from '../BaseEditView.vue';
+import { createSheet } from '@/services/api/sheetClient';
 
 const router = useRouter();
 
@@ -29,7 +30,7 @@ const handleSave = async () => {
         return;
     }
 
-    await sheetsStore.createSheet(newSheet.value);
+    await createSheet(newSheet.value);
 
     if (!sheetsStore.error) {
         router.push({ name: 'sheetSearch' });
