@@ -60,7 +60,7 @@ class SheetHandler
         $sheet = new Sheet();
         $sheet->setTitle($dto->title);
         $sheet->setCapo($dto->capo);
-        $sheet->setSourceURL($dto->source_url);
+        $sheet->setSourceURL($dto->source_url ?? "");
         $sheet->setContent($dto->content);
 
         if ($dto->artist_id !== null) {
