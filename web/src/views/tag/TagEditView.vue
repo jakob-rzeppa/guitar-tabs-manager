@@ -6,6 +6,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useTagsStore } from '@/stores/tagsStore';
 import type { Tag } from '@/types/types';
 import BaseEditView from '../BaseEditView.vue';
+import { fetchAllTags, updateTag } from '@/services/api/tagClient';
 
 const route = useRoute();
 const router = useRouter();
@@ -27,13 +28,13 @@ watch(
 );
 
 onMounted(() => {
-    tagsStore.fetchAllTags();
+    fetchAllTags();
 });
 
 const handleSave = async () => {
     if (!localTag.value) return;
 
-    await tagsStore.updateTag(parseInt(tagId.value), {
+    await updateTag(parseInt(tagId.value), {
         name: localTag.value.name,
     });
 

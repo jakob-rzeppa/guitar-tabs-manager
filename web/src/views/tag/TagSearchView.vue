@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import type { Tag } from '@/types/types.ts';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import calculateSimilarity from '@/services/calculateSimilarity.ts';
 import { useTagsStore } from '@/stores/tagsStore';
 import BaseSearchView from '@/views/BaseSearchView.vue';
+import { fetchAllTags } from '@/services/api/tagClient';
 
 const tagsStore = useTagsStore();
 
-tagsStore.fetchAllTags();
+onMounted(() => {
+    fetchAllTags();
+});
 
 const searchValue = ref<string>('');
 const displayedTags = ref<Tag[]>([]);

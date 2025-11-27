@@ -12,6 +12,7 @@ import EditIcon from '@/components/icons/EditIcon.vue';
 import DeleteIcon from '@/components/icons/DeleteIcon.vue';
 import BaseView from '../BaseView.vue';
 import TagIcon from '@/components/icons/TagIcon.vue';
+import { fetchAllTags } from '@/services/api/tagClient';
 
 const route = useRoute();
 const tagsStore = useTagsStore();
@@ -22,7 +23,7 @@ const currentTag = ref<Tag | null>(null);
 const tagSheets = ref<SheetListItem[]>([]);
 
 onMounted(async () => {
-    await tagsStore.fetchAllTags();
+    await fetchAllTags();
     await sheetsStore.fetchAllSheets();
 
     currentTag.value = tagsStore.tags.find((t) => t.id === parseInt(tagId.value)) || null;

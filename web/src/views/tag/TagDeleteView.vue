@@ -7,6 +7,7 @@ import { useTagsStore } from '@/stores/tagsStore';
 import type { Tag } from '@/types/types';
 import BaseDeleteView from '../BaseDeleteView.vue';
 import TagIcon from '@/components/icons/TagIcon.vue';
+import { deleteTag, fetchAllTags } from '@/services/api/tagClient';
 
 const route = useRoute();
 const router = useRouter();
@@ -16,12 +17,12 @@ const tagId = computed(() => route.params.id as string);
 const currentTag = ref<Tag | null>(null);
 
 onMounted(async () => {
-    await tagsStore.fetchAllTags();
+    await fetchAllTags();
     currentTag.value = tagsStore.tags.find((t) => t.id === parseInt(tagId.value)) || null;
 });
 
 const handleDelete = async () => {
-    await tagsStore.deleteTag(parseInt(tagId.value));
+    await deleteTag(parseInt(tagId.value));
 
     if (!tagsStore.error) {
         router.push({ name: 'tagSearch' });

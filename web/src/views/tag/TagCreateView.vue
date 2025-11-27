@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { useTagsStore } from '@/stores/tagsStore';
 import type { Tag } from '@/types/types';
 import BaseEditView from '../BaseEditView.vue';
+import { createTag } from '@/services/api/tagClient';
 
 const router = useRouter();
 
@@ -18,7 +19,7 @@ const handleSave = async () => {
         return;
     }
 
-    await tagsStore.createTag(newTag.value);
+    await createTag(newTag.value);
 
     if (!tagsStore.error) {
         router.push({ name: 'tagSearch' });
