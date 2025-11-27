@@ -24,7 +24,7 @@ final class SheetController extends AbstractController
         $sheets = $sheetHandler->getWithLessDetailsAllSheets();
 
         return $this->json([
-            'data' => $sheets,
+            'payload' => $sheets,
         ]);
     }
 
@@ -39,7 +39,7 @@ final class SheetController extends AbstractController
 
         $sheetPayload = SheetDto::fromSheet($sheet);
         return $this->json([
-            'data' => $sheetPayload->toArray(),
+            'payload' => $sheetPayload->toArray(),
         ]);
     }
 
@@ -53,7 +53,7 @@ final class SheetController extends AbstractController
         $sheetPayload = SheetDto::fromSheet($sheet);
         return $this->json([
             'message' => 'Sheet created successfully',
-            'data' => $sheetPayload->toArray(),
+            'payload' => $sheetPayload->toArray(),
         ]);
     }
 
@@ -68,7 +68,7 @@ final class SheetController extends AbstractController
         $sheetPayload = SheetDto::fromSheet($sheet);
         return $this->json([
             'message' => 'Sheet updated successfully',
-            'data' => $sheetPayload->toArray(),
+            'payload' => $sheetPayload->toArray(),
         ]);
     }
 
@@ -91,7 +91,7 @@ final class SheetController extends AbstractController
         $sheetContent = $formatService->formatSheet($sheetContent);
 
         return $this->json([
-            'data' => [
+            'payload' => [
                 'content' => $sheetContent
             ]
         ]);
@@ -108,7 +108,7 @@ final class SheetController extends AbstractController
         $sheetContent = $transposeService->transposeSheet($sheetContent, $dir);
 
         return $this->json([
-            'data' => [
+            'payload' => [
                 'content' => $sheetContent
             ]
         ]);

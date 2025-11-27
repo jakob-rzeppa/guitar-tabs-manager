@@ -22,7 +22,7 @@ final class ArtistController extends AbstractController
         $artists = $artistRepository->findAll();
 
         return $this->json([
-            'data' => array_map(fn(Artist $artist) => ArtistDto::fromArtist($artist)->toArray(), $artists),
+            'payload' => array_map(fn(Artist $artist) => ArtistDto::fromArtist($artist)->toArray(), $artists),
         ]);
     }
 
@@ -36,7 +36,7 @@ final class ArtistController extends AbstractController
         }
 
         return $this->json([
-            'data' => ArtistDto::fromArtist($artist)->toArray()
+            'payload' => ArtistDto::fromArtist($artist)->toArray()
         ]);
     }
 
@@ -46,7 +46,7 @@ final class ArtistController extends AbstractController
         $artist = $artistHandler->createArtist($createArtistRequestDto->name);
 
         return $this->json([
-            'data' => ArtistDto::fromArtist($artist)->toArray(),
+            'payload' => ArtistDto::fromArtist($artist)->toArray(),
             'message' => 'Artist created successfully'
         ]);
     }
@@ -57,7 +57,7 @@ final class ArtistController extends AbstractController
         $artist = $artistHandler->updateArtist($id, $updateArtistRequestDto);
 
         return $this->json([
-            'data' => ArtistDto::fromArtist($artist)->toArray(),
+            'payload' => ArtistDto::fromArtist($artist)->toArray(),
             'message' => 'Artist updated successfully'
         ]);
     }

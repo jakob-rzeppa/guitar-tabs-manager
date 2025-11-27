@@ -26,7 +26,7 @@ final class TagController extends AbstractController
         }, $tags);
 
         return $this->json([
-            'data' => array_map(fn(TagDto $tagPayload) => $tagPayload->toArray(), $tagPayloads),
+            'payload' => array_map(fn(TagDto $tagPayload) => $tagPayload->toArray(), $tagPayloads),
         ]);
     }
 
@@ -40,7 +40,7 @@ final class TagController extends AbstractController
         }
 
         return $this->json([
-            'data' => TagDto::fromTag($tag)->toArray()
+            'payload' => TagDto::fromTag($tag)->toArray()
         ]);
     }
 
@@ -52,7 +52,7 @@ final class TagController extends AbstractController
         $tag = $tagHandler->createTag($createTagRequestDto->name);
 
         return $this->json([
-            'data' => TagDto::fromTag($tag)->toArray(),
+            'payload' => TagDto::fromTag($tag)->toArray(),
             'message' => 'Tag created successfully'
         ]);
     }
@@ -67,7 +67,7 @@ final class TagController extends AbstractController
 
         return $this->json([
             'message' => 'Tag updated successfully',
-            'data' => TagDto::fromTag($tag)->toArray(),
+            'payload' => TagDto::fromTag($tag)->toArray(),
         ]);
     }
 
