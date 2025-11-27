@@ -10,8 +10,8 @@ export const useSheetTransposer = () => {
     const transposedSheetContent = ref<string | null>(null);
 
     watch(transposeResponse, (newValue) => {
-        if (newValue && newValue.content) {
-            transposedSheetContent.value = newValue.content.content;
+        if (newValue && newValue.payload) {
+            transposedSheetContent.value = newValue.payload.content;
         } else {
             transposedSheetContent.value = null;
         }
@@ -28,7 +28,7 @@ export const useSheetTransposer = () => {
                 return;
             }
 
-            if (!transposeResponse.value || !transposeResponse.value.content) {
+            if (!transposeResponse.value || !transposeResponse.value.payload) {
                 transposeError.value = 'API Transpose Response not found.';
                 return;
             }

@@ -10,8 +10,8 @@ export const useSheetFormatter = () => {
     const formattedSheetContent = ref<string | null>(null);
 
     watch(formatResponse, (newValue) => {
-        if (newValue && newValue.content) {
-            formattedSheetContent.value = newValue.content.content;
+        if (newValue && newValue.payload) {
+            formattedSheetContent.value = newValue.payload.content;
         } else {
             formattedSheetContent.value = null;
         }
@@ -24,7 +24,7 @@ export const useSheetFormatter = () => {
             response: formatResponse,
             apiCall: () => api.post('/sheets/format', { content }),
         }).then(() => {
-            if (!formatResponse.value || !formatResponse.value.content) {
+            if (!formatResponse.value || !formatResponse.value.payload) {
                 formatError.value = 'API Format Response not found.';
                 return;
             }
