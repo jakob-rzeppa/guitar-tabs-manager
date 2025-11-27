@@ -13,7 +13,7 @@ readonly class CreateSheetRequestDto
         public ?int $capo,
         #[Assert\Url(message: 'Source URL should be a valid URL.')]
         public ?string $source_url,
-        #[Assert\NotBlank(message: 'Content should not be blank.')]
+        #[Assert\NotNull(message: 'Content should not be null.')]
         public ?string $content,
         public ?int $artist_id,
         public ?array $tag_ids,
