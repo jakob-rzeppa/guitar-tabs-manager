@@ -37,7 +37,8 @@ import MusicIcon from '@/components/icons/MusicIcon.vue';
                     </div>
                     <h3 class="card-title">Search & Filter</h3>
                     <p>
-                        Quickly find sheets by title, artist, or tags with powerful filtering options.
+                        Quickly find sheets by title, artist, or tags with powerful filtering
+                        options.
                     </p>
                 </div>
             </div>
@@ -58,7 +59,9 @@ import MusicIcon from '@/components/icons/MusicIcon.vue';
                         <MusicIcon class="h-8 w-8 text-accent-content" />
                     </div>
                     <h3 class="card-title">Transpose & Format</h3>
-                    <p>Transpose sheets to different keys and format them for better readability.</p>
+                    <p>
+                        Transpose sheets to different keys and format them for better readability.
+                    </p>
                 </div>
             </div>
         </div>

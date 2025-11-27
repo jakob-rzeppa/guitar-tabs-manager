@@ -139,7 +139,10 @@ export const useSheetsStore = defineStore('sheets', {
             } = {};
 
             // Compare primitive fields
-            if (fieldsToUpdate.title !== undefined && fieldsToUpdate.title !== currentSheet?.title) {
+            if (
+                fieldsToUpdate.title !== undefined &&
+                fieldsToUpdate.title !== currentSheet?.title
+            ) {
                 payload.title = fieldsToUpdate.title;
             }
             if (

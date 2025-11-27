@@ -92,7 +92,7 @@ export const useTagsStore = defineStore('tags', {
                     const sheetsStore = useSheetsStore();
                     sheetsStore.sheetsList.forEach((sheet) => {
                         sheet.tags = sheet.tags.map((t) =>
-                            t.id === tagId ? { id: tagId, name: data.content!.name } : t
+                            t.id === tagId ? { id: tagId, name: data.content!.name } : t,
                         );
                     });
 
@@ -100,7 +100,7 @@ export const useTagsStore = defineStore('tags', {
                     Object.keys(sheetsStore.detailedSheets).forEach((key) => {
                         const sheet = sheetsStore.detailedSheets[key];
                         sheet.tags = sheet.tags.map((t) =>
-                            t.id === tagId ? { id: tagId, name: tag.name ?? t.name } : t
+                            t.id === tagId ? { id: tagId, name: tag.name ?? t.name } : t,
                         );
                     });
                 },
@@ -121,16 +121,16 @@ export const useTagsStore = defineStore('tags', {
                     // Clear tag reference in sheets list
                     const sheetsStore = useSheetsStore();
                     sheetsStore.sheetsList.forEach((sheet) => {
-                        sheet.tags = sheet.tags.filter(tag => tag.id !== tagId);
+                        sheet.tags = sheet.tags.filter((tag) => tag.id !== tagId);
                     });
 
                     // Clear tag reference in detailed sheets
                     Object.keys(sheetsStore.detailedSheets).forEach((key) => {
                         const sheet = sheetsStore.detailedSheets[key];
-                        sheet.tags = sheet.tags.filter(tag => tag.id !== tagId);
+                        sheet.tags = sheet.tags.filter((tag) => tag.id !== tagId);
                     });
                 },
             });
-        }
+        },
     },
 });

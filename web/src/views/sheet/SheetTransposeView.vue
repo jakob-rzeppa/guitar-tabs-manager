@@ -21,7 +21,8 @@ const sheetId = computed(() => route.params.id as string);
 
 const sheetsStore = useSheetsStore();
 
-const { transposeLoading, transposeError, transposedSheetContent, transposeSheet } = useSheetTransposer();
+const { transposeLoading, transposeError, transposedSheetContent, transposeSheet } =
+    useSheetTransposer();
 
 const capo = ref<number | null>(null);
 // The computed property to bind the textarea input to the formatted sheet content
