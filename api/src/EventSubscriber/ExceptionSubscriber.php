@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,15 +11,18 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
+    public function __construct(private LoggerInterface $logger) {}
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        // You get the exception object from the received event
         $exception = $event->getThrowable();
 
-        // Customize your response object to display the exception details
+        $this->logger->error('An exception occurred: ' . $exception->getMessage(), [
+            'exception' => $exception,
+        ]);
+
         $responseBody = [
-            'message' => $exception->getMessage()
+            'message' => $exception->getMessage() ?? 'An unexpected error occurred',
         ];
 
         $response = new JsonResponse($responseBody);
