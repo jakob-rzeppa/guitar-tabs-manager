@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { useTagsStore } from '@/stores/tagsStore';
+import { useTagStore } from '@/stores/tagStore';
 import type { Tag } from '@/types/types';
 import BaseEditView from '../BaseEditView.vue';
 import { createTag } from '@/services/api/tagClient';
 
 const router = useRouter();
 
-const tagsStore = useTagsStore();
+const tagStore = useTagStore();
 
 const newTag = ref<Omit<Tag, 'id'>>({
     name: '',
@@ -21,7 +21,7 @@ const handleSave = async () => {
 
     await createTag(newTag.value);
 
-    if (!tagsStore.error) {
+    if (!tagStore.error) {
         router.push({ name: 'tagSearch' });
     }
 };

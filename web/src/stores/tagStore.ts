@@ -7,7 +7,7 @@ interface State {
     error: string | null;
 }
 
-export const useTagsStore = defineStore('tags', {
+export const useTagStore = defineStore('tag', {
     state: (): State => ({
         tags: [],
         loading: false,

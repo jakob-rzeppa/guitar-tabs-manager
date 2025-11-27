@@ -4,7 +4,7 @@ import SelectArtist from '@/components/SelectArtist.vue';
 import SelectTags from '@/components/SelectTags.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
 import { ref } from 'vue';
-import { useSheetsStore } from '@/stores/sheetsStore';
+import { useSheetStore } from '@/stores/sheetStore';
 import type { Sheet } from '@/types/types';
 import { useModalStore } from '@/stores/modalStore';
 import CreateArtistModal from '@/components/CreateArtistModal.vue';
@@ -13,7 +13,7 @@ import { createSheet } from '@/services/api/sheetClient';
 
 const router = useRouter();
 
-const sheetsStore = useSheetsStore();
+const sheetStore = useSheetStore();
 const modalStore = useModalStore();
 
 const newSheet = ref<Omit<Sheet, 'id'>>({
@@ -32,7 +32,7 @@ const handleSave = async () => {
 
     await createSheet(newSheet.value);
 
-    if (!sheetsStore.error) {
+    if (!sheetStore.error) {
         router.push({ name: 'sheetSearch' });
     }
 };

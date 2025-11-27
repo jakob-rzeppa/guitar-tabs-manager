@@ -5,7 +5,7 @@ import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import SelectArtist from '@/components/SelectArtist.vue';
 import SelectTags from '@/components/SelectTags.vue';
 import { computed, onMounted, ref, watch } from 'vue';
-import { useSheetsStore } from '@/stores/sheetsStore';
+import { useSheetStore } from '@/stores/sheetStore';
 import type { Sheet } from '@/types/types';
 import { useModalStore } from '@/stores/modalStore';
 import CreateArtistModal from '@/components/CreateArtistModal.vue';
@@ -16,7 +16,7 @@ import { fetchSheet, updateSheet } from '@/services/api/sheetClient';
 const route = useRoute();
 const router = useRouter();
 
-const sheetsStore = useSheetsStore();
+const sheetStore = useSheetStore();
 const modalStore = useModalStore();
 
 const sheetId = computed(() => route.params.id as string);
@@ -24,7 +24,7 @@ const sheetId = computed(() => route.params.id as string);
 const localSheet = ref<Sheet | null>(null);
 
 watch(
-    () => sheetsStore.detailedSheets[sheetId.value],
+    () => sheetStore.detailedSheets[sheetId.value],
     (newSheet) => {
         if (newSheet) {
             // If we directly assign newSheet to localSheet, changes to localSheet would affect the store's state.
@@ -47,15 +47,15 @@ const handleSave = async () => {
 
     await updateSheet(sheetId.value, fieldsToUpdate);
 
-    if (!sheetsStore.error) {
+    if (!sheetStore.error) {
         router.push({ name: 'sheet', params: { id: sheetId.value } });
     }
 };
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="sheetsStore.loading" />
-    <ErrorDisplay v-else-if="sheetsStore.error !== null" :message="sheetsStore.error" />
+    <LoadingPlaceholder v-if="sheetStore.loading" />
+    <ErrorDisplay v-else-if="sheetStore.error !== null" :message="sheetStore.error" />
     <ErrorDisplay
         v-else-if="localSheet === null"
         message="Something went wrong while loading the sheet."

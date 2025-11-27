@@ -3,28 +3,29 @@ import { ref, onMounted } from 'vue';
 import type { Tag } from '@/types/types.ts';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
-import { useTagsStore } from '@/stores/tagsStore';
+import { useTagStore } from '@/stores/tagStore';
 import { useModalStore } from '@/stores/modalStore';
 import CreateTagModal from '@/components/CreateTagModal.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
+import { fetchAllTags } from '@/services/api/tagClient';
 
 const model = defineModel<Tag[]>({ required: true });
 
-const tagsStore = useTagsStore();
+const tagStore = useTagStore();
 const modalStore = useModalStore();
 
 const inputValue = ref<string>('');
 
 onMounted(() => {
-    tagsStore.fetchAllTags();
+    fetchAllTags();
 });
 
 function addActiveTag() {
-    const tagToAdd = tagsStore.tags.find(
+    const tagToAdd = tagStore.tags.find(
         (tag: Tag) => tag.name.toLowerCase() === inputValue.value.toLowerCase(),
     );
 
-    // Since errors are handled by the tagsStore, we can just return early if something is wrong
+    // Since errors are handled by the tagStore, we can just return early if something is wrong
     if (!tagToAdd) {
         return;
     }
@@ -56,8 +57,8 @@ function removeActiveTag(id?: number) {
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="tagsStore.loading" />
-    <ErrorDisplay v-else-if="tagsStore.error" :message="tagsStore.error" />
+    <LoadingPlaceholder v-if="tagStore.loading" />
+    <ErrorDisplay v-else-if="tagStore.error" :message="tagStore.error" />
     <div v-else>
         <label class="label">
             <span class="label-text text-base font-semibold">Tags</span>
@@ -122,7 +123,7 @@ function removeActiveTag(id?: number) {
         </div>
         <datalist id="tags">
             <option
-                v-for="tag in tagsStore.tags.filter(
+                v-for="tag in tagStore.tags.filter(
                     (el: Tag) => model.findIndex((m) => m.id === el.id) === -1,
                 )"
                 :key="tag.id"

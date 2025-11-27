@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { useArtistsStore } from '@/stores/artistsStore';
+import { useArtistStore } from '@/stores/artistStore';
 import type { Artist } from '@/types/types';
 import BaseEditView from '../BaseEditView.vue';
 import { createArtist } from '@/services/api/artistClient';
 
 const router = useRouter();
-const artistsStore = useArtistsStore();
+const artistStore = useArtistStore();
 
 const localArtist = ref<Omit<Artist, 'id'>>({
     name: '',
@@ -18,7 +18,7 @@ const handleSave = async () => {
 
     await createArtist(localArtist.value);
 
-    if (!artistsStore.error) {
+    if (!artistStore.error) {
         router.push({ name: 'artistSearch' });
     }
 };

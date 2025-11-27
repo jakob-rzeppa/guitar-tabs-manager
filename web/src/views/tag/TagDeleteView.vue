@@ -3,7 +3,7 @@ import { useRoute, useRouter } from 'vue-router';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import { computed, onMounted, ref } from 'vue';
-import { useTagsStore } from '@/stores/tagsStore';
+import { useTagStore } from '@/stores/tagStore';
 import type { Tag } from '@/types/types';
 import BaseDeleteView from '../BaseDeleteView.vue';
 import TagIcon from '@/components/icons/TagIcon.vue';
@@ -11,28 +11,28 @@ import { deleteTag, fetchAllTags } from '@/services/api/tagClient';
 
 const route = useRoute();
 const router = useRouter();
-const tagsStore = useTagsStore();
+const tagStore = useTagStore();
 
 const tagId = computed(() => route.params.id as string);
 const currentTag = ref<Tag | null>(null);
 
 onMounted(async () => {
     await fetchAllTags();
-    currentTag.value = tagsStore.tags.find((t) => t.id === parseInt(tagId.value)) || null;
+    currentTag.value = tagStore.tags.find((t) => t.id === parseInt(tagId.value)) || null;
 });
 
 const handleDelete = async () => {
     await deleteTag(parseInt(tagId.value));
 
-    if (!tagsStore.error) {
+    if (!tagStore.error) {
         router.push({ name: 'tagSearch' });
     }
 };
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="tagsStore.loading" />
-    <ErrorDisplay v-else-if="tagsStore.error" :message="tagsStore.error" />
+    <LoadingPlaceholder v-if="tagStore.loading" />
+    <ErrorDisplay v-else-if="tagStore.error" :message="tagStore.error" />
     <ErrorDisplay v-else-if="!currentTag" message="Something went wrong while loading the tag." />
     <BaseDeleteView
         v-else

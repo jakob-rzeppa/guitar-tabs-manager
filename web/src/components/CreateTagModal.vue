@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { useTagsStore } from '@/stores/tagsStore';
+import { createTag } from '@/services/api/tagClient';
 import { ref } from 'vue';
-
-const tagsStore = useTagsStore();
 
 const name = ref('');
 </script>
@@ -10,7 +8,7 @@ const name = ref('');
 <template>
     <div class="space-y-6">
         <h2 class="text-2xl font-bold text-center">Create New Tag</h2>
-        <form @submit.prevent="tagsStore.createTag({ name })" class="space-y-4">
+        <form @submit.prevent="createTag({ name })" class="space-y-4">
             <div>
                 <label for="tag-name" class="label">
                     <span class="label-text text-base font-semibold">Tag Name</span>

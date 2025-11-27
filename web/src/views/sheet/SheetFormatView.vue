@@ -9,7 +9,7 @@ import SaveCancelButtons from '@/components/SaveCancelButtons.vue';
 import FormatIcon from '@/components/icons/FormatIcon.vue';
 import InfoIcon from '@/components/icons/InfoIcon.vue';
 import { computed, onMounted } from 'vue';
-import { useSheetsStore } from '@/stores/sheetsStore';
+import { useSheetStore } from '@/stores/sheetStore';
 import { useSheetFormatter } from '@/composables/useSheetFormatter';
 import { fetchSheet, updateSheet } from '@/services/api/sheetClient';
 
@@ -18,7 +18,7 @@ const router = useRouter();
 
 const sheetId = computed(() => route.params.id as string);
 
-const sheetsStore = useSheetsStore();
+const sheetStore = useSheetStore();
 
 const { formatLoading, formatError, formattedSheetContent, formatSheet } = useSheetFormatter();
 
@@ -35,8 +35,8 @@ onMounted(() => {
 });
 
 const handleFormat = () => {
-    if (sheetsStore.detailedSheets[sheetId.value]) {
-        formatSheet(sheetsStore.detailedSheets[sheetId.value].content);
+    if (sheetStore.detailedSheets[sheetId.value]) {
+        formatSheet(sheetStore.detailedSheets[sheetId.value].content);
     }
 };
 
@@ -45,7 +45,7 @@ const handleSave = async () => {
 
     await updateSheet(sheetId.value, { content: formattedSheetContent.value });
 
-    if (!sheetsStore.error) {
+    if (!sheetStore.error) {
         router.push({ name: 'sheet', params: { id: sheetId.value } });
     }
 };
@@ -67,10 +67,10 @@ const handleCancel = () => {
                 </PageHeader>
             </div>
 
-            <LoadingPlaceholder v-if="sheetsStore.loading || formatLoading" />
+            <LoadingPlaceholder v-if="sheetStore.loading || formatLoading" />
             <ErrorDisplay
-                v-else-if="sheetsStore.error !== null || formatError !== null"
-                :message="sheetsStore.error || formatError"
+                v-else-if="sheetStore.error !== null || formatError !== null"
+                :message="sheetStore.error || formatError"
             />
             <div v-else-if="formattedSheetContent === null" class="space-y-6">
                 <div class="alert alert-info shadow-lg">
@@ -88,7 +88,7 @@ const handleCancel = () => {
                     <div class="card-body">
                         <h3 class="card-title text-sm opacity-60">Original Content:</h3>
                         <pre class="text-sm overflow-x-auto">{{
-                            sheetsStore.detailedSheets[sheetId]?.content
+                            sheetStore.detailedSheets[sheetId]?.content
                         }}</pre>
                     </div>
                 </div>

@@ -4,12 +4,12 @@ import type { Artist } from '@/types/types.ts';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import calculateSimilarity from '@/services/calculateSimilarity.ts';
-import { useArtistsStore } from '@/stores/artistsStore';
+import { useArtistStore } from '@/stores/artistStore';
 import PersonIcon from '@/components/icons/PersonIcon.vue';
 import BaseSearchView from '@/views/BaseSearchView.vue';
 import { fetchAllArtists } from '@/services/api/artistClient';
 
-const artistsStore = useArtistsStore();
+const artistStore = useArtistStore();
 
 onMounted(() => {
     fetchAllArtists();
@@ -19,9 +19,9 @@ const searchValue = ref<string>('');
 const displayedArtists = ref<Artist[]>([]);
 
 watch(
-    () => [artistsStore.artists, searchValue.value],
+    () => [artistStore.artists, searchValue.value],
     () => {
-        displayedArtists.value = [...artistsStore.artists];
+        displayedArtists.value = [...artistStore.artists];
 
         displayedArtists.value.sort((a, b) => {
             const nameA = a.name.toLowerCase();
@@ -43,8 +43,8 @@ watch(
             <input placeholder="Search by name..." v-model="searchValue" />
         </template>
         <template #content>
-            <LoadingPlaceholder v-if="artistsStore.loading" />
-            <ErrorDisplay v-else-if="artistsStore.error !== null" :message="artistsStore.error" />
+            <LoadingPlaceholder v-if="artistStore.loading" />
+            <ErrorDisplay v-else-if="artistStore.error !== null" :message="artistStore.error" />
             <div v-else-if="displayedArtists.length === 0" class="text-center py-16">
                 <p class="text-xl opacity-60">No artists found. Try adjusting your search.</p>
             </div>

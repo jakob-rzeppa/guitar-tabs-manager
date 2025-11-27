@@ -2,7 +2,7 @@
 import { useRoute } from 'vue-router';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
-import { useSheetsStore } from '@/stores/sheetsStore';
+import { useSheetStore } from '@/stores/sheetStore';
 import { computed, onMounted } from 'vue';
 import TagIcon from '@/components/icons/TagIcon.vue';
 import InfoIcon from '@/components/icons/InfoIcon.vue';
@@ -16,10 +16,10 @@ import SheetIcon from '@/components/icons/SheetIcon.vue';
 import { fetchSheet } from '@/services/api/sheetClient';
 
 const route = useRoute();
-const sheetsStore = useSheetsStore();
+const sheetStore = useSheetStore();
 
 const sheetId = computed(() => route.params.id as string);
-const currentSheet = computed(() => sheetsStore.detailedSheets[sheetId.value]);
+const currentSheet = computed(() => sheetStore.detailedSheets[sheetId.value]);
 
 onMounted(async () => {
     await fetchSheet(sheetId.value);
@@ -27,8 +27,8 @@ onMounted(async () => {
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="sheetsStore.loading" />
-    <ErrorDisplay v-else-if="sheetsStore.error" :message="sheetsStore.error" />
+    <LoadingPlaceholder v-if="sheetStore.loading" />
+    <ErrorDisplay v-else-if="sheetStore.error" :message="sheetStore.error" />
     <ErrorDisplay v-else-if="!currentSheet || !currentSheet" message="No content." />
     <BaseView v-else>
         <template #above-header>

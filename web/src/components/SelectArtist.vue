@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
-import { useArtistsStore } from '@/stores/artistsStore';
+import { useArtistStore } from '@/stores/artistStore';
 import { onMounted, ref } from 'vue';
 import type { Artist } from '@/types/types';
+import { fetchAllArtists } from '@/services/api/artistClient';
 
 const model = defineModel<Artist | null>({ required: true });
 
-const artistsStore = useArtistsStore();
+const artistStore = useArtistStore();
 
 const inputValue = ref<string>(model.value ? model.value.name : '');
 
 onMounted(async () => {
-    await artistsStore.fetchAllArtists();
+    await fetchAllArtists();
 });
 
 function handleInput() {
-    const artistObject = artistsStore.artists.find((e) => e.name === inputValue.value);
+    const artistObject = artistStore.artists.find((e) => e.name === inputValue.value);
 
     // If valid artist
     if (artistObject) {
@@ -30,8 +31,8 @@ function handleInput() {
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="artistsStore.loading" />
-    <ErrorDisplay v-else-if="artistsStore.error" :message="artistsStore.error" />
+    <LoadingPlaceholder v-if="artistStore.loading" />
+    <ErrorDisplay v-else-if="artistStore.error" :message="artistStore.error" />
     <div v-else>
         <label class="label">
             <span class="label-text text-base font-semibold">Artist</span>
@@ -47,7 +48,7 @@ function handleInput() {
         />
         <datalist id="artists">
             <option
-                v-for="possibleArtist in artistsStore.artists"
+                v-for="possibleArtist in artistStore.artists"
                 :key="possibleArtist.id"
                 :value="possibleArtist.name"
             />

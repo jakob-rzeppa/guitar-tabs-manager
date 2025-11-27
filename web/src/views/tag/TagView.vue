@@ -4,8 +4,8 @@ import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import SheetsDisplay from '@/components/SheetsDisplay.vue';
 import BackLink from '@/components/BackLink.vue';
-import { useTagsStore } from '@/stores/tagsStore';
-import { useSheetsStore } from '@/stores/sheetsStore';
+import { useTagStore } from '@/stores/tagStore';
+import { useSheetStore } from '@/stores/sheetStore';
 import { computed, onMounted, ref } from 'vue';
 import type { Tag, SheetListItem } from '@/types/types';
 import EditIcon from '@/components/icons/EditIcon.vue';
@@ -16,8 +16,8 @@ import { fetchAllTags } from '@/services/api/tagClient';
 import { fetchAllSheets } from '@/services/api/sheetClient';
 
 const route = useRoute();
-const tagsStore = useTagsStore();
-const sheetsStore = useSheetsStore();
+const tagStore = useTagStore();
+const sheetStore = useSheetStore();
 
 const tagId = computed(() => route.params.id as string);
 const currentTag = ref<Tag | null>(null);
@@ -27,10 +27,10 @@ onMounted(async () => {
     await fetchAllTags();
     await fetchAllSheets();
 
-    currentTag.value = tagsStore.tags.find((t) => t.id === parseInt(tagId.value)) || null;
+    currentTag.value = tagStore.tags.find((t) => t.id === parseInt(tagId.value)) || null;
 
     if (currentTag.value) {
-        tagSheets.value = sheetsStore.sheetsList.filter((sheet) =>
+        tagSheets.value = sheetStore.sheetsList.filter((sheet) =>
             sheet.tags.some((tag) => tag.id === currentTag.value!.id),
         );
     }
@@ -38,10 +38,10 @@ onMounted(async () => {
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="tagsStore.loading || sheetsStore.loading" />
+    <LoadingPlaceholder v-if="tagStore.loading || sheetStore.loading" />
     <ErrorDisplay
-        v-else-if="tagsStore.error || sheetsStore.error"
-        :message="tagsStore.error || sheetsStore.error || ''"
+        v-else-if="tagStore.error || sheetStore.error"
+        :message="tagStore.error || sheetStore.error || ''"
     />
     <ErrorDisplay v-else-if="!currentTag" message="Tag not found." />
     <BaseView v-else>

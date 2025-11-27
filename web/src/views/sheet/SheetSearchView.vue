@@ -7,11 +7,11 @@ import SheetsDisplay from '@/components/SheetsDisplay.vue';
 import calculateSimilarity from '@/services/calculateSimilarity.ts';
 import SelectArtist from '@/components/SelectArtist.vue';
 import SelectTags from '@/components/SelectTags.vue';
-import { useSheetsStore } from '@/stores/sheetsStore';
+import { useSheetStore } from '@/stores/sheetStore';
 import BaseSearchView from '@/views/BaseSearchView.vue';
 import { fetchAllSheets } from '@/services/api/sheetClient';
 
-const sheetsStore = useSheetsStore();
+const sheetStore = useSheetStore();
 
 fetchAllSheets();
 
@@ -21,12 +21,12 @@ const tagsFilter = ref<Tag[]>([]);
 const displayedSheets = ref<SheetListItem[]>([]);
 
 watch(
-    () => [sheetsStore.sheetsList, searchValue.value, artistFilter.value, tagsFilter.value],
+    () => [sheetStore.sheetsList, searchValue.value, artistFilter.value, tagsFilter.value],
     () => {
         if (artistFilter.value === null) {
-            displayedSheets.value = [...sheetsStore.sheetsList];
+            displayedSheets.value = [...sheetStore.sheetsList];
         } else {
-            displayedSheets.value = sheetsStore.sheetsList.filter((sheet) => {
+            displayedSheets.value = sheetStore.sheetsList.filter((sheet) => {
                 return (
                     !artistFilter.value ||
                     (sheet.artist !== null && sheet.artist.id === artistFilter.value.id)
@@ -69,8 +69,8 @@ watch(
             <SelectTags v-model="tagsFilter" />
         </template>
         <template #content>
-            <LoadingPlaceholder v-if="sheetsStore.loading" />
-            <ErrorDisplay v-else-if="sheetsStore.error !== null" :message="sheetsStore.error" />
+            <LoadingPlaceholder v-if="sheetStore.loading" />
+            <ErrorDisplay v-else-if="sheetStore.error !== null" :message="sheetStore.error" />
             <div v-else-if="displayedSheets.length === 0" class="text-center py-16">
                 <p class="text-xl opacity-60">No sheets found. Try adjusting your filters.</p>
             </div>

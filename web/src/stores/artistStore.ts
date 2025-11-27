@@ -7,7 +7,7 @@ interface State {
     error: string | null;
 }
 
-export const useArtistsStore = defineStore('artists', {
+export const useArtistStore = defineStore('artist', {
     state: (): State => ({
         artists: [],
         loading: false,

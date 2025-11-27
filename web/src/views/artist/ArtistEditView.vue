@@ -3,21 +3,21 @@ import { useRoute, useRouter } from 'vue-router';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import { computed, onMounted, ref, watch } from 'vue';
-import { useArtistsStore } from '@/stores/artistsStore';
+import { useArtistStore } from '@/stores/artistStore';
 import type { Artist } from '@/types/types';
 import BaseEditView from '../BaseEditView.vue';
 import { fetchAllArtists, updateArtist } from '@/services/api/artistClient';
 
 const route = useRoute();
 const router = useRouter();
-const artistsStore = useArtistsStore();
+const artistStore = useArtistStore();
 
 const artistId = computed(() => route.params.id as string);
 
 const localArtist = ref<Artist | null>(null);
 
 watch(
-    () => artistsStore.artists,
+    () => artistStore.artists,
     (artists) => {
         const artist = artists.find((a) => a.id === parseInt(artistId.value));
         if (artist) {
@@ -38,15 +38,15 @@ const handleSave = async () => {
         name: localArtist.value.name,
     });
 
-    if (!artistsStore.error) {
+    if (!artistStore.error) {
         router.push({ name: 'artist', params: { id: artistId.value } });
     }
 };
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="artistsStore.loading" />
-    <ErrorDisplay v-else-if="artistsStore.error !== null" :message="artistsStore.error" />
+    <LoadingPlaceholder v-if="artistStore.loading" />
+    <ErrorDisplay v-else-if="artistStore.error !== null" :message="artistStore.error" />
     <ErrorDisplay
         v-else-if="localArtist === null"
         message="Something went wrong while loading the artist."

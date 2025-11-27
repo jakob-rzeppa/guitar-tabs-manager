@@ -4,8 +4,8 @@ import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import SheetsDisplay from '@/components/SheetsDisplay.vue';
 import BackLink from '@/components/BackLink.vue';
-import { useArtistsStore } from '@/stores/artistsStore';
-import { useSheetsStore } from '@/stores/sheetsStore';
+import { useArtistStore } from '@/stores/artistStore';
+import { useSheetStore } from '@/stores/sheetStore';
 import { computed, onMounted, ref } from 'vue';
 import type { Artist, SheetListItem } from '@/types/types';
 import PersonIcon from '@/components/icons/PersonIcon.vue';
@@ -16,8 +16,8 @@ import { fetchAllArtists } from '@/services/api/artistClient';
 import { fetchAllSheets } from '@/services/api/sheetClient';
 
 const route = useRoute();
-const artistsStore = useArtistsStore();
-const sheetsStore = useSheetsStore();
+const artistStore = useArtistStore();
+const sheetStore = useSheetStore();
 
 const artistId = computed(() => route.params.id as string);
 const currentArtist = ref<Artist | null>(null);
@@ -28,10 +28,10 @@ onMounted(async () => {
     await fetchAllSheets();
 
     currentArtist.value =
-        artistsStore.artists.find((a) => a.id === parseInt(artistId.value)) || null;
+        artistStore.artists.find((a) => a.id === parseInt(artistId.value)) || null;
 
     if (currentArtist.value) {
-        artistSheets.value = sheetsStore.sheetsList.filter(
+        artistSheets.value = sheetStore.sheetsList.filter(
             (sheet) => sheet.artist && sheet.artist.id === currentArtist.value!.id,
         );
     }
@@ -39,10 +39,10 @@ onMounted(async () => {
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="artistsStore.loading || sheetsStore.loading" />
+    <LoadingPlaceholder v-if="artistStore.loading || sheetStore.loading" />
     <ErrorDisplay
-        v-else-if="artistsStore.error || sheetsStore.error"
-        :message="artistsStore.error || sheetsStore.error || ''"
+        v-else-if="artistStore.error || sheetStore.error"
+        :message="artistStore.error || sheetStore.error || ''"
     />
     <ErrorDisplay v-else-if="!currentArtist" message="Artist not found." />
     <BaseView v-else>

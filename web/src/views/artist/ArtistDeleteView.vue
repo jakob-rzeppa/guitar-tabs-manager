@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 import { computed, onMounted, ref } from 'vue';
-import { useArtistsStore } from '@/stores/artistsStore';
+import { useArtistStore } from '@/stores/artistStore';
 import type { Artist } from '@/types/types';
 import BaseDeleteView from '../BaseDeleteView.vue';
 import PersonIcon from '@/components/icons/PersonIcon.vue';
@@ -9,7 +9,7 @@ import { deleteArtist, fetchAllArtists } from '@/services/api/artistClient';
 
 const route = useRoute();
 const router = useRouter();
-const artistsStore = useArtistsStore();
+const artistStore = useArtistStore();
 
 const artistId = computed(() => route.params.id as string);
 const currentArtist = ref<Artist | null>(null);
@@ -17,13 +17,13 @@ const currentArtist = ref<Artist | null>(null);
 onMounted(async () => {
     await fetchAllArtists();
     currentArtist.value =
-        artistsStore.artists.find((a) => a.id === parseInt(artistId.value)) || null;
+        artistStore.artists.find((a) => a.id === parseInt(artistId.value)) || null;
 });
 
 const handleDelete = async () => {
     await deleteArtist(parseInt(artistId.value));
 
-    if (!artistsStore.error) {
+    if (!artistStore.error) {
         router.push({ name: 'artistSearch' });
     }
 };

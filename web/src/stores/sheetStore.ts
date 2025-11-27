@@ -8,7 +8,7 @@ interface SheetState {
     error: string | null;
 }
 
-export const useSheetsStore = defineStore('sheets', {
+export const useSheetStore = defineStore('sheet', {
     state: (): SheetState => ({
         detailedSheets: {},
         sheetsList: [],

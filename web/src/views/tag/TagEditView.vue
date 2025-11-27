@@ -3,21 +3,21 @@ import { useRoute, useRouter } from 'vue-router';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import { computed, onMounted, ref, watch } from 'vue';
-import { useTagsStore } from '@/stores/tagsStore';
+import { useTagStore } from '@/stores/tagStore';
 import type { Tag } from '@/types/types';
 import BaseEditView from '../BaseEditView.vue';
 import { fetchAllTags, updateTag } from '@/services/api/tagClient';
 
 const route = useRoute();
 const router = useRouter();
-const tagsStore = useTagsStore();
+const tagStore = useTagStore();
 
 const tagId = computed(() => route.params.id as string);
 
 const localTag = ref<Tag | null>(null);
 
 watch(
-    () => tagsStore.tags,
+    () => tagStore.tags,
     (tags) => {
         const tag = tags.find((t) => t.id === parseInt(tagId.value));
         if (tag) {
@@ -38,15 +38,15 @@ const handleSave = async () => {
         name: localTag.value.name,
     });
 
-    if (!tagsStore.error) {
+    if (!tagStore.error) {
         router.push({ name: 'tag', params: { id: tagId.value } });
     }
 };
 </script>
 
 <template>
-    <LoadingPlaceholder v-if="tagsStore.loading" />
-    <ErrorDisplay v-else-if="tagsStore.error !== null" :message="tagsStore.error" />
+    <LoadingPlaceholder v-if="tagStore.loading" />
+    <ErrorDisplay v-else-if="tagStore.error !== null" :message="tagStore.error" />
     <ErrorDisplay
         v-else-if="localTag === null"
         message="Something went wrong while loading the tag."

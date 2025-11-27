@@ -4,11 +4,11 @@ import type { Tag } from '@/types/types.ts';
 import ErrorDisplay from '@/components/ErrorDisplay.vue';
 import LoadingPlaceholder from '@/components/LoadingPlaceholder.vue';
 import calculateSimilarity from '@/services/calculateSimilarity.ts';
-import { useTagsStore } from '@/stores/tagsStore';
+import { useTagStore } from '@/stores/tagStore';
 import BaseSearchView from '@/views/BaseSearchView.vue';
 import { fetchAllTags } from '@/services/api/tagClient';
 
-const tagsStore = useTagsStore();
+const tagStore = useTagStore();
 
 onMounted(() => {
     fetchAllTags();
@@ -18,9 +18,9 @@ const searchValue = ref<string>('');
 const displayedTags = ref<Tag[]>([]);
 
 watch(
-    () => [tagsStore.tags, searchValue.value],
+    () => [tagStore.tags, searchValue.value],
     () => {
-        displayedTags.value = [...tagsStore.tags];
+        displayedTags.value = [...tagStore.tags];
 
         displayedTags.value.sort((a, b) => {
             const nameA = a.name.toLowerCase();
@@ -42,8 +42,8 @@ watch(
             <input placeholder="Search by name..." v-model="searchValue" />
         </template>
         <template #content>
-            <LoadingPlaceholder v-if="tagsStore.loading" />
-            <ErrorDisplay v-else-if="tagsStore.error !== null" :message="tagsStore.error" />
+            <LoadingPlaceholder v-if="tagStore.loading" />
+            <ErrorDisplay v-else-if="tagStore.error !== null" :message="tagStore.error" />
             <div v-else-if="displayedTags.length === 0" class="text-center py-16">
                 <p class="text-xl opacity-60">No tags found. Try adjusting your search.</p>
             </div>

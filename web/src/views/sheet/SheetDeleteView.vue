@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 import { computed, onMounted } from 'vue';
-import { useSheetsStore } from '@/stores/sheetsStore';
+import { useSheetStore } from '@/stores/sheetStore';
 import BaseDeleteView from '../BaseDeleteView.vue';
 import { deleteSheet, fetchSheet } from '@/services/api/sheetClient';
 
 const route = useRoute();
 const router = useRouter();
-const sheetsStore = useSheetsStore();
+const sheetStore = useSheetStore();
 
 const sheetId = computed(() => route.params.id as string);
-const currentSheet = computed(() => sheetsStore.detailedSheets[sheetId.value]);
+const currentSheet = computed(() => sheetStore.detailedSheets[sheetId.value]);
 
 onMounted(() => {
     fetchSheet(sheetId.value);
@@ -19,7 +19,7 @@ onMounted(() => {
 const handleDelete = async () => {
     await deleteSheet(sheetId.value);
 
-    if (!sheetsStore.error) {
+    if (!sheetStore.error) {
         router.push({ name: 'sheetSearch' });
     }
 };

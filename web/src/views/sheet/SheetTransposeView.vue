@@ -11,7 +11,7 @@ import InfoIcon from '@/components/icons/InfoIcon.vue';
 import ChevronUpIcon from '@/components/icons/ChevronUpIcon.vue';
 import ChevronDownIcon from '@/components/icons/ChevronDownIcon.vue';
 import { computed, onMounted, ref } from 'vue';
-import { useSheetsStore } from '@/stores/sheetsStore';
+import { useSheetStore } from '@/stores/sheetStore';
 import { useSheetTransposer } from '@/composables/useSheetTransposer';
 import { fetchSheet, updateSheet } from '@/services/api/sheetClient';
 
@@ -20,7 +20,7 @@ const router = useRouter();
 
 const sheetId = computed(() => route.params.id as string);
 
-const sheetsStore = useSheetsStore();
+const sheetStore = useSheetStore();
 
 const { transposeLoading, transposeError, transposedSheetContent, transposeSheet } =
     useSheetTransposer();
@@ -39,10 +39,10 @@ onMounted(() => {
 });
 
 const handleTranspose = (direction: 'up' | 'down', changeCapo: boolean) => {
-    if (sheetsStore.detailedSheets[sheetId.value]) {
-        transposeSheet(sheetsStore.detailedSheets[sheetId.value].content, direction);
+    if (sheetStore.detailedSheets[sheetId.value]) {
+        transposeSheet(sheetStore.detailedSheets[sheetId.value].content, direction);
 
-        capo.value = sheetsStore.detailedSheets[sheetId.value].capo;
+        capo.value = sheetStore.detailedSheets[sheetId.value].capo;
         if (changeCapo && capo.value !== null) {
             if (direction === 'up') {
                 capo.value += 1;
@@ -61,7 +61,7 @@ const handleSave = async () => {
         capo: capo.value ?? undefined,
     });
 
-    if (!sheetsStore.error) {
+    if (!sheetStore.error) {
         router.push({ name: 'sheet', params: { id: sheetId.value } });
     }
 };
@@ -83,10 +83,10 @@ const handleCancel = () => {
                 </PageHeader>
             </div>
 
-            <LoadingPlaceholder v-if="sheetsStore.loading || transposeLoading" />
+            <LoadingPlaceholder v-if="sheetStore.loading || transposeLoading" />
             <ErrorDisplay
-                v-else-if="sheetsStore.error !== null || transposeError !== null"
-                :message="sheetsStore.error || transposeError"
+                v-else-if="sheetStore.error !== null || transposeError !== null"
+                :message="sheetStore.error || transposeError"
             />
             <div v-else-if="transposedSheetContent === null || capo === null" class="space-y-6">
                 <div class="alert alert-info shadow-lg">
@@ -129,13 +129,13 @@ const handleCancel = () => {
                     <div class="card-body">
                         <h3 class="card-title text-sm opacity-60">Original Capo:</h3>
                         <pre>{{
-                            sheetsStore.detailedSheets[sheetId]?.capo === 0
+                            sheetStore.detailedSheets[sheetId]?.capo === 0
                                 ? 'None'
-                                : `Fret ${sheetsStore.detailedSheets[sheetId]?.capo}`
+                                : `Fret ${sheetStore.detailedSheets[sheetId]?.capo}`
                         }}</pre>
                         <h3 class="card-title text-sm opacity-60">Original Content:</h3>
                         <pre class="text-sm overflow-x-auto">{{
-                            sheetsStore.detailedSheets[sheetId]?.content
+                            sheetStore.detailedSheets[sheetId]?.content
                         }}</pre>
                     </div>
                 </div>
