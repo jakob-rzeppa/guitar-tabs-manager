@@ -1,8 +1,9 @@
 import { useArtistStore } from "@/stores/artistStore";
 import type { ArtistDto } from "@/types/dtos";
-import api, { useApiInStore } from "../api";
+import api, { callApi } from "../api";
 import type { Artist } from "@/types/types";
 import { useSheetStore } from "@/stores/sheetStore";
+import { toRef } from "vue/dist/vue.js";
 
 export async function fetchAllArtists(options: { force?: boolean } = {}): Promise<void> {
     const artistStore = useArtistStore();
@@ -10,8 +11,9 @@ export async function fetchAllArtists(options: { force?: boolean } = {}): Promis
     // Skip if already loaded unless force is true
     if (!options.force && artistStore.artists.length > 0) return;
 
-    await useApiInStore<ArtistDto[]>({
-        store: artistStore,
+    await callApi<ArtistDto[]>({
+        loadingRef: toRef(artistStore, 'loading'),
+        errorRef: toRef(artistStore, 'error'),
         apiCall: () => api.get('/artists'),
         onSuccess: ({ data }) => {
             if (!data.payload) {
@@ -23,6 +25,7 @@ export async function fetchAllArtists(options: { force?: boolean } = {}): Promis
                 id: artistDto.id,
                 name: artistDto.name,
             }));
+            console.log('Fetched artists:', artistStore.artists);
         },
     });
 }
@@ -30,8 +33,9 @@ export async function fetchAllArtists(options: { force?: boolean } = {}): Promis
 export async function createArtist(artist: Partial<Artist>): Promise<void> {
     const artistStore = useArtistStore();
 
-    await useApiInStore<ArtistDto>({
-        store: artistStore,
+    await callApi<ArtistDto>({
+        loadingRef: toRef(artistStore, 'loading'),
+        errorRef: toRef(artistStore, 'error'),
         apiCall: () => api.post('/artists', artist),
         onSuccess: ({ data }) => {
             if (!data.payload) {
@@ -52,8 +56,9 @@ export async function updateArtist(artistId: number, artist: Partial<Omit<Artist
 
     const payload = { name: artist.name };
 
-    await useApiInStore<ArtistDto>({
-        store: artistStore,
+    await callApi<ArtistDto>({
+        loadingRef: toRef(artistStore, 'loading'),
+        errorRef: toRef(artistStore, 'error'),
         apiCall: () => api.put(`/artists/${artistId}`, payload),
         onSuccess: ({ data }) => {
             if (!data.payload) {
@@ -87,8 +92,9 @@ export async function updateArtist(artistId: number, artist: Partial<Omit<Artist
 export async function deleteArtist(artistId: number): Promise<void> {
     const artistStore = useArtistStore();
 
-    await useApiInStore<void>({
-        store: artistStore,
+    await callApi<void>({
+        loadingRef: toRef(artistStore, 'loading'),
+        errorRef: toRef(artistStore, 'error'),
         apiCall: () => api.delete(`/artists/${artistId}`),
         onSuccess: () => {
             artistStore.artists = artistStore.artists.filter((a) => a.id !== artistId);

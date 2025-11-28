@@ -1,7 +1,8 @@
 import { useSheetStore } from "@/stores/sheetStore";
-import api, { useApiInStore } from "../api";
+import api, { callApi } from "../api";
 import type { CreateSheetRequest, DeleteDto, SheetDto, SheetListItemDto } from "@/types/dtos";
 import type { Sheet } from "@/types/types";
+import { toRef } from "vue";
 
 /**
  * Fetch all sheets in condensed format (without content and capo)
@@ -12,8 +13,9 @@ export async function fetchAllSheets(options: { force?: boolean } = {}): Promise
     // Skip if already loaded unless force is true
     if (!options.force && sheetStore.sheetsList.length > 0) return;
 
-    await useApiInStore<SheetListItemDto[]>({
-        store: sheetStore,
+    await callApi<SheetListItemDto[]>({
+        loadingRef: toRef(sheetStore, 'loading'),
+        errorRef: toRef(sheetStore, 'error'),
         apiCall: () => api.get('/sheets'),
         onSuccess: ({ data }) => {
             if (!data.payload) {
@@ -24,8 +26,8 @@ export async function fetchAllSheets(options: { force?: boolean } = {}): Promise
             sheetStore.sheetsList = data.payload.map((sheet) => ({
                 id: sheet.id,
                 title: sheet.title,
-                artist: sheet.artist,
-                tags: sheet.tags,
+                artist: sheet.artist ?? null,
+                tags: sheet.tags ?? [],
             }));
         },
     });
@@ -42,9 +44,10 @@ export async function fetchSheet(id: string, options: { force?: boolean } = {}):
     // Skip if already cached unless force is true
     if (!options.force && sheetStore.detailedSheets[id]) return;
 
-    await useApiInStore<SheetDto>({
-        store: sheetStore,
-        apiCall: () => api.get(`/sheets/${id}`),
+    await callApi<SheetDto>({
+        loadingRef: toRef(sheetStore, 'loading'),
+        errorRef: toRef(sheetStore, 'error'),
+        apiCall: () => api.get('/sheets'),
         onSuccess: ({ data }) => {
             if (!data.payload) {
                 sheetStore.error = 'Request payload is empty';
@@ -54,8 +57,8 @@ export async function fetchSheet(id: string, options: { force?: boolean } = {}):
             sheetStore.detailedSheets[id] = {
                 id: data.payload.id,
                 title: data.payload.title,
-                artist: data.payload.artist,
-                tags: data.payload.tags,
+                artist: data.payload.artist ?? null,
+                tags: data.payload.tags ?? [],
                 capo: data.payload.capo,
                 sourceURL: data.payload.source_url,
                 content: data.payload.content,
@@ -80,8 +83,9 @@ export async function createSheet(sheet: Omit<Sheet, 'id'>): Promise<void> {
         tag_ids: sheet.tags?.map((tag) => tag.id),
     };
 
-    await useApiInStore<SheetDto>({
-        store: sheetStore,
+    await callApi<SheetDto>({
+        loadingRef: toRef(sheetStore, 'loading'),
+        errorRef: toRef(sheetStore, 'error'),
         apiCall: () => api.post('/sheets', payload),
         onSuccess: ({ data }) => {
             if (!data.payload) {
@@ -171,8 +175,9 @@ export async function updateSheet(id: string, fieldsToUpdate: Partial<Omit<Sheet
         return;
     }
 
-    await useApiInStore<SheetDto>({
-        store: sheetStore,
+    await callApi<SheetDto>({
+        loadingRef: toRef(sheetStore, 'loading'),
+        errorRef: toRef(sheetStore, 'error'),
         apiCall: () => api.put(`/sheets/${id}`, payload),
         onSuccess: ({ data }) => {
             if (!data.payload) {
@@ -180,7 +185,7 @@ export async function updateSheet(id: string, fieldsToUpdate: Partial<Omit<Sheet
                 return;
             }
 
-            sheetStore.detailedSheets[id] = {
+            sheetStore.detailedSheets[data.payload.id] = {
                 id: data.payload.id,
                 title: data.payload.title,
                 artist: data.payload.artist,
@@ -190,16 +195,13 @@ export async function updateSheet(id: string, fieldsToUpdate: Partial<Omit<Sheet
                 content: data.payload.content,
             };
 
-            // Also update sheetsList entry
-            const index = sheetStore.sheetsList.findIndex((sheet) => sheet.id === Number(id));
-            if (index !== -1) {
-                sheetStore.sheetsList[index] = {
-                    id: data.payload.id,
-                    title: data.payload.title,
-                    artist: data.payload.artist,
-                    tags: data.payload.tags,
-                };
-            }
+            // Add to sheetsList as well
+            sheetStore.sheetsList.push({
+                id: data.payload.id,
+                title: data.payload.title,
+                artist: data.payload.artist,
+                tags: data.payload.tags,
+            });
         },
     });
 }
@@ -211,8 +213,9 @@ export async function updateSheet(id: string, fieldsToUpdate: Partial<Omit<Sheet
 export async function deleteSheet(id: string): Promise<void> {
     const sheetStore = useSheetStore();
 
-    await useApiInStore<DeleteDto>({
-        store: sheetStore,
+    await callApi<DeleteDto>({
+        loadingRef: toRef(sheetStore, 'loading'),
+        errorRef: toRef(sheetStore, 'error'),
         apiCall: () => api.delete(`/sheets/${id}`),
         onSuccess: () => {
             delete sheetStore.detailedSheets[id];

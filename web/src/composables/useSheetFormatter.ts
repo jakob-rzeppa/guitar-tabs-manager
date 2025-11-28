@@ -1,5 +1,6 @@
-import api, { useApi } from '@/services/api';
+import api, { callApi } from '@/services/api';
 import type { ApiResponse, FormatSheetDto } from '@/types/dtos';
+import type { AxiosResponse } from 'axios';
 import { ref, watch } from 'vue';
 
 export const useSheetFormatter = () => {
@@ -18,16 +19,13 @@ export const useSheetFormatter = () => {
     });
 
     function formatSheet(content: string) {
-        useApi<FormatSheetDto>({
-            loading: formatLoading,
-            error: formatError,
-            response: formatResponse,
+        callApi<FormatSheetDto>({
+            loadingRef: formatLoading,
+            errorRef: formatError,
+            onSuccess: (response: AxiosResponse<ApiResponse<FormatSheetDto>>) => {
+                formatResponse.value = response.data.payload ? { payload: response.data.payload } : null;
+            },
             apiCall: () => api.post('/sheets/format', { content }),
-        }).then(() => {
-            if (!formatResponse.value || !formatResponse.value.payload) {
-                formatError.value = 'API Format Response not found.';
-                return;
-            }
         });
     }
 

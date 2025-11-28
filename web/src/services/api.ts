@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from 'axios';
 import type { ApiResponse } from '@/types/dtos.ts';
-import type { Ref } from 'vue';
+import { type Ref } from 'vue';
 
 const baseURL = import.meta.env.VITE_API_ENDPOINT;
 
@@ -13,24 +13,32 @@ console.log('Successfully created axios instance with the baseURL:', baseURL);
 export default axiosInstance;
 
 interface UseApiParams<T> {
-    loading: Ref<boolean>;
-    error: Ref<string | null>;
-    response: Ref<ApiResponse<T> | null>;
+    loadingRef: Ref<boolean>;
+    errorRef: Ref<string | null>;
+    onSuccess: (response: AxiosResponse<ApiResponse<T>>) => void;
     apiCall: () => Promise<AxiosResponse<ApiResponse<T>>>;
 }
 
-export async function useApi<T>({
-    loading,
-    error,
-    response,
+export async function callApi<T>({
+    loadingRef: loading,
+    errorRef: error,
+    onSuccess,
     apiCall,
 }: UseApiParams<T>): Promise<void> {
     loading.value = true;
     error.value = null;
 
     try {
-        response.value = (await apiCall()).data;
-        return;
+        const res = await apiCall();
+
+        console.log('API call successful:', res);
+        if (res.status >= 200 && res.status < 300) {
+            onSuccess(res);
+            return;
+        }
+
+        const errMessage = res.data?.message;
+        error.value = "Request failed" + (errMessage ? `: ${errMessage}` : '');
     } catch (err: unknown) {
         if (err instanceof Error) {
             error.value = err.message || 'Request failed';
@@ -40,35 +48,5 @@ export async function useApi<T>({
         throw err;
     } finally {
         loading.value = false;
-    }
-}
-
-interface UseApiInStoreParams<T> {
-    store: { loading: boolean; error: string | null };
-    apiCall: () => Promise<AxiosResponse<ApiResponse<T>>>;
-    onSuccess?: (response: AxiosResponse<ApiResponse<T>>) => void;
-}
-
-export async function useApiInStore<T>({
-    store,
-    apiCall,
-    onSuccess,
-}: UseApiInStoreParams<T>): Promise<ApiResponse<T>> {
-    store.loading = true;
-    store.error = null;
-
-    try {
-        const response = await apiCall();
-        onSuccess?.(response);
-        return response.data;
-    } catch (err: unknown) {
-        if (err instanceof Error) {
-            store.error = err.message || 'Request failed';
-        } else {
-            store.error = 'An unknown error occurred';
-        }
-        throw err;
-    } finally {
-        store.loading = false;
     }
 }

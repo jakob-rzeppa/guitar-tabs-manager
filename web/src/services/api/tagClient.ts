@@ -1,9 +1,9 @@
 import { useTagStore } from "@/stores/tagStore";
-import api, { useApiInStore } from "../api";
+import api, { callApi } from "../api";
 import type { CreateTagRequest, TagDto, UpdateTagRequest } from "@/types/dtos";
 import type { Tag } from "@/types/types";
 import { useSheetStore } from "@/stores/sheetStore";
-
+import { toRef } from "vue";
 
 /**
  * Fetch all tags
@@ -14,8 +14,9 @@ export async function fetchAllTags(options: { force?: boolean } = {}): Promise<v
     // Skip if already loaded unless force is true
     if (!options.force && tagStore.tags.length > 0) return;
 
-    await useApiInStore<TagDto[]>({
-        store: tagStore,
+    await callApi<TagDto[]>({
+        loadingRef: toRef(tagStore, 'loading'),
+        errorRef: toRef(tagStore, 'error'),
         apiCall: () => api.get('/tags'),
         onSuccess: ({ data }) => {
             if (!data.payload) {
@@ -40,8 +41,9 @@ export async function createTag(tag: Omit<Tag, 'id'>): Promise<void> {
 
     const payload: CreateTagRequest = { name: tag.name };
 
-    await useApiInStore<TagDto>({
-        store: tagStore,
+    await callApi<TagDto>({
+        loadingRef: toRef(tagStore, 'loading'),
+        errorRef: toRef(tagStore, 'error'),
         apiCall: () => api.post('/tags', payload),
         onSuccess: ({ data }) => {
             if (!data.payload) {
@@ -67,8 +69,9 @@ export async function updateTag(tagId: number, tag: Partial<Omit<Tag, 'id'>>): P
 
     const payload: UpdateTagRequest = { name: tag.name };
 
-    await useApiInStore<TagDto>({
-        store: tagStore,
+    await callApi<TagDto>({
+        loadingRef: toRef(tagStore, 'loading'),
+        errorRef: toRef(tagStore, 'error'),
         apiCall: () => api.put(`/tags/${tagId}`, payload),
         onSuccess: ({ data }) => {
             if (!data.payload) {
@@ -107,8 +110,9 @@ export async function updateTag(tagId: number, tag: Partial<Omit<Tag, 'id'>>): P
 export async function deleteTag(tagId: number): Promise<void> {
     const tagStore = useTagStore();
 
-    await useApiInStore<void>({
-        store: tagStore,
+    await callApi<void>({
+        loadingRef: toRef(tagStore, 'loading'),
+        errorRef: toRef(tagStore, 'error'),
         apiCall: () => api.delete(`/tags/${tagId}`),
         onSuccess: () => {
             tagStore.tags = tagStore.tags.filter((t) => t.id !== tagId);
