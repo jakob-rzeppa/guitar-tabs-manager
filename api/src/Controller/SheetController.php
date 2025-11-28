@@ -23,8 +23,6 @@ final class SheetController extends AbstractController
     {
         $sheets = $sheetHandler->getWithLessDetailsAllSheets();
 
-        //throw new \Exception('Test exception');
-
         return $this->json([
             'payload' => $sheets,
         ]);
