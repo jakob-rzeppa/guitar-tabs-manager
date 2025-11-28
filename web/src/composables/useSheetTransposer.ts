@@ -1,4 +1,4 @@
-import api, { useApi } from '@/services/api';
+import api, { callApi } from '@/services/api';
 import type { ApiResponse, TransposeSheetDto } from '@/types/dtos';
 import { ref, watch } from 'vue';
 
@@ -18,10 +18,12 @@ export const useSheetTransposer = () => {
     });
 
     const transposeSheet = (content: string, transposeDir: 'up' | 'down') => {
-        useApi<TransposeSheetDto>({
-            loading: transposeLoading,
-            error: transposeError,
-            response: transposeResponse,
+        callApi<TransposeSheetDto>({
+            loadingRef: transposeLoading,
+            errorRef: transposeError,
+            onSuccess: (response) => {
+                transposeResponse.value = response.data;
+            },
             apiCall: () => api.post('/sheets/transpose', { content, dir: transposeDir }),
         }).then(() => {
             if (transposeError.value) {
