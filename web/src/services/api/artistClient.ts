@@ -3,7 +3,7 @@ import type { ArtistDto } from "@/types/dtos";
 import api, { callApi } from "../api";
 import type { Artist } from "@/types/types";
 import { useSheetStore } from "@/stores/sheetStore";
-import { toRef } from "vue/dist/vue.js";
+import { toRef } from "vue";
 
 export async function fetchAllArtists(options: { force?: boolean } = {}): Promise<void> {
     const artistStore = useArtistStore();
@@ -25,7 +25,6 @@ export async function fetchAllArtists(options: { force?: boolean } = {}): Promis
                 id: artistDto.id,
                 name: artistDto.name,
             }));
-            console.log('Fetched artists:', artistStore.artists);
         },
     });
 }
