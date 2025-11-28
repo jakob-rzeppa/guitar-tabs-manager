@@ -1,4 +1,4 @@
-import axios, { type AxiosResponse } from 'axios';
+import axios, { AxiosError, type AxiosResponse } from 'axios';
 import type { ApiResponse } from '@/types/dtos.ts';
 import { type Ref } from 'vue';
 
@@ -32,20 +32,18 @@ export async function callApi<T>({
         const res = await apiCall();
 
         console.log('API call successful:', res);
-        if (res.status >= 200 && res.status < 300) {
-            onSuccess(res);
-            return;
-        }
-
-        const errMessage = res.data?.message;
-        error.value = "Request failed" + (errMessage ? `: ${errMessage}` : '');
+        onSuccess(res);
     } catch (err: unknown) {
-        if (err instanceof Error) {
-            error.value = err.message || 'Request failed';
+        if (err instanceof AxiosError) {
+            console.log('API call failed:', err.response);
+
+            const errorMessage = err.response?.data.message;
+            error.value = `Request failed` + (err.response?.status ? ` with status code ${err.response?.status}` : '') + (errorMessage ? `: ${errorMessage}` : '');
+        } else if (err instanceof Error) {
+            error.value = err.message;
         } else {
             error.value = 'An unknown error occurred';
         }
-        throw err;
     } finally {
         loading.value = false;
     }
