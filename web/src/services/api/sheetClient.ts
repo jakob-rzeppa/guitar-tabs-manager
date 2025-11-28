@@ -47,7 +47,7 @@ export async function fetchSheet(id: string, options: { force?: boolean } = {}):
     await callApi<SheetDto>({
         loadingRef: toRef(sheetStore, 'loading'),
         errorRef: toRef(sheetStore, 'error'),
-        apiCall: () => api.get('/sheets'),
+        apiCall: () => api.get(`/sheets/${id}`),
         onSuccess: ({ data }) => {
             if (!data.payload) {
                 sheetStore.error = 'Request payload is empty';
