@@ -9,7 +9,7 @@ readonly class UpdateSheetRequestDto
     public function __construct(
         public ?string $title,
         public ?int $capo,
-        #[Assert\Url(message: 'Source URL should be a valid URL.')]
+        #[Assert\Url(message: 'Source URL should be a valid URL.', requireTld: false)]
         public ?string $source_url,
         public ?string $content,
         public ?int $artist_id,
