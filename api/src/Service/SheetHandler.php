@@ -9,6 +9,7 @@ use App\Repository\ArtistRepository;
 use App\Repository\SheetRepository;
 use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SheetHandler
 {
@@ -87,7 +88,7 @@ class SheetHandler
         $sheet = $this->sheetRepository->find($id);
 
         if (null === $sheet) {
-            throw new \InvalidArgumentException("Sheet with id $id not found.");
+            throw new NotFoundHttpException("Sheet with id $id not found.");
         }
 
         if (null !== $dto->title) {
@@ -128,7 +129,7 @@ class SheetHandler
         $sheet = $this->sheetRepository->find($id);
 
         if (null === $sheet) {
-            throw new \InvalidArgumentException("Sheet with id $id not found.");
+            throw new NotFoundHttpException("Sheet with id $id not found.");
         }
 
         $this->entityManager->remove($sheet);

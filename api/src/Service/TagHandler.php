@@ -6,6 +6,7 @@ use App\Dto\Request\UpdateTagRequestDto;
 use App\Entity\Tag;
 use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TagHandler
 {
@@ -29,7 +30,7 @@ class TagHandler
     {
         $tag = $this->tagRepository->find($id);
         if ($tag === null) {
-            throw new \InvalidArgumentException('Tag not found');
+            throw new NotFoundHttpException('Tag not found');
         }
 
         if ($updateTagRequestDto->name !== null) {
@@ -45,7 +46,7 @@ class TagHandler
     {
         $tag = $this->tagRepository->find($id);
         if ($tag === null) {
-            throw new \InvalidArgumentException('Tag not found');
+            throw new NotFoundHttpException('Tag not found');
         }
 
         $this->entityManager->remove($tag);

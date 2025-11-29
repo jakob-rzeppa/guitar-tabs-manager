@@ -6,6 +6,7 @@ use App\Dto\Request\UpdateArtistRequestDto;
 use App\Entity\Artist;
 use App\Repository\ArtistRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ArtistHandler
 {
@@ -30,7 +31,7 @@ class ArtistHandler
     {
         $artist = $this->artistRepository->find($id);
         if ($artist === null) {
-            throw new \InvalidArgumentException('Artist not found');
+            throw new NotFoundHttpException('Artist not found');
         }
 
         if ($updateArtistRequestDto->name !== null) {
@@ -46,7 +47,7 @@ class ArtistHandler
     {
         $artist = $this->artistRepository->find($id);
         if ($artist === null) {
-            throw new \InvalidArgumentException('Artist not found');
+            throw new NotFoundHttpException('Artist not found');
         }
 
         $this->sheetHandler->deleteArtistFromAllSheets($artist->getId());
