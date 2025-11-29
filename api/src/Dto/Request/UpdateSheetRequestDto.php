@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 readonly class UpdateSheetRequestDto
 {
     public function __construct(
+        #[Assert\NotBlank(message: 'Title should not be blank.', allowNull: true)]
         public ?string $title,
         public ?int $capo,
         #[Assert\Url(message: 'Source URL should be a valid URL.', requireTld: false)]
