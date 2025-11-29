@@ -15,15 +15,15 @@ class AppFixtures extends Fixture
         $artist = new Artist();
         $artist->setName('Ed Sheeran');
 
-        $manager->persist($artist);
+        $manager->persist($artist); // will have id 1
 
         $tagOne = new Tag();
-        $tagOne->setName('Pop');
+        $tagOne->setName('Pop'); // will have id 1
 
         $manager->persist($tagOne);
 
         $tagTwo = new Tag();
-        $tagTwo->setName('Acoustic');
+        $tagTwo->setName('Acoustic'); // will have id 2
 
         $manager->persist($tagTwo);
 
@@ -36,7 +36,7 @@ class AppFixtures extends Fixture
         $sheet->addTag($tagOne);
         $sheet->addTag($tagTwo);
 
-        $manager->persist($sheet);
+        $manager->persist($sheet); // will have id 1
 
         $manager->flush();
     }
