@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\SheetRepository;
 use App\Service\SheetHandler;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 #[Route('/sheets')]
 final class SheetController extends AbstractController
@@ -32,6 +33,10 @@ final class SheetController extends AbstractController
     public function getById(int $id, SheetRepository $sheetRepository): JsonResponse
     {
         $sheet = $sheetRepository->find($id);
+
+        if (null === $sheet) {
+            throw new NotFoundHttpException("Sheet with id $id not found.");
+        }
 
         $sheetPayload = SheetDto::fromSheet($sheet);
         return $this->json([

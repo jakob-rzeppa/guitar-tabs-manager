@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TagHandlerTest extends KernelTestCase
 {
@@ -68,7 +69,7 @@ class TagHandlerTest extends KernelTestCase
 
         $tagHandler = $this->container->get(TagHandler::class);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NotFoundHttpException::class);
         $this->expectExceptionMessage('Tag not found');
 
         $tagHandler->updateTag(999, new UpdateTagRequestDto(name: 'Updated Tag'));
@@ -113,7 +114,7 @@ class TagHandlerTest extends KernelTestCase
 
         $tagHandler = $this->container->get(TagHandler::class);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NotFoundHttpException::class);
         $this->expectExceptionMessage('Tag not found');
 
         $tagHandler->deleteTag(999);

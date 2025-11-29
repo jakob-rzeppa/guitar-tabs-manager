@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ArtistHandlerTest extends KernelTestCase
 {
@@ -73,7 +74,7 @@ class ArtistHandlerTest extends KernelTestCase
 
         $artistHandler = $this->container->get(ArtistHandler::class);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NotFoundHttpException::class);
         $this->expectExceptionMessage('Artist not found');
 
         $artistHandler->updateArtist(999, new UpdateArtistRequestDto(name: 'Updated Artist'));
@@ -124,7 +125,7 @@ class ArtistHandlerTest extends KernelTestCase
 
         $artistHandler = $this->container->get(ArtistHandler::class);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NotFoundHttpException::class);
         $this->expectExceptionMessage('Artist not found');
 
         $artistHandler->deleteArtist(999);
