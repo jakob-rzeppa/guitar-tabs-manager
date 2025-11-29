@@ -33,10 +33,6 @@ final class SheetController extends AbstractController
     {
         $sheet = $sheetRepository->find($id);
 
-        if (null === $sheet) {
-            throw $this->createNotFoundException();
-        }
-
         $sheetPayload = SheetDto::fromSheet($sheet);
         return $this->json([
             'payload' => $sheetPayload->toArray(),

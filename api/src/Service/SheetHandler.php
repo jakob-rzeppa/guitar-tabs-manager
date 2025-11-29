@@ -51,9 +51,15 @@ class SheetHandler
         return $reducedSheets;
     }
 
-    public function getSheetById(int $id): ?Sheet
+    public function getSheetById(int $id): Sheet
     {
-        return $this->sheetRepository->find($id);
+        $sheet = $this->sheetRepository->find($id);
+
+        if (null === $sheet) {
+            throw new NotFoundHttpException("Sheet with id $id not found.");
+        }
+
+        return $sheet;
     }
 
     public function createSheet(CreateSheetRequestDto $dto): Sheet
