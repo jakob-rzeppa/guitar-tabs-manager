@@ -2,7 +2,7 @@
 
 namespace App\Tests\Application;
 
-use App\DataFixtures\AppFixtures;
+use App\DataFixtures\ApplicationTestFixtures;
 use App\Entity\Sheet;
 use Doctrine\ORM\EntityManagerInterface;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -25,7 +25,7 @@ class SheetApplicationTest extends WebTestCase
         $this->databaseTool = static::$kernel->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->databaseTool->loadFixtures([
-            AppFixtures::class,
+            ApplicationTestFixtures::class,
         ]);
     }
 
